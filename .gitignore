@@ -1,0 +1,45 @@
+# Misc
+.DS_Store
+
+# IDE
+.run
+.idea
+.history
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+.npmrc
+
+# Local env files
+.env
+.env.local
+
+# Vercel
+.vercel
+
+# Coverage
+coverage
+
+# Local certs
+local-cert
+
+# Build Outputs
+build
+dist
+package
+ios
+android
+
+# Svelte Output
+.svelte-kit
+
+# Debug
+vite.config.js.timestamp-*
+npm-debug.log*
+
+
+
+
+

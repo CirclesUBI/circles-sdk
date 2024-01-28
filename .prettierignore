@@ -1,0 +1,47 @@
+# Misc
+.DS_Store
+
+# Markdown
+README.md
+
+# Vercel
+.vercel
+
+# IDE
+.run
+.idea
+.history
+.vscode
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+.npmrc
+pnpm-lock.yaml
+pnpm-workspace.yaml
+package-lock.json
+
+# Local env files
+.env
+.env.local
+
+# Coverage
+coverage
+
+# Local certs
+local-cert
+
+# Build Outputs
+build
+dist
+package
+ios
+android
+
+# Svelte Output
+.svelte-kit
+
+# Debug
+vite.config.js.timestamp-*
+npm-debug.log*
