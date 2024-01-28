@@ -68,8 +68,5 @@
   ],
   "include": [
     "src/**/*.ts",
-    "src/test/invoiceGenerator.test.tsx",
-    "packages/sdk/graph.ts",
-    "packages/abi-encoder/abiEncode.ts"
   ]
 }
