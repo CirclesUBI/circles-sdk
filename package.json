@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "###### Lint ######": "",
     "lint": "eslint . --max-warnings 0",
-    "build": "pnpm --filter './packages/*' recursive exec -- tsc"
+    "build": "pnpm --filter './packages/*' recursive exec -- pnpm run build"
   },
   "keywords": [],
   "author": "",
