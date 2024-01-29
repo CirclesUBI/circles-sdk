@@ -8,6 +8,7 @@ export class Graph {
     RegisterAvatar: keccak256(Buffer.from("RegisterAvatar(address,address)")),
     RegisterOrganization: keccak256(Buffer.from("RegisterOrganization(address)")),
     RegisterGroup: keccak256(Buffer.from("RegisterGroup(address,int128)")),
+    Trust: keccak256(Buffer.from("Trust(address,address,uint256)")),
   }
 
   static registerAvatar() : string {

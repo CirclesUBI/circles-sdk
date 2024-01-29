@@ -16,6 +16,16 @@ const organizationPrivateKey1 = Accounts[organizationAccount1].privateKey;
 const groupAccount1 = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC";
 const groupPrivateKey1 = Accounts[groupAccount1].privateKey;
 
+const testResultAddresses = {
+  avatar: {
+    address: "",
+    circlesNodeAddress: "",
+  },
+  circlesNodeAddress: "",
+  organizationAddress: "",
+  groupAddress: "",
+};
+
 describe('Graph', () => {
   it('should register an avatar', async () => {
     const callData = Graph.registerAvatar();
@@ -35,9 +45,11 @@ describe('Graph', () => {
 
     const avatarAddress = ethers.stripZerosLeft(registerAvatarLog[0].topics[1]);
     expect(ethers.isAddress(avatarAddress)).toBeTruthy();
+    testResultAddresses.avatar.address = avatarAddress;
 
     const circlesNodeAddress = ethers.stripZerosLeft(registerAvatarLog[0].data);
     expect(ethers.isAddress(circlesNodeAddress)).toBeTruthy();
+    testResultAddresses.avatar.circlesNodeAddress = circlesNodeAddress;
   }, 10000);
 
   it('should register an organization', async () => {
@@ -58,6 +70,7 @@ describe('Graph', () => {
 
     const organizationAddress = ethers.stripZerosLeft(registerOrganizationLog[0].topics[1]);
     expect(ethers.isAddress(organizationAddress)).toBeTruthy();
+    testResultAddresses.organizationAddress = organizationAddress;
   }, 10000);
 
   it('should register a group', async () => {
@@ -79,12 +92,34 @@ describe('Graph', () => {
 
     const groupAddress = ethers.stripZerosLeft(registerGroupLog[0].topics[1]);
     expect(ethers.isAddress(groupAddress)).toBeTruthy();
+    testResultAddresses.groupAddress = groupAddress;
     expect(registerGroupLog[0].data).toBe("0x0000000000000000000000000000000000000000000000000000000000000000");
   }, 10000);
 
-  it('should allow to trust an entity', async () => {
+  it('should allow an organization to trust an avatar', async () => {
     // trust
-    const callData = Graph.trust('0x0000000000000000000000000000000000000000');
+    const callData = Graph.trust(testResultAddresses.avatar.address);
+    const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
+    const txResponse = await wallet.sendTransaction({
+      from: organizationAccount1,
+      to: Deployments.Graph[networkId],
+      data: callData
+    });
+
+    const transactionReceipt = await txResponse.wait();
+    expect(transactionReceipt).not.toBeNull();
+
+    const trustLogs = transactionReceipt!.logs.filter((log) => log.topics[0] === Graph.eventTopics.Trust)
+    expect(trustLogs.length).toBe(1);
+
+    const trusterAddress = ethers.stripZerosLeft(trustLogs[0].topics[1]);
+    expect(ethers.isAddress(trusterAddress)).toBeTruthy();
+
+    const trusteeAddress = ethers.stripZerosLeft(trustLogs[0].topics[2]);
+    expect(ethers.isAddress(trusteeAddress)).toBeTruthy();
+
+    const expiry = trustLogs[0].data;
+    console.log("expiry", expiry);
   });
   it('should allow to trust an entity with expiry', async () => {
     // trustWithExpiry

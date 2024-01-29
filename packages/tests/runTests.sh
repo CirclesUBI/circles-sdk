@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start anvil in the background
-anvil --fork-url https://rpc.chiado.gnosis.gateway.fm --fork-block-number 7969160 --port 8545 --gas-limit 8000000 --accounts 10 &
+./runAnvil.sh &
 ANVIL_PID=$!
 
 # Function to check if anvil is ready
@@ -24,9 +24,10 @@ echo "Waiting for anvil to be ready..."
 while ! is_anvil_ready; do
     sleep 1
 done
-echo "Anvil is ready."
+echo "Anvil is ready. Running tests..."
 
-# Proceed with other operations here...
+rm -rf ./dist
+npx jest
 
 # Wait for anvil to finish
 wait $ANVIL_PID
