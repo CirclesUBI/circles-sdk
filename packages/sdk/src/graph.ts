@@ -20,7 +20,6 @@ export class GraphContract {
       throw new Error('No signer available');
     }
 
-
     if (!('sendTransaction' in this.contract.signer) || typeof this.contract.signer.sendTransaction !== 'function') {
       throw new Error('No sendTransaction function available');
     }
@@ -41,7 +40,7 @@ export class GraphContract {
 
   // State-changing functions
   async registerAvatar() {
-    return this.sendTransaction('registerAvatar', []);
+    return this.abiInterface.encodeFunctionData('registerAvatar', []);
   }
 
   async registerGroup(exitFee: ethers.BigNumberish) {

@@ -1,11 +1,11 @@
 {
-  "name": "abi",
-  "version": "1.0.0",
+  "name": "@circles-sdk-v2/abi",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "sh getAbis.sh"
+    "build": "tsc && mkdir -p ./dist/abi && cp ./src/abi/*.json ./dist/abi/"
   },
   "keywords": [],
   "author": "",
