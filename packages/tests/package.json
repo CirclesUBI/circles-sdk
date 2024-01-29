@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Circles v2 ABI encoders",
   "scripts": {
-    "test": "./runChain.sh & (jest; kill $!)",
+    "test": "rm -rf dist && (./runChain.sh & (jest; kill $!))",
     "build": ""
   },
   "dependencies": {

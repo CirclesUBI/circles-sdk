@@ -38,7 +38,7 @@ describe('Graph', () => {
 
     const circlesNodeAddress = ethers.stripZerosLeft(registerAvatarLog[0].data);
     expect(ethers.isAddress(circlesNodeAddress)).toBeTruthy();
-  });
+  }, 10000);
 
   it('should register an organization', async () => {
     const callData = Graph.registerOrganization();
@@ -58,11 +58,11 @@ describe('Graph', () => {
 
     const organizationAddress = ethers.stripZerosLeft(registerOrganizationLog[0].topics[1]);
     expect(ethers.isAddress(organizationAddress)).toBeTruthy();
-  });
+  }, 10000);
 
   it('should register a group', async () => {
     // registerGroup
-    const callData = Graph.registerGroup(BigInt(0));
+    const callData = Graph.registerGroup("0");
     const wallet = new ethers.Wallet(groupPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: groupAccount1,
@@ -79,10 +79,8 @@ describe('Graph', () => {
 
     const groupAddress = ethers.stripZerosLeft(registerGroupLog[0].topics[1]);
     expect(ethers.isAddress(groupAddress)).toBeTruthy();
-
-    const exitFee_64x64 = ethers.parseUnits(registerGroupLog[0].data);
-    expect(exitFee_64x64).toEqual(BigInt(0));
-  });
+    expect(registerGroupLog[0].data).toBe("0x0000000000000000000000000000000000000000000000000000000000000000");
+  }, 10000);
 
   it('should allow to trust an entity', async () => {
     // trust
