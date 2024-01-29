@@ -1,14 +1,12 @@
 {
   "name": "circles-sdk-v2",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "private": true,
+  "description": "Circles v2 SDK",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "###### Lint ######": "",
-    "lint": "eslint . --max-warnings 0",
-    "build": "pnpm --filter './packages/*' recursive exec -- pnpm run build"
+    "build": "npm run build --workspaces"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +21,5 @@
     "jest": "^29.7.0",
     "@types/jest": "^29.5.11",
     "ts-jest": "^29.1.2"
-  },
-  "packageManager": "pnpm@8.10.5"
+  }
 }

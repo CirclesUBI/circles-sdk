@@ -1,0 +1,20 @@
+{
+  "name": "@circles-sdk-v2/circles-v2-test",
+  "version": "0.0.1",
+  "description": "Circles v2 ABI encoders",
+  "scripts": {
+    "test": "./runChain.sh & (jest; kill $!)",
+    "build": ""
+  },
+  "dependencies": {
+    "@circles-sdk-v2/circles-v2-abi": "^0.0.1",
+    "@circles-sdk-v2/circles-v2-abi-encoder": "^0.0.1",
+    "ethers": "^6.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "ts-jest": "^29.1.2"
+  }
+}

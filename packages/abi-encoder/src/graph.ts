@@ -1,5 +1,5 @@
 import { BigNumberish, ethers } from "ethers";
-import { GraphAbi } from "@circles-sdk-v2/abi";
+import GraphAbi from "@circles-sdk-v2/circles-v2-abi/abi/Graph.json";
 
 export class Graph {
   private static readonly contractInterface = ethers.Interface.from(GraphAbi);

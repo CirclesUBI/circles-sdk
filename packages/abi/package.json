@@ -1,13 +1,8 @@
 {
-  "name": "@circles-sdk-v2/abi",
+  "name": "@circles-sdk-v2/circles-v2-abi",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Circles v2 ABI documents",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && mkdir -p ./dist/abi && cp ./src/abi/*.json ./dist/abi/"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "build": "./generateAbisFromSource.sh"
+  }
 }

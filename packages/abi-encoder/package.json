@@ -1,16 +1,15 @@
 {
-  "name": "@circles-sdk-v2/abi-encoder",
+  "name": "@circles-sdk-v2/circles-v2-abi-encoder",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Circles v2 ABI encoders",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo 'No build step'"
+    "build": "npx tsc"
   },
   "dependencies": {
-    "@circles-sdk-v2/abi": "^0.0.1"
+    "@circles-sdk-v2/circles-v2-abi": "^0.0.1",
+    "ethers": "^6.10.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
 }
