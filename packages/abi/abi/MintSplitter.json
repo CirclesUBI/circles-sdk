@@ -1,287 +1,287 @@
 [
   {
-    "type": "constructor",
     "inputs": [
       {
+        "internalType": "contract IHubV1",
         "name": "_hubV1",
-        "type": "address",
-        "internalType": "contract IHubV1"
+        "type": "address"
       }
     ],
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    "type": "function",
+    "inputs": [],
     "name": "MAX_DISTRIBUTIONS",
-    "inputs": [],
     "outputs": [
       {
+        "internalType": "uint8",
         "name": "",
-        "type": "uint8",
-        "internalType": "uint8"
+        "type": "uint8"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [],
     "name": "ONE_64x64",
-    "inputs": [],
     "outputs": [
       {
+        "internalType": "int128",
         "name": "",
-        "type": "int128",
-        "internalType": "int128"
+        "type": "int128"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [],
     "name": "SENTINEL",
-    "inputs": [],
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [],
     "name": "UPDATE_RELAXATION_TIME_FEE",
-    "inputs": [],
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "int128[]",
+        "name": "_allocations",
+        "type": "int128[]"
+      }
+    ],
     "name": "addsToOneUnit",
-    "inputs": [
-      {
-        "name": "_allocations",
-        "type": "int128[]",
-        "internalType": "int128[]"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "bool",
         "name": "unitary_",
-        "type": "bool",
-        "internalType": "bool"
+        "type": "bool"
       }
     ],
-    "stateMutability": "pure"
+    "stateMutability": "pure",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_source",
+        "type": "address"
+      }
+    ],
     "name": "allocationTowardsCaller",
-    "inputs": [
-      {
-        "name": "_source",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "int128",
         "name": "allocation_",
-        "type": "int128",
-        "internalType": "int128"
+        "type": "int128"
       },
       {
+        "internalType": "uint256",
         "name": "earliestTimestamp_",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "name": "checkSourceLockHubV1",
     "inputs": [
       {
+        "internalType": "address",
         "name": "_source",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
+    "name": "checkSourceLockHubV1",
     "outputs": [
       {
+        "internalType": "enum MintSplitter.HubV1Lock",
         "name": "lockStatus_",
-        "type": "uint8",
-        "internalType": "enum MintSplitter.HubV1Lock"
+        "type": "uint8"
       }
     ],
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "destinations",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "distributions",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "int128",
         "name": "allocation",
-        "type": "int128",
-        "internalType": "int128"
+        "type": "int128"
       },
       {
+        "internalType": "uint128",
         "name": "sequence",
-        "type": "uint128",
-        "internalType": "uint128"
+        "type": "uint128"
       },
       {
+        "internalType": "address",
         "name": "destinationIterator",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "name": "hubV1",
     "inputs": [],
+    "name": "hubV1",
     "outputs": [
       {
+        "internalType": "contract IHubV1",
         "name": "",
-        "type": "address",
-        "internalType": "contract IHubV1"
+        "type": "address"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "hubV1Locks",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "enum MintSplitter.HubV1Lock",
         "name": "",
-        "type": "uint8",
-        "internalType": "enum MintSplitter.HubV1Lock"
+        "type": "uint8"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "lastUpdatedDistribution",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "name": "registerDistribution",
     "inputs": [
       {
+        "internalType": "address[]",
         "name": "_destinations",
-        "type": "address[]",
-        "internalType": "address[]"
+        "type": "address[]"
       },
       {
+        "internalType": "int128[]",
         "name": "_allocations",
-        "type": "int128[]",
-        "internalType": "int128[]"
+        "type": "int128[]"
       }
     ],
+    "name": "registerDistribution",
     "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "sourceSequences",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [
       {
+        "internalType": "uint128",
         "name": "",
-        "type": "uint128",
-        "internalType": "uint128"
+        "type": "uint128"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "name": "sources",
     "inputs": [
       {
+        "internalType": "address",
         "name": "",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
+    "name": "sources",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
-        "type": "address",
-        "internalType": "address"
+        "type": "address"
       }
     ],
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
