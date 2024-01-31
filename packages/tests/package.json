@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Circles v2 ABI encoders",
   "scripts": {
-    "test": "runTests.sh"
+    "test": "runTests.sh",
+    "build": "echo 'nop'"
   },
   "dependencies": {
     "@circles-sdk-v2/circles-v2-abi": "^0.0.1",
