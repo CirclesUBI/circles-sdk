@@ -1,8 +1,8 @@
 import {BigNumberish, ethers, keccak256} from "ethers";
-import GraphAbi from "@circles-sdk-v2/circles-v2-abi/abi/Graph.json";
+import HubAbi from "@circles-sdk-v2/circles-v2-abi/abi/Hub.json";
 
 export class Hub {
-  private static readonly contractInterface = ethers.Interface.from(GraphAbi);
+  private static readonly contractInterface = ethers.Interface.from(HubAbi);
 
   static readonly eventTopics = {
     RegisterHuman: keccak256(Buffer.from("RegisterHuman(address)")),
