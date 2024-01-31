@@ -1,7 +1,7 @@
-import {Graph} from "@circles-sdk-v2/circles-v2-abi-encoder/src/graph";
 import Accounts from '../accounts.json';
 import Deployments from '../deployments.json';
-import {ethers} from "ethers";
+import {ethers, ZeroAddress} from "ethers";
+import {Hub} from "@circles-sdk-v2/circles-v2-abi-encoder/dist/hub";
 
 const rpcUrl: string = "http://localhost:8545";
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -26,9 +26,9 @@ const testResultAddresses = {
   groupAddress: "",
 };
 
-describe('Graph', () => {
-  it('should register an avatar', async () => {
-    const callData = Graph.registerAvatar();
+describe('Hub', () => {
+  it('should register a human', async () => {
+    const callData = Hub.registerHuman();
     const wallet = new ethers.Wallet(avatarPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: avatarAccount1,
@@ -40,7 +40,7 @@ describe('Graph', () => {
     expect(transactionReceipt).not.toBeNull();
 
     const registerAvatarLog = transactionReceipt!.logs
-    .filter((log) => log.topics[0] === Graph.eventTopics.RegisterAvatar);
+    .filter((log) => log.topics[0] === Hub.eventTopics.RegisterHuman);
     expect(registerAvatarLog.length).toBe(1);
 
     const avatarAddress = ethers.stripZerosLeft(registerAvatarLog[0].topics[1]);
@@ -53,7 +53,7 @@ describe('Graph', () => {
   }, 10000);
 
   it('should register an organization', async () => {
-    const callData = Graph.registerOrganization();
+    const callData = Hub.registerOrganization("test-org");
     const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: organizationAccount1,
@@ -65,7 +65,7 @@ describe('Graph', () => {
     expect(transactionReceipt).not.toBeNull();
 
     const registerOrganizationLog = transactionReceipt!.logs
-    .filter((log) => log.topics[0] === Graph.eventTopics.RegisterOrganization);
+    .filter((log) => log.topics[0] === Hub.eventTopics.RegisterOrganization);
     expect(registerOrganizationLog.length).toBe(1);
 
     const organizationAddress = ethers.stripZerosLeft(registerOrganizationLog[0].topics[1]);
@@ -75,7 +75,7 @@ describe('Graph', () => {
 
   it('should register a group', async () => {
     // registerGroup
-    const callData = Graph.registerGroup("0");
+    const callData = Hub.registerGroup(ZeroAddress, "test-group", "GRP");
     const wallet = new ethers.Wallet(groupPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: groupAccount1,
@@ -87,7 +87,7 @@ describe('Graph', () => {
     expect(transactionReceipt).not.toBeNull();
 
     const registerGroupLog = transactionReceipt!.logs
-    .filter((log) => log.topics[0] === Graph.eventTopics.RegisterGroup);
+    .filter((log) => log.topics[0] === Hub.eventTopics.RegisterGroup);
     expect(registerGroupLog.length).toBe(1);
 
     const groupAddress = ethers.stripZerosLeft(registerGroupLog[0].topics[1]);
@@ -98,7 +98,7 @@ describe('Graph', () => {
 
   it('should allow an organization to trust an avatar', async () => {
     // trust
-    const callData = Graph.trust(testResultAddresses.avatar.address);
+    const callData = Hub.trust(testResultAddresses.avatar.address, "0");
     const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: organizationAccount1,
@@ -109,7 +109,7 @@ describe('Graph', () => {
     const transactionReceipt = await txResponse.wait();
     expect(transactionReceipt).not.toBeNull();
 
-    const trustLogs = transactionReceipt!.logs.filter((log) => log.topics[0] === Graph.eventTopics.Trust)
+    const trustLogs = transactionReceipt!.logs.filter((log) => log.topics[0] === Hub.eventTopics.Trust)
     expect(trustLogs.length).toBe(1);
 
     const trusterAddress = ethers.stripZerosLeft(trustLogs[0].topics[1]);
@@ -120,27 +120,5 @@ describe('Graph', () => {
 
     const expiry = trustLogs[0].data;
     console.log("expiry", expiry);
-  });
-
-  it('should allow to trust an entity with expiry', async () => {
-    // trustWithExpiry
-    const callData = Graph.trustWithExpiry('0x0000000000000000000000000000000000000000', BigInt(0));
-  });
-  it('should allow to untrust an entity', async () => {
-    // untrust
-    const callData = Graph.untrust('0x0000000000000000000000000000000000000000');
-  });
-
-  it('should resolve an avatar by its circle node', async () => {
-    // circleToAvatar
-    const callData = Graph.circleToAvatar('0x0000000000000000000000000000000000000000');
-  });
-  it('should resolve a circle node by its avatar', async () => {
-    // avatarToCircle
-    const callData = Graph.avatarToCircle('0x0000000000000000000000000000000000000000');
-  });
-  it('should resolve a group circles node by its group', async () => {
-    // groupToCircle
-    const callData = Graph.groupToCircle('0x0000000000000000000000000000000000000000');
   });
 });
