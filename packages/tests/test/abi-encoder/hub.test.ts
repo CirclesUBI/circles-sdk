@@ -53,7 +53,7 @@ describe('Hub', () => {
       testResultAddresses.avatar.circlesNodeAddress = circlesNodeAddress;
     }, 10000);
 
-    it('should fail when trying to register the same human again', async () => {
+    it('should revert when trying to register the same human again', async () => {
       const callData = Hub.registerHuman();
       const wallet = new ethers.Wallet(avatarPrivateKey1, provider);
 
@@ -90,7 +90,7 @@ describe('Hub', () => {
       testResultAddresses.organizationAddress = organizationAddress;
     }, 10000);
 
-    it('should fail when trying to register the same organization again', async () => {
+    it('should revert when trying to register the same organization again', async () => {
       const callData = Hub.registerOrganization("test-org");
       const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
 
@@ -129,7 +129,7 @@ describe('Hub', () => {
       expect(registerGroupLog[0].data).toBe("0x0000000000000000000000000000000000000000000000000000000000000000");
     }, 10000);
 
-    it('should fail when trying to register the same group again', async () => {
+    it('should revert when trying to register the same group again', async () => {
       const callData = Hub.registerGroup(ZeroAddress, "test-group", "GRP");
       const wallet = new ethers.Wallet(groupPrivateKey1, provider);
 
