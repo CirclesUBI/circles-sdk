@@ -32,7 +32,7 @@ describe('Graph', () => {
     const wallet = new ethers.Wallet(avatarPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: avatarAccount1,
-      to: Deployments.Graph[networkId],
+      to: Deployments.Hub[networkId],
       data: callData
     });
 
@@ -57,7 +57,7 @@ describe('Graph', () => {
     const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: organizationAccount1,
-      to: Deployments.Graph[networkId],
+      to: Deployments.Hub[networkId],
       data: callData
     });
 
@@ -79,7 +79,7 @@ describe('Graph', () => {
     const wallet = new ethers.Wallet(groupPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: groupAccount1,
-      to: Deployments.Graph[networkId],
+      to: Deployments.Hub[networkId],
       data: callData
     });
 
@@ -102,7 +102,7 @@ describe('Graph', () => {
     const wallet = new ethers.Wallet(organizationPrivateKey1, provider);
     const txResponse = await wallet.sendTransaction({
       from: organizationAccount1,
-      to: Deployments.Graph[networkId],
+      to: Deployments.Hub[networkId],
       data: callData
     });
 
@@ -121,6 +121,7 @@ describe('Graph', () => {
     const expiry = trustLogs[0].data;
     console.log("expiry", expiry);
   });
+
   it('should allow to trust an entity with expiry', async () => {
     // trustWithExpiry
     const callData = Graph.trustWithExpiry('0x0000000000000000000000000000000000000000', BigInt(0));
