@@ -1,7 +1,15 @@
 #!/bin/bash
-git clone git@github.com:CirclesUBI/circles-contracts-v2.git
-cd circles-contracts-v2
-git checkout 20240129-erc1155-evaluation
+if [ -d "./.contracts" ]; then
+  cd ./.contracts
+  git pull
+else
+  mkdir ./.contracts
+  git clone https://github.com/CirclesUBI/circles-contracts-v2.git ./.contracts
+  cd ./.contracts
+fi
+
+git checkout develop
 forge build
+
 chmod +x ./runInAnvil.sh
 ./runInAnvil.sh

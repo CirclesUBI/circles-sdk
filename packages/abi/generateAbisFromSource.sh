@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ -d "./contracts" ]; then
-  cd ./contracts
+if [ -d "./.contracts" ]; then
+  cd ./.contracts
   git pull
 else
   mkdir ./.contracts
@@ -9,7 +9,7 @@ else
   cd ./.contracts
 fi
 
-git checkout dev
+git checkout develop
 forge build
 
 cd ..
@@ -20,4 +20,3 @@ mkdir ./abi
 cat ./.contracts/out/Hub.sol/Hub.json | jq .abi > ./abi/Hub.json
 cat ./.contracts/out/Hub.sol/WrappedERC20.json | jq .abi > ./abi/WrappedERC20.json
 
-rm -rf ./.contracts
