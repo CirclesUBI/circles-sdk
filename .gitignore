@@ -39,7 +39,8 @@ android
 vite.config.js.timestamp-*
 npm-debug.log*
 
-
+packages/abi/.contracts
+packages/tests/.contracts
 
 
 
