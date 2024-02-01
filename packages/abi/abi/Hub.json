@@ -486,6 +486,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_human",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_optionalIpfsCid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "inviteHuman",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "account",
         "type": "address"
       },
@@ -610,7 +628,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_optionalIpfsCid",
+        "type": "bytes32"
+      }
+    ],
     "name": "registerHuman",
     "outputs": [],
     "stateMutability": "nonpayable",
