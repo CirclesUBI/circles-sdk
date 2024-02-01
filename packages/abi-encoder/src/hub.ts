@@ -1,4 +1,4 @@
-import {BigNumberish, ethers, keccak256} from "ethers";
+import { BigNumberish, ethers, keccak256 } from "ethers";
 import HubAbi from "@circles-sdk-v2/circles-v2-abi/abi/Hub.json";
 
 export class Hub {
@@ -11,21 +11,21 @@ export class Hub {
     Trust: keccak256(Buffer.from("Trust(address,address,uint256)")),
   }
 
-  static registerHuman() : string {
-    return this.contractInterface.encodeFunctionData("registerHuman", []);
+  static registerHuman(optionalIpfsCid: string): string {
+    return this.contractInterface.encodeFunctionData("registerHuman", [optionalIpfsCid]);
   }
 
-  static registerGroup(treasury:string, name:string, symbol:string) {
+  static registerGroup(treasury: string, name: string, symbol: string) {
     return this.contractInterface.encodeFunctionData("registerGroup", [
       treasury, name, symbol
     ]);
   }
 
-  static registerOrganization(name:string) : string {
+  static registerOrganization(name: string): string {
     return this.contractInterface.encodeFunctionData("registerOrganization", [name]);
   }
 
-  static trust(trustReceiver: string, expiry: BigNumberish) : string {
+  static trust(trustReceiver: string, expiry: BigNumberish): string {
     return this.contractInterface.encodeFunctionData("trust", [trustReceiver, expiry]);
   }
 }

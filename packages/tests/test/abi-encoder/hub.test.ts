@@ -1,7 +1,7 @@
 import Accounts from '../accounts.json';
 import Deployments from '../deployments.json';
-import {ethers, ZeroAddress} from "ethers";
-import {Hub} from "@circles-sdk-v2/circles-v2-abi-encoder/dist/hub";
+import { ethers, ZeroAddress } from "ethers";
+import { Hub } from "@circles-sdk-v2/circles-v2-abi-encoder/dist/hub";
 
 const rpcUrl: string = "http://localhost:8545";
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -29,7 +29,7 @@ const testResultAddresses = {
 describe('Hub', () => {
   describe('registerHuman', () => {
     it('should register a human', async () => {
-      const callData = Hub.registerHuman();
+      const callData = Hub.registerHuman("");
       const wallet = new ethers.Wallet(avatarPrivateKey1, provider);
       const txResponse = await wallet.sendTransaction({
         from: humanAccount1,
@@ -41,7 +41,7 @@ describe('Hub', () => {
       expect(transactionReceipt).not.toBeNull();
 
       const registerAvatarLog = transactionReceipt!.logs
-      .filter((log) => log.topics[0] === Hub.eventTopics.RegisterHuman);
+        .filter((log) => log.topics[0] === Hub.eventTopics.RegisterHuman);
       expect(registerAvatarLog.length).toBe(1);
 
       const avatarAddress = ethers.stripZerosLeft(registerAvatarLog[0].topics[1]);
@@ -82,7 +82,7 @@ describe('Hub', () => {
       expect(transactionReceipt).not.toBeNull();
 
       const registerOrganizationLog = transactionReceipt!.logs
-      .filter((log) => log.topics[0] === Hub.eventTopics.RegisterOrganization);
+        .filter((log) => log.topics[0] === Hub.eventTopics.RegisterOrganization);
       expect(registerOrganizationLog.length).toBe(1);
 
       const organizationAddress = ethers.stripZerosLeft(registerOrganizationLog[0].topics[1]);
@@ -120,7 +120,7 @@ describe('Hub', () => {
       expect(transactionReceipt).not.toBeNull();
 
       const registerGroupLog = transactionReceipt!.logs
-      .filter((log) => log.topics[0] === Hub.eventTopics.RegisterGroup);
+        .filter((log) => log.topics[0] === Hub.eventTopics.RegisterGroup);
       expect(registerGroupLog.length).toBe(1);
 
       const groupAddress = ethers.stripZerosLeft(registerGroupLog[0].topics[1]);
