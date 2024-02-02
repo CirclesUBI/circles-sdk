@@ -3,9 +3,19 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_standardGroupMint",
+        "name": "_hubV1",
+        "type": "address",
+        "internalType": "contract IHubV1"
+      },
+      {
+        "name": "_standardTreasury",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "_fallbackUri",
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "nonpayable"
@@ -155,6 +165,19 @@
   },
   {
     "type": "function",
+    "name": "circlesStartTime",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "createERC20InflationWrapper",
     "inputs": [
       {
@@ -225,13 +248,13 @@
   },
   {
     "type": "function",
-    "name": "hubV1START",
+    "name": "hubV1",
     "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
@@ -363,7 +386,7 @@
     "name": "registerGroup",
     "inputs": [
       {
-        "name": "_treasury",
+        "name": "_mint",
         "type": "address",
         "internalType": "address"
       },
@@ -513,7 +536,7 @@
   },
   {
     "type": "function",
-    "name": "standardGroupMint",
+    "name": "standardTreasury",
     "inputs": [],
     "outputs": [
       {
