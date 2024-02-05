@@ -2,10 +2,11 @@ import accounts from "./accounts.json";
 import {ethers} from "ethers";
 
 export type Unregistered = "unregistered";
+export type V1Avatar = "v1Person" | "v1Organization";
 export type HumanAvatar = "registeredHuman" | "invitedActiveHuman" | "invitedInactiveHuman";
 export type OrganizationAvatar = "registeredOrganization";
 export type GroupAvatar = "registeredGroup" | "registeredCustomGroup";
-export type AvatarType = Unregistered | HumanAvatar | OrganizationAvatar | GroupAvatar;
+export type AvatarType = Unregistered | V1Avatar | HumanAvatar | OrganizationAvatar | GroupAvatar;
 
 export type Avatar = {
   type: AvatarType;
@@ -30,8 +31,22 @@ export const getUnregisteredAvatar = async (): Promise<Avatar> => {
 };
 let lastUnregisteredAvatarIdx = 0;
 
-export const getV1PersonAvatar = async (index?:number): Promise<Avatar> => {
-  const unregisteredAvatar = await getUnregisteredAvatar();
+export type V1PersonAvatar = Avatar & {
+  type: "v1Person";
+  v1TokenAddress: string;
+};
+/**
+ * TODO: Returns a fresh avatar with an active v1 token.
+ */
+export const getActiveV1PersonAvatar = async (): Promise<V1PersonAvatar> => {
+  throw new Error("Not implemented");
+}
+
+/**
+ * TODO: Returns a fresh avatar with an inactive v1 token.
+ */
+export const getStoppedV1PersonAvatar = async (): Promise<V1PersonAvatar> => {
+  throw new Error("Not implemented");
 }
 
 export type RegisteredHuman = Avatar & {
@@ -62,7 +77,7 @@ export const registerGroup = async (unregisteredAvatar: Avatar): Promise<Registe
 export type RegisteredCustomGroup = Avatar & {
   type: "registeredCustomGroup";
 };
-export const registerCustomGroup = async (unregisteredAvatar: Avatar): Promise<RegisteredCustomGroup> => {
+export const registerCustomGroup = async (unregisteredAvatar: Avatar, treasuryAddress:string): Promise<RegisteredCustomGroup> => {
   throw new Error("Not implemented");
 };
 

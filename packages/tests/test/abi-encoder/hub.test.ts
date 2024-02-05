@@ -1,15 +1,19 @@
 import {
   getJsonRpcProvider,
-  getUnregisteredAvatar,
+  getUnregisteredAvatar, getActiveV1PersonAvatar,
   registerCustomGroup,
   RegisteredCustomGroup, RegisteredGroup,
   RegisteredHuman, RegisteredOrganization,
   registerGroup,
   registerHuman,
-  registerOrganization
+  registerOrganization, getStoppedV1PersonAvatar
 } from "../util";
+import {ethers, ZeroAddress} from "ethers";
 
 describe('Hub', () => {
+
+
+  const REGISTRATION_PERIOD = 60 * 60 * 24 * 365;
 
   /**
    * An EOA or Safe that's not yet registered at the v2 hub.
@@ -82,9 +86,12 @@ describe('Hub', () => {
       // * REGISTERED_GROUP | REGISTERED_CUSTOM_GROUP
       // Any of these states can be reached only once per msg.sender.
       it(`can become a ${REGISTERED_HUMAN} (registerHuman)`, async () => {
-        const unregisteredAvatar = await getUnregisteredAvatar();
+        const unregisteredAvatar = await getStoppedV1PersonAvatar();
         registeredAvatars.human = await registerHuman(unregisteredAvatar);
         expect(registeredAvatars.human).toBeTruthy();
+
+        const unregisterAvatar2 = await getActiveV1PersonAvatar();
+        await expect(registerHuman(unregisterAvatar2)).rejects.toThrow();
       });
       it(`can become a ${REGISTERED_ORGANIZATION} (registerOrganization)`, async () => {
         const unregisteredAvatar = await getUnregisteredAvatar();
@@ -98,47 +105,63 @@ describe('Hub', () => {
       });
       it(`can become a ${REGISTERED_CUSTOM_GROUP} (registerCustomGroup)`, async () => {
         const unregisteredAvatar = await getUnregisteredAvatar();
-        registeredAvatars.customGroup = await registerCustomGroup(unregisteredAvatar);
-        expect(registeredAvatars.customGroup).toBeTruthy();
+        // TODO: Add treasury address
+        // registeredAvatars.customGroup = await registerCustomGroup(unregisteredAvatar, "0x");
+        // expect(registeredAvatars.customGroup).toBeTruthy();
       });
       it(`only one path can be taken per ${msgSender}`, async () => {
         await expect(registerHuman(registeredAvatars.human!)).rejects.toThrow();
         await expect(registerOrganization(registeredAvatars.human!)).rejects.toThrow();
         await expect(registerGroup(registeredAvatars.human!)).rejects.toThrow();
-        await expect(registerCustomGroup(registeredAvatars.human!)).rejects.toThrow();
+        // TODO: Add treasury address
+        // await expect(registerCustomGroup(registeredAvatars.human!, "0x")).rejects.toThrow();
 
         await expect(registerHuman(registeredAvatars.organization!)).rejects.toThrow();
         await expect(registerOrganization(registeredAvatars.organization!)).rejects.toThrow();
         await expect(registerGroup(registeredAvatars.organization!)).rejects.toThrow();
-        await expect(registerCustomGroup(registeredAvatars.organization!)).rejects.toThrow();
+        // TODO: Add treasury address
+        // await expect(registerCustomGroup(registeredAvatars.organization!, "0x")).rejects.toThrow();
 
         await expect(registerHuman(registeredAvatars.group!)).rejects.toThrow();
         await expect(registerOrganization(registeredAvatars.group!)).rejects.toThrow();
         await expect(registerGroup(registeredAvatars.group!)).rejects.toThrow();
-        await expect(registerCustomGroup(registeredAvatars.group!)).rejects.toThrow();
+        // TODO: Add treasury address
+        // await expect(registerCustomGroup(registeredAvatars.group!, "0x")).rejects.toThrow();
 
         await expect(registerHuman(registeredAvatars.customGroup!)).rejects.toThrow();
         await expect(registerOrganization(registeredAvatars.customGroup!)).rejects.toThrow();
         await expect(registerGroup(registeredAvatars.customGroup!)).rejects.toThrow();
-        await expect(registerCustomGroup(registeredAvatars.customGroup!)).rejects.toThrow();
+        // TODO: Add treasury address
+        // await expect(registerCustomGroup(registeredAvatars.customGroup!, "0x")).rejects.toThrow();
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_HUMAN} (ON: registerHuman)`, () => {
         it("only before REGISTRATION_PERIOD_END", async () => {
-          const unregisterAvatar1 = await getUnregisteredAvatar();
-          const registeredHuman = await registerHuman(unregisterAvatar1);
+          const unregisteredAvatar1 = await getStoppedV1PersonAvatar();
+          const registeredHuman = await registerHuman(unregisteredAvatar1);
           expect(registeredHuman).toBeTruthy();
 
           // send anvil's evm_increaseTime to increase the time by 1 year
           const provider = await getJsonRpcProvider();
-          await provider.send("evm_increaseTime", [60 * 60 * 24 * 365]);
+          await provider.send("evm_increaseTime", [REGISTRATION_PERIOD]);
 
-          const unregisterAvatar2 = await getUnregisteredAvatar();
-          await expect(registerHuman(unregisterAvatar2)).rejects.toThrow();
+          const unregisteredAvatar2 = await getStoppedV1PersonAvatar();
+          await expect(registerHuman(unregisteredAvatar2)).rejects.toThrow();
         });
-        it(`only if ${msgSender} has a token at the ${v1} hub`, async () => {});
-        it(`only if ${msgSender}'s ${v1} token is ${V1_STOPPED}`, async () => {});
-        it(`create a ${personalCirclesToken} for ${msgSender}`, async () => {});
+        it(`only if ${msgSender} has a token at the ${v1} hub`, async () => {
+          const unregisteredAvatar = await getStoppedV1PersonAvatar();
+          const registeredHuman = await registerHuman(unregisteredAvatar);
+          expect(registeredHuman).toBeTruthy();
+        });
+        it(`only if ${msgSender}'s ${v1} token is ${V1_STOPPED}`, async () => {
+          const unregisterAvatar = await getActiveV1PersonAvatar();
+          await expect(registerHuman(unregisterAvatar)).rejects.toThrow();
+        });
+        it(`create a ${personalCirclesToken} for ${msgSender}`, async () => {
+          const unregisteredAvatar = await getStoppedV1PersonAvatar();
+          const registeredHuman = await registerHuman(unregisteredAvatar);
+          // TODO: Check if the personal Circles token was created
+        });
       });
 
       // TODO: Are organizations or groups migrated from v1 to v2?
@@ -146,12 +169,18 @@ describe('Hub', () => {
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_GROUP} (ON: registerGroup)`, () => {
-        it(`must have the standard treasury contract`, async () => { });
+        it(`must have the standard treasury contract`, async () => {
+          const unregisteredAvatar = await getUnregisteredAvatar();
+          const registeredGroup = await registerGroup(unregisteredAvatar);
+          // TODO: Check if the standard treasury contract was created
+        });
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_CUSTOM_GROUP} (ON: registerCustomGroup)`, () => {
-        it(`must have a treasury contract`, async () => { });
-        it(`can't have the standard treasury contract`, async () => { });
+        it(`must have a treasury contract`, async () => {
+          const unregisteredAvatar = await getUnregisteredAvatar();
+          await expect(registerCustomGroup(unregisteredAvatar, ZeroAddress)).rejects.toThrow();
+        });
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${INVITED_HUMAN} (ON: inviteHuman)`, () => {
@@ -161,21 +190,21 @@ describe('Hub', () => {
         // When the INVITEE became an INVITED_HUMAN, the contract mints the INVITEE a welcome bonus consisting of the INVITED_HUMAN's personal Circles.
         // The INVITER is charged with the invitation fee.
         // TODO: Any avatar can invite any address (e.g. CREATE2 address with nothing deployed on yet)?.
-        it(`only if INVITER (${msgSender}) is a ${REGISTERED_HUMAN}`, async () => { });
-        it(`only if INVITEE is not already a ${REGISTERED_AVATAR}`, async () => { });
-        it(`only if INVITER (${msgSender}) has enough ${personalCirclesToken}s to pay the invitation fee`, async () => { });
-        it("mint INVITEE's welcome bonus", async () => { });
-        it(`charge INVITER (${msgSender}) the invitation fee`, async () => { });
-        it(`create a ${personalCirclesToken} for INVITEE`, async () => { });
+        it(`only if INVITER (${msgSender}) is a ${REGISTERED_HUMAN}`, async () => {});
+        it(`only if INVITEE is not already a ${REGISTERED_AVATAR}`, async () => {});
+        it(`only if INVITER (${msgSender}) has enough ${personalCirclesToken}s to pay the invitation fee`, async () => {});
+        it("mint INVITEE's welcome bonus", async () => {});
+        it(`charge INVITER (${msgSender}) the invitation fee`, async () => {});
+        it(`create a ${personalCirclesToken} for INVITEE`, async () => {});
 
         describe(`${UNREGISTERED_AVATAR} to ${INVITED_PAUSED_HUMAN} (ON: inviteHuman)`, () => {
-          it(`only if INVITEE's ${v1} token is ${V1_ACTIVE}`, async () => { });
-          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_PAUSED}`, async () => { });
+          it(`only if INVITEE's ${v1} token is ${V1_ACTIVE}`, async () => {});
+          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_PAUSED}`, async () => {});
         });
 
         describe(`${UNREGISTERED_AVATAR} to ${INVITED_ACTIVE_HUMAN} (ON: inviteHuman)`, () => {
-          it(`only if INVITEE's ${v1} token is ${V1_STOPPED}`, async () => { });
-          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => { });
+          it(`only if INVITEE's ${v1} token is ${V1_STOPPED}`, async () => {});
+          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => {});
         });
       });
     });
