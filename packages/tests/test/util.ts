@@ -83,7 +83,7 @@ export const registerHuman = async (unregisteredAvatar: Avatar): Promise<Registe
   const decodedMultihash = multihashes.fromB58String(cidV0);
   const hashBytes32 = decodedMultihash.slice(-32);
   const tx = await hubV2Contract.registerHuman(hashBytes32);
-  const receipt = await tx.wait();
+  await tx.wait();
   return {
     ...unregisteredAvatar,
     type: "registeredHuman",
@@ -94,7 +94,17 @@ export type RegisteredOrganization = Avatar & {
   type: "registeredOrganization";
 };
 export const registerOrganization = async (unregisteredAvatar: Avatar): Promise<RegisteredOrganization> => {
-  throw new Error("Not implemented");
+  const hubV2Contract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, unregisteredAvatar.wallet);
+  // TODO: Get the CID from somewhere
+  const cidV0 = "QmPK1s3pNYLi9ERiq3BDxKa4XosgWwFRQUydHUtz4YgpqB";
+  const decodedMultihash = multihashes.fromB58String(cidV0);
+  const hashBytes32 = decodedMultihash.slice(-32);
+  const tx = await hubV2Contract.registerOrganization("test org", hashBytes32);
+  await tx.wait();
+  return {
+    ...unregisteredAvatar,
+    type: "registeredOrganization",
+  };
 };
 
 export type RegisteredGroup = Avatar & {

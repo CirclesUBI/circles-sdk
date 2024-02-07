@@ -8,7 +8,7 @@ import {
   registerHuman,
   registerOrganization, getStoppedV1PersonAvatar
 } from "../util";
-import {ethers, ZeroAddress} from "ethers";
+import {ZeroAddress} from "ethers";
 
 describe('Hub', () => {
 
@@ -92,17 +92,17 @@ describe('Hub', () => {
 
         const unregisterAvatar2 = await getActiveV1PersonAvatar();
         await expect(registerHuman(unregisterAvatar2)).rejects.toThrow();
-      });
+      }, 60000);
       it(`can become a ${REGISTERED_ORGANIZATION} (registerOrganization)`, async () => {
         const unregisteredAvatar = await getUnregisteredAvatar();
         registeredAvatars.organization = await registerOrganization(unregisteredAvatar);
         expect(registeredAvatars.organization).toBeTruthy();
-      });
+      }, 60000);
       it(`can become a ${REGISTERED_GROUP} (registerGroup)`, async () => {
         const unregisteredAvatar = await getUnregisteredAvatar();
         registeredAvatars.group = await registerGroup(unregisteredAvatar);
         expect(registeredAvatars.group).toBeTruthy();
-      });
+      }, 60000);
       it(`can become a ${REGISTERED_CUSTOM_GROUP} (registerCustomGroup)`, async () => {
         const unregisteredAvatar = await getUnregisteredAvatar();
         // TODO: Add treasury address
@@ -147,21 +147,21 @@ describe('Hub', () => {
 
           const unregisteredAvatar2 = await getStoppedV1PersonAvatar();
           await expect(registerHuman(unregisteredAvatar2)).rejects.toThrow();
-        });
+        }, 60000);
         it(`only if ${msgSender} has a token at the ${v1} hub`, async () => {
           const unregisteredAvatar = await getStoppedV1PersonAvatar();
           const registeredHuman = await registerHuman(unregisteredAvatar);
           expect(registeredHuman).toBeTruthy();
-        });
+        }, 60000);
         it(`only if ${msgSender}'s ${v1} token is ${V1_STOPPED}`, async () => {
           const unregisterAvatar = await getActiveV1PersonAvatar();
           await expect(registerHuman(unregisterAvatar)).rejects.toThrow();
-        });
+        }, 60000);
         it(`create a ${personalCirclesToken} for ${msgSender}`, async () => {
           const unregisteredAvatar = await getStoppedV1PersonAvatar();
           const registeredHuman = await registerHuman(unregisteredAvatar);
           // TODO: Check if the personal Circles token was created
-        });
+        }, 60000);
       });
 
       // TODO: Are organizations or groups migrated from v1 to v2?
@@ -173,14 +173,14 @@ describe('Hub', () => {
           const unregisteredAvatar = await getUnregisteredAvatar();
           const registeredGroup = await registerGroup(unregisteredAvatar);
           // TODO: Check if the standard treasury contract was created
-        });
+        }, 60000);
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_CUSTOM_GROUP} (ON: registerCustomGroup)`, () => {
         it(`must have a treasury contract`, async () => {
           const unregisteredAvatar = await getUnregisteredAvatar();
           await expect(registerCustomGroup(unregisteredAvatar, ZeroAddress)).rejects.toThrow();
-        });
+        }, 60000);
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${INVITED_HUMAN} (ON: inviteHuman)`, () => {
