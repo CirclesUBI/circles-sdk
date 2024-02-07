@@ -5,6 +5,9 @@ PRIVATE_KEY='0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 ANVIL_PORT=8545
 ANVIL_URL=http://127.0.0.1:$ANVIL_PORT
 
+git submodule init
+git submodule update
+
 # Build the v1 contracts
 cd ./circles-contracts-v1
 npm install
