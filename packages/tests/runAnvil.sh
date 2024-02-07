@@ -53,7 +53,7 @@ echo "V1 Hub deployed at ${V1_HUB_ADDRESS}"
 
 # Deploy the v2 contracts using `forge create`
 echo "Deploying V2 Hub ..."
-cd ../../circles-contracts-v2/src/multitoken-graph
+cd ../../circles-contracts-v2/src/hub
 V2_HUB_V1_HUB=${V1_HUB_ADDRESS}
 V2_HUB_STANDARD_TREASURY="0x1234567890123456789012345678901234567890"
 V2_HUB_BOOTSTRAP_TIME=15552000 # 180 days
