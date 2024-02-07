@@ -111,7 +111,20 @@ export type RegisteredGroup = Avatar & {
   type: "registeredGroup"
 };
 export const registerGroup = async (unregisteredAvatar: Avatar): Promise<RegisteredGroup> => {
-  throw new Error("Not implemented");
+  const hubV2Contract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, unregisteredAvatar.wallet);
+  // TODO: Get the CID from somewhere
+  const cidV0 = "QmPK1s3pNYLi9ERiq3BDxKa4XosgWwFRQUydHUtz4YgpqB";
+  const decodedMultihash = multihashes.fromB58String(cidV0);
+  const mintPolicy = "0x";
+  const name = "test group";
+  const symbol = "TST";
+  const cidBytes = decodedMultihash.slice(-32);
+  const tx = await hubV2Contract.registerGroup(mintPolicy, name, symbol, cidBytes);
+  await tx.wait();
+  return {
+    ...unregisteredAvatar,
+    type: "registeredGroup",
+  };
 };
 
 export type RegisteredCustomGroup = Avatar & {
