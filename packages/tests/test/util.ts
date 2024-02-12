@@ -1,5 +1,5 @@
 import accounts from "./accounts.json";
-import {ethers} from "ethers";
+import { HDNodeWallet, ethers } from "ethers";
 import HUB_V1 from "../circles-contracts-v1/out/Hub.sol/Hub.json";
 import CRC_V1 from "../circles-contracts-v1/out/Token.sol/Token.json";
 import HUB_V2 from "../circles-contracts-v2/out/Hub.sol/Hub.json";
@@ -7,6 +7,9 @@ import multihashes from "multihashes";
 
 export const V1_HUB_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const V2_HUB_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+
+export const FUNDING_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+
 
 export const JSON_RPC_URL = "http://localhost:8545";
 
@@ -21,7 +24,25 @@ export type Avatar = {
   type: AvatarType;
   address: string;
   key: string;
-  wallet: ethers.Wallet
+  wallet: HDNodeWallet
+};
+
+export const fundWallet = async (privateKey: string, amount: ethers.BigNumberish, recipient: string): Promise<void> => {
+  const provider = await getJsonRpcProvider();
+  const wallet = new ethers.Wallet(privateKey, provider);
+
+  const tx = {
+    to: recipient,
+    value: amount,
+  };
+
+  try {
+    const txResponse = await wallet.sendTransaction(tx);
+    await txResponse.wait();
+    console.log(`Funded wallet ${recipient} with ${ethers.formatEther(amount)} ETH`);
+  } catch (e) {
+    throw new Error(`Failed to fund wallet: ${e}`);
+  }
 };
 
 /**
@@ -29,11 +50,13 @@ export type Avatar = {
  * The index can be used to address a specific unregistered avatar.
  */
 export const getUnregisteredAvatar = async (): Promise<Avatar> => {
-  const key = accounts[lastUnregisteredAvatarIdx];
-  lastUnregisteredAvatarIdx++;
+  // const key = accounts[lastUnregisteredAvatarIdx];
+  // lastUnregisteredAvatarIdx++;
 
   const provider = await getJsonRpcProvider();
-  const wallet = new ethers.Wallet(key, provider);
+  const wallet = ethers.Wallet.createRandom().connect(provider);
+
+  await fundWallet(FUNDING_PRIVATE_KEY, ethers.parseEther("100"), wallet.address);
   return {
     type: "unregistered",
     address: wallet.address,
@@ -41,7 +64,7 @@ export const getUnregisteredAvatar = async (): Promise<Avatar> => {
     wallet: wallet
   };
 };
-let lastUnregisteredAvatarIdx = 0;
+// let lastUnregisteredAvatarIdx = 0;
 
 export type V1PersonAvatar = Avatar & {
   type: "v1Person";
@@ -51,6 +74,7 @@ export type V1PersonAvatar = Avatar & {
 export const getActiveV1PersonAvatar = async (): Promise<V1PersonAvatar> => {
   const unregistered = await getUnregisteredAvatar();
   const hubContract = new ethers.Contract(V1_HUB_ADDRESS, HUB_V1.abi, unregistered.wallet);
+  // await hubContract.signup();
   const tx = await hubContract.signup();
   await tx.wait();
   const v1TokenAddress = await hubContract.userToToken(unregistered.address);
@@ -130,10 +154,18 @@ export const registerGroup = async (unregisteredAvatar: Avatar): Promise<Registe
 export type RegisteredCustomGroup = Avatar & {
   type: "registeredCustomGroup";
 };
-export const registerCustomGroup = async (unregisteredAvatar: Avatar, treasuryAddress:string): Promise<RegisteredCustomGroup> => {
+export const registerCustomGroup = async (unregisteredAvatar: Avatar, treasuryAddress: string): Promise<RegisteredCustomGroup> => {
   throw new Error("Not implemented");
 };
 
 export const getJsonRpcProvider = async (): Promise<ethers.JsonRpcProvider> => {
   return new ethers.JsonRpcProvider(JSON_RPC_URL);
 };
+
+export const balanceOf = async (userAddress: string): Promise<ethers.BigNumberish> => {
+  const provider = await getJsonRpcProvider();
+  const contract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, provider)
+  const tokenId = ethers.toBeHex(BigInt(userAddress))
+
+  return await contract.balanceOf(userAddress, tokenId);
+}
