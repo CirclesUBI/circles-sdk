@@ -55,6 +55,7 @@ echo "V1 Hub deployed at ${V1_HUB_ADDRESS}"
 echo "Deploying V2 Hub ..."
 cd ../../circles-contracts-v2/src/hub
 V2_HUB_V1_HUB=${V1_HUB_ADDRESS}
+V2_DEMURRAGE_ZERO_DAY=1602786330
 V2_HUB_STANDARD_TREASURY="0x1234567890123456789012345678901234567890"
 V2_HUB_BOOTSTRAP_TIME=15552000 # 180 days
 V2_HUB_FALLBACK_URL="https://example.com"
@@ -62,7 +63,7 @@ V2_HUB_FALLBACK_URL="https://example.com"
 V2_HUB_DEPLOYMENT=$(forge create Hub \
   --rpc-url ${ANVIL_URL} \
   --private-key ${PRIVATE_KEY} \
-  --constructor-args ${V2_HUB_V1_HUB} ${V2_HUB_STANDARD_TREASURY} ${V2_HUB_BOOTSTRAP_TIME} ${V2_HUB_FALLBACK_URL})
+  --constructor-args ${V2_HUB_V1_HUB} ${V2_DEMURRAGE_ZERO_DAY} ${V2_HUB_STANDARD_TREASURY} ${V2_HUB_BOOTSTRAP_TIME} ${V2_HUB_FALLBACK_URL})
 V2_HUB_ADDRESS=$(echo "$V2_HUB_DEPLOYMENT" | grep "Deployed to:" | awk '{print $3}')
 echo "V2 Hub deployed at ${V2_HUB_ADDRESS}"
 
