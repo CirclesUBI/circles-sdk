@@ -94,7 +94,7 @@ describe('V2HubCalls', () => {
     expect(inputs._from).toEqual(from);
     expect(inputs._to).toEqual(to);
     expect(inputs._ids.map((id) => uintToAddress(BigInt(id)))).toEqual(ids);
-    expect(inputs._values.map((val) => uintToAddress(BigInt(val)))).toEqual(ids);
+    expect(inputs._values.map((val) => BigInt(val))).toEqual(values);
     expect(inputs._data).toEqual(data);
   });
 
