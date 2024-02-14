@@ -1,0 +1,91 @@
+import { ethers, getAddress } from 'ethers';
+import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
+import { Event, EventDecoder, ParsedEvent } from './eventDecoder';
+
+export type HubTransferEvent = Event & {
+  from: string;
+  to: string;
+  amount: bigint;
+};
+
+export type OrganizationSignupEvent = Event & {
+  organization: string;
+};
+
+export type SignupEvent = Event & {
+  user: string;
+  token: string;
+};
+
+export type TrustEvent = Event & {
+  canSendTo: string;
+  user: string;
+  limit: bigint;
+};
+
+export type V1Event =
+  HubTransferEvent
+  | OrganizationSignupEvent
+  | SignupEvent
+  | TrustEvent;
+
+export type ParsedV1Event<T extends V1Event> = ParsedEvent<T>;
+
+const parseHubTransferEvent = (log: ethers.LogDescription): HubTransferEvent => ({
+  from: getAddress(log.args[0]),
+  to: getAddress(log.args[1]),
+  amount: BigInt(log.args[2])
+});
+
+const parseOrganizationSignupEvent = (log: ethers.LogDescription): OrganizationSignupEvent => ({
+  organization: getAddress(log.args[0])
+});
+
+const parseSignupEvent = (log: ethers.LogDescription): SignupEvent => ({
+  user: getAddress(log.args[0]),
+  token: getAddress(log.args[1])
+});
+
+const parseTrustEvent = (log: ethers.LogDescription): TrustEvent => ({
+  canSendTo: getAddress(log.args[0]),
+  user: getAddress(log.args[1]),
+  limit: BigInt(log.args[2])
+});
+
+export class V1HubEvents implements EventDecoder {
+  private readonly contractInterface: ethers.Interface = ethers.Interface.from(HubV1.abi);
+
+  decodeEventData<T extends V1Event>(log: {
+    topics: string[],
+    data: string
+  }) : ParsedV1Event<T> {
+    const decoded = this.contractInterface.parseLog(log);
+
+    if (!decoded) {
+      throw new Error('Invalid event data');
+    }
+
+    let eventData: any;
+    switch (decoded.name) {
+      case 'HubTransfer':
+        eventData = parseHubTransferEvent(decoded);
+        break;
+      case 'OrganizationSignup':
+        eventData =  parseOrganizationSignupEvent(decoded);
+        break;
+      case 'Signup':
+        eventData =  parseSignupEvent(decoded);
+        break;
+      case 'Trust':
+        eventData =  parseTrustEvent(decoded);
+        break;
+      default:
+        throw new Error(`Invalid event name: ${decoded.name}`);
+    }
+
+    return {
+      name: decoded.name,
+      data: eventData
+    };
+  }
+}

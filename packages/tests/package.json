@@ -7,8 +7,9 @@
     "build": "echo 'nop'"
   },
   "dependencies": {
-    "@circles-sdk-v2/circles-v2-abi": "^0.0.1",
-    "@circles-sdk-v2/circles-v2-abi-encoder": "^0.0.1",
+    "@circles/circles-sdk-v2-abi-encoder": "^0.0.1",
+    "@circles/circles-sdk-v2-abi-decoder": "^0.0.1",
+    "@circles/circles-contracts": "3.3.2",
     "ethers": "^6.10.0"
   },
   "devDependencies": {

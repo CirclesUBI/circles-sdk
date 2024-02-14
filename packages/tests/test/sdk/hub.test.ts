@@ -7,12 +7,10 @@ import {
   registerGroup,
   registerHuman,
   registerOrganization, getStoppedV1PersonAvatar, balanceOf
-} from "../util";
-import { ZeroAddress } from "ethers";
+} from '../util';
+import { ZeroAddress } from 'ethers';
 
 describe('Hub', () => {
-
-
   const REGISTRATION_PERIOD = 60 * 60 * 24 * 365;
 
   /**
@@ -70,7 +68,6 @@ describe('Hub', () => {
   const v2 = "v2";
 
   // TODO: Add expected events
-
   describe("state transitions", () => {
     describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_AVATAR}`, () => {
       const registeredAvatars: {
