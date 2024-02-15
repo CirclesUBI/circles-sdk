@@ -226,4 +226,7 @@ export class Avatar {
     await this.initialize();
     return txReceipt;
   }
+
+  updateProfile = async (cidV0: string): Promise<TransactionReceipt> =>
+    await this.v2Hub.setIpfsCidV0(cidV0Digest(cidV0))
 }
