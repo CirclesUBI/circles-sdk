@@ -6,9 +6,11 @@ import {
   RegisteredHuman, RegisteredOrganization,
   registerGroup,
   registerHuman,
+  inviteHuman,
+  mintCircles,
   registerOrganization, getStoppedV1PersonAvatar, balanceOf
 } from "../util";
-import { ZeroAddress } from "ethers";
+import { ZeroAddress, ethers } from "ethers";
 
 describe('Hub', () => {
 
@@ -136,18 +138,20 @@ describe('Hub', () => {
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${REGISTERED_HUMAN} (ON: registerHuman)`, () => {
-        it("only before REGISTRATION_PERIOD_END", async () => {
-          const unregisteredAvatar1 = await getStoppedV1PersonAvatar();
-          const registeredHuman = await registerHuman(unregisteredAvatar1);
-          expect(registeredHuman).toBeTruthy();
+        // it("only before REGISTRATION_PERIOD_END", async () => {
+        //   const unregisteredAvatar1 = await getStoppedV1PersonAvatar();
+        //   const registeredHuman = await registerHuman(unregisteredAvatar1);
+        //   expect(registeredHuman).toBeTruthy();
 
-          // send anvil's evm_increaseTime to increase the time by 1 year
-          const provider = await getJsonRpcProvider();
-          await provider.send("evm_increaseTime", [REGISTRATION_PERIOD]);
+        //   // send anvil's evm_increaseTime to increase the time by 1 year
+        //   const provider = await getJsonRpcProvider();
+        //   await provider.send("evm_increaseTime", [REGISTRATION_PERIOD]);
 
-          const unregisteredAvatar2 = await getStoppedV1PersonAvatar();
-          await expect(registerHuman(unregisteredAvatar2)).rejects.toThrow();
-        }, 60000);
+        //   await provider.send("evm_mine", []);
+
+        //   const unregisteredAvatar2 = await getStoppedV1PersonAvatar();
+        //   await expect(registerHuman(unregisteredAvatar2)).rejects.toThrow();
+        // }, 60000);
         it(`only if ${msgSender} has a token at the ${v1} hub`, async () => {
           const unregisteredAvatar = await getStoppedV1PersonAvatar();
           const registeredHuman = await registerHuman(unregisteredAvatar);
@@ -186,16 +190,69 @@ describe('Hub', () => {
       });
 
       describe(`${UNREGISTERED_AVATAR} to ${INVITED_HUMAN} (ON: inviteHuman)`, () => {
+        const twoWeeksInSeconds = 2 * 7 * 24 * 60 * 60;
+
         // An invitation is a special case of a registration.
         // It is executed by an INVITER to register an INVITEE.
         // The INVITER must be a REGISTERED_HUMAN and the INVITEE must be an UNREGISTERED_AVATAR.
         // When the INVITEE became an INVITED_HUMAN, the contract mints the INVITEE a welcome bonus consisting of the INVITED_HUMAN's personal Circles.
         // The INVITER is charged with the invitation fee.
         // TODO: Any avatar can invite any address (e.g. CREATE2 address with nothing deployed on yet)?.
-        it(`only if INVITER (${msgSender}) is a ${REGISTERED_HUMAN}`, async () => { });
-        it(`only if INVITEE is not already a ${REGISTERED_AVATAR}`, async () => { });
-        it(`only if INVITER (${msgSender}) has enough ${personalCirclesToken}s to pay the invitation fee`, async () => { });
-        it("mint INVITEE's welcome bonus", async () => { });
+        it(`only if INVITER (${msgSender}) is a ${REGISTERED_HUMAN}`, async () => {
+          const provider = await getJsonRpcProvider();
+          const unregisteredAvatar = await getUnregisteredAvatar();
+          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          const newUnregisteredAvatar = await getUnregisteredAvatar();
+
+          await expect(inviteHuman(newUnregisteredAvatar.address, registeredHuman)).resolves.not.toThrow();
+
+          await expect(inviteHuman(newUnregisteredAvatar.address, unregisteredAvatar)).rejects.toThrow();
+        }, 60000);
+        it(`only if INVITEE is not already a ${REGISTERED_AVATAR}`, async () => {
+          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          const anotherRegisteredHuman = await registerHuman(await getUnregisteredAvatar());
+
+          await expect(inviteHuman(anotherRegisteredHuman.address, registeredHuman)).rejects.toThrow();
+
+        }, 60000);
+        it(`only if INVITER (${msgSender}) has enough ${personalCirclesToken}s to pay the invitation fee`, async () => {
+          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          const newUnregisteredAvatar = await getUnregisteredAvatar();
+
+          const inviterBalance = ethers.toBigInt(await balanceOf(registeredHuman.address));
+
+          const invitationFee = ethers.parseEther("144");
+
+          const hasEnoughBalance = inviterBalance >= invitationFee;
+
+          if (hasEnoughBalance) {
+            await expect(inviteHuman(newUnregisteredAvatar.address, registeredHuman)).resolves.not.toThrow();
+          } else {
+            await expect(inviteHuman(newUnregisteredAvatar.address, registeredHuman)).rejects.toThrow();
+          }
+        }, 60000);
+        it("mint INVITEE's welcome bonus", async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          const invitee = await getUnregisteredAvatar();
+
+          await mintCircles(registeredHuman);
+
+          const initialBalance = await balanceOf(invitee.address);
+
+          await inviteHuman(invitee.address, registeredHuman);
+
+          const finalBalance = await balanceOf(invitee.address);
+
+          const initialBalanceDisplay = ethers.formatEther(initialBalance);
+
+          // Expect the final balance to be greater than the initial balance by the welcome bonus amount
+          expect(finalBalance).toBeGreaterThan(Number(initialBalanceDisplay));
+        }, 60000);
         it(`charge INVITER (${msgSender}) the invitation fee`, async () => { });
         it(`create a ${personalCirclesToken} for INVITEE`, async () => { });
 

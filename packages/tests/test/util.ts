@@ -169,3 +169,40 @@ export const balanceOf = async (userAddress: string): Promise<ethers.BigNumberis
 
   return await contract.balanceOf(userAddress, tokenId);
 }
+
+export type InvitedActiveHuman = Avatar & {
+  type: "invitedActiveHuman";
+};
+
+export const inviteHuman = async (inviteeAddress: string, inviter: Avatar): Promise<InvitedActiveHuman> => {
+  const hubV2Contract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, inviter.wallet);
+  const tx = await hubV2Contract.inviteHuman(inviteeAddress);
+  await tx.wait();
+  return {
+    ...inviter,
+    type: "invitedActiveHuman",
+  };
+};
+
+export type MintCirclesResult = {
+  success: boolean;
+};
+
+/**
+ * Mints Circles tokens for a registered human avatar using the personalMint method.
+ * @param avatar The avatar object representing a registered human.
+ * @returns A promise that resolves to a MintCirclesResult indicating success or failure.
+ */
+export const mintCircles = async (avatar: Avatar): Promise<MintCirclesResult> => {
+  console.log('Minting Circles tokens for avatar', avatar);
+  const hubContract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, avatar.wallet);
+
+  try {
+    const tx = await hubContract.personalMint();
+    await tx.wait();
+    console.log('Circles tokens minted successfully');
+    return { success: true };
+  } catch (error) {
+    return { success: false };
+  }
+};
