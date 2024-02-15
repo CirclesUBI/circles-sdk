@@ -9,7 +9,7 @@ import {
   ParsedV1TokenEvent,
   V1TokenEvent
 } from '@circles/circles-sdk-v2-abi-decoder/dist/v1TokenEvents';
-import { TransactionReceipt } from 'ethers';
+import { ethers, TransactionReceipt } from 'ethers';
 import { cidV0Digest } from './utils';
 import { EventEmitter } from './eventEmitter';
 
@@ -33,10 +33,10 @@ export type AvatarEvent =
 
 export class Avatar {
   private readonly provider: Provider;
-  private readonly v1Hub: V1Hub;
-  private readonly v2Hub: V2Hub;
+  readonly v1Hub: V1Hub;
+  readonly v2Hub: V2Hub;
 
-  private readonly avatarAddress: string;
+  public readonly address: string;
 
   private readonly v1Avatar: V1Avatar;
   private readonly v2Avatar: V2Avatar;
@@ -53,15 +53,15 @@ export class Avatar {
   private readonly _onEvent: EventEmitter<AvatarEvent> = new EventEmitter();
   public readonly onEvent = this._onEvent.subscribe;
 
-  constructor(hubV1Address: string, hubV2Address: string, avatarAddress: string, provider: Provider) {
+  constructor(v1Hub: V1Hub, v2Hub: V2Hub, avatarAddress: string, provider: Provider) {
     this.provider = provider;
-    this.avatarAddress = avatarAddress;
+    this.address = avatarAddress;
 
-    this.v1Hub = new V1Hub(provider, hubV1Address);
+    this.v1Hub = v1Hub
     this.v1Hub.onEvent(event => this._onEvent.emit(event));
     this.v1Avatar = new V1Avatar(this.v1Hub, avatarAddress, provider);
 
-    this.v2Hub = new V2Hub(provider, hubV2Address);
+    this.v2Hub = v2Hub;
     this.v2Hub.onEvent(event => this._onEvent.emit(event));
     this.v2Avatar = new V2Avatar(this.v2Hub, avatarAddress, provider);
   }
@@ -136,13 +136,32 @@ export class Avatar {
     this._onStateChanged.emit(this._state);
   };
 
-  totalBalance = async (): Promise<bigint> => {
-    // TODO: Return total circles balance
-    return 0n;
+  /**
+   * Get the avatar's balance of a token.
+   * @param tokenOrAvatar The address of a v1 token or a v2 human/group-avatar. Defaults to the avatar's address.
+   */
+  getTokenBalance = async (tokenOrAvatar?:string): Promise<bigint> => {
+    tokenOrAvatar = tokenOrAvatar || this.address;
+
+    if (!ethers.isAddress(tokenOrAvatar)) {
+      throw new Error(`Invalid address: ${tokenOrAvatar}`);
+    }
+
+    const v2TokenBalance = await this.v2Hub.balanceOf(this.address, tokenOrAvatar);
+    if (v2TokenBalance > 0n) {
+      return v2TokenBalance;
+    }
+
+    const v1Token = this.v1Hub.getToken(tokenOrAvatar);
+    if (!v1Token) {
+      throw new Error(`Token not found: ${tokenOrAvatar} (address is neither a v1 token nor a v2 human- or group-avatar)`);
+    }
+
+    return await v1Token.balanceOf(this.address);
   }
 
   migrateAvatar = async (cidV0:string): Promise<void> => {
-    await this.stopV1Token();
+    await this.stopV1();
     await this.registerHuman(cidV0);
     // TODO: Foreach eligible token, migrate
     // await this.migrateTokens();
@@ -160,6 +179,9 @@ export class Avatar {
     await this.initialize();
     return txReceipt;
   };
+
+  inviteHuman = async (address: string): Promise<TransactionReceipt> =>
+    await this.v2Hub.inviteHuman(address)
 
   registerOrganization = async (name: string, cidV0: string): Promise<TransactionReceipt> => {
     if (this.state !== AvatarState.Unregistered) {
@@ -196,7 +218,7 @@ export class Avatar {
   groupMint = async (group: string, collateral: string[], amounts: bigint[]) =>
     await this.v2Hub.groupMint(group, collateral, amounts)
 
-  private stopV1Token = async (): Promise<TransactionReceipt> => {
+  stopV1 = async (): Promise<TransactionReceipt> => {
     if (this.state !== AvatarState.V1_Human || !this.v1Avatar.v1Token) {
       throw new Error('Avatar must be V1 human');
     }

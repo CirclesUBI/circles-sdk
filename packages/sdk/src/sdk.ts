@@ -1,19 +1,33 @@
 import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
 import { Avatar } from './avatar';
+import { V2Hub } from './v2/v2Hub';
+import { V1Hub } from './v1/v1Hub';
 
 export class Sdk {
   private readonly provider: Provider;
 
-  private readonly hubV1Address: string;
-  private readonly hubV2Address: string;
+  public readonly hubV1Address: string;
+  public readonly v1Hub: V1Hub;
+
+  public readonly hubV2Address: string;
+  public readonly v2Hub: V2Hub;
 
   constructor(hubV1Address: string, hubV2Address: string, provider: Provider) {
     this.provider = provider;
+
     this.hubV1Address = hubV1Address;
+    this.v1Hub = new V1Hub(provider, hubV1Address);
+
     this.hubV2Address = hubV2Address;
+    this.v2Hub = new V2Hub(provider, hubV2Address);
   }
 
-  getAvatar = async (avatarAddress: string) => {
-    return new Avatar(this.hubV1Address, this.hubV2Address, avatarAddress, this.provider);
-  }
+  getInvitationFee = async () =>
+    (await this.v2Hub.WELCOME_BONUS()) * 2n;
+
+  isRegistrationPeriodOver: () => Promise<boolean> = async () =>
+    (await this.v2Hub.invitationOnlyTime()) < BigInt(Date.now() / 1000);
+
+  getAvatar = async (avatarAddress: string) =>
+    new Avatar(this.v1Hub, this.v2Hub, avatarAddress, this.provider);
 }
