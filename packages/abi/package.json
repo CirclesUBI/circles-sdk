@@ -1,8 +1,0 @@
-{
-  "name": "@circles-sdk-v2/circles-v2-abi",
-  "version": "0.0.1",
-  "description": "Circles v2 ABI documents",
-  "scripts": {
-    "build": "./generateAbisFromSource.sh"
-  }
-}

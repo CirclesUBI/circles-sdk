@@ -1,15 +1,16 @@
-import accounts from "./accounts.json";
-import { HDNodeWallet, ethers } from "ethers";
-import HUB_V1 from "../circles-contracts-v1/out/Hub.sol/Hub.json";
-import CRC_V1 from "../circles-contracts-v1/out/Token.sol/Token.json";
-import HUB_V2 from "../circles-contracts-v2/out/Hub.sol/Hub.json";
-import multihashes from "multihashes";
+import { ethers, HDNodeWallet } from 'ethers';
+import HUB_V1 from '../../circles-contracts/out/Hub.sol/Hub.json';
+import CRC_V1 from '../../circles-contracts/out/Token.sol/Token.json';
+import HUB_V2 from '../../circles-contracts/out/Hub.sol/Hub.json';
+import multihashes, { HashCode, HashName } from 'multihashes';
+import { V2HubEventNames } from './abi-decoder/v2HubEvents.test';
+import { V1HubEventNames } from './abi-decoder/v1HubEvents.test';
+import { V1TokenEvents } from './abi-decoder/v1TokenEvents.test';
 
 export const V1_HUB_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const V2_HUB_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 export const FUNDING_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-
 
 export const JSON_RPC_URL = "http://localhost:8545";
 
@@ -27,44 +28,60 @@ export type Avatar = {
   wallet: HDNodeWallet
 };
 
-export const fundWallet = async (privateKey: string, amount: ethers.BigNumberish, recipient: string): Promise<void> => {
-  const provider = await getJsonRpcProvider();
-  const wallet = new ethers.Wallet(privateKey, provider);
-
-  const tx = {
-    to: recipient,
-    value: amount,
-  };
-
-  try {
-    const txResponse = await wallet.sendTransaction(tx);
-    await txResponse.wait();
-    console.log(`Funded wallet ${recipient} with ${ethers.formatEther(amount)} ETH`);
-  } catch (e) {
-    throw new Error(`Failed to fund wallet: ${e}`);
+export const createLog = (contractInterface: ethers.Interface, eventName: string, eventArgs: any[]): {
+  topics: string[],
+  data: string
+} => {
+  const eventSignature = contractInterface.getEvent(eventName);
+  if (!eventSignature || (!(eventName in V2HubEventNames) && !(eventName in V1HubEventNames) && !(eventName in V1TokenEvents))) {
+    throw new Error('Invalid event name');
   }
+  return contractInterface.encodeEventLog(eventSignature, eventArgs);
 };
+
+export const uintToAddress = (uint: bigint) => ethers.getAddress('0x' + uint.toString(16).padStart(40, '0'));
+
+export const decodeMultihash = (cidV0: string) => {
+  const multihashBytes = multihashes.fromB58String(cidV0);
+  const decodedMultihash = multihashes.decode(multihashBytes);
+
+  return decodedMultihash;
+}
+
+export const encodeMultihash = (decodedCidV0Digest: Uint8Array, decodedMultihash: {
+  code: HashCode;
+  name: HashName;
+  length: number;
+  digest: Uint8Array;
+}) => {
+  const restoredCidV0 = multihashes.encode(decodedCidV0Digest, decodedMultihash.code, decodedMultihash.length);
+  return multihashes.toB58String(restoredCidV0);
+}
+
+export const generateRandomAddress = () => ethers.Wallet.createRandom().address;
 
 /**
  * Returns a fresh unregistered avatar.
  * The index can be used to address a specific unregistered avatar.
  */
 export const getUnregisteredAvatar = async (): Promise<Avatar> => {
-  // const key = accounts[lastUnregisteredAvatarIdx];
-  // lastUnregisteredAvatarIdx++;
-
   const provider = await getJsonRpcProvider();
-  const wallet = ethers.Wallet.createRandom().connect(provider);
+  const mainWallet = new ethers.Wallet(FUNDING_PRIVATE_KEY, provider);
 
-  await fundWallet(FUNDING_PRIVATE_KEY, ethers.parseEther("100"), wallet.address);
+  const subWallet = ethers.Wallet.createRandom().connect(provider);
+  const tx = await mainWallet.sendTransaction({
+    to: subWallet.address,
+    value: ethers.parseEther("1")
+  });
+  await tx.wait();
+
   return {
     type: "unregistered",
-    address: wallet.address,
-    key: wallet.privateKey,
-    wallet: wallet
+    address: subWallet.address,
+    key: subWallet.privateKey,
+    wallet: subWallet
   };
 };
-// let lastUnregisteredAvatarIdx = 0;
 
 export type V1PersonAvatar = Avatar & {
   type: "v1Person";

@@ -1,0 +1,17 @@
+{
+  "name": "@circles/circles-sdk-v2",
+  "version": "0.0.1",
+  "description": "Circles v2 SDK",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "@circles/circles-sdk-v2-abi-encoder": "0.0.1",
+    "@circles/circles-sdk-v2-providers": "0.0.1",
+    "multihashes": "^4.0.3",
+    "ethers": "^6.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

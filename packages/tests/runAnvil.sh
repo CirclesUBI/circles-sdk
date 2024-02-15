@@ -5,21 +5,10 @@ PRIVATE_KEY='0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 ANVIL_PORT=8545
 ANVIL_URL=http://127.0.0.1:$ANVIL_PORT
 
-# Make sure the submodules are initialized
-git submodule update --init --recursive --remote
-
-# Build the v1 contracts
-cd ./circles-contracts-v1
-npm install
-forge build
-
-# Build the v2 contracts
-cd ../circles-contracts-v2
-forge build
-cd ..
+./build.sh || exit 1
 
 # Run anvil in the background
-anvil --port $ANVIL_PORT --gas-limit 8000000 --accounts 1000 &
+anvil --port $ANVIL_PORT --gas-limit 8000000 --accounts 10 &
 ANVIL_PID=$!
 
 echo "Waiting for anvil to be ready..."

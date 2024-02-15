@@ -1,25 +1,85 @@
-# Circles SDK v2 (WIP)
-This repository will contain the SDK for working with the new Circles contracts.
-It's a work in progress and will be updated as the contracts are updated.
+# Circles SDK
+The Circles SDK is a library that allows you to interact with the Circles protocol.
+It supports version 1 and 2 of the Circles contracts.
 
-## Run the tests from CLI
-```
-git checkout git@github.com:CirclesUBI/circles-sdk.git
+## Build
+Currently, there are no npm packages, so you must build the SDK yourself if you want to use it.
+
+### Prerequisites
+* [git](https://git-scm.com/)
+* [jq](https://jqlang.github.io/jq/)
+* [Node.js](https://nodejs.org/)
+* [foundry](https://getfoundry.sh/)
+
+### Clone the repository:
+This is a monorepo using npm workspaces.
+```bash
+git clone https://github.com/CirclesUBI/circles-sdk.git
 cd circles-sdk
-npm i
-
-cd packages/tests/`
-./runTests.sh
 ```
 
-## Run the tests from the IDE
+### Build the SDK
+```bash
+npm install
+npm run build
 ```
-git checkout git@github.com:CirclesUBI/circles-sdk.git
-cd circles-sdk
-npm i
 
-cd packages/tests/`
-./runAnvil.sh
+## Getting started
+### Choose and initialize a provider
 
-# Open the IDE and run the tests
+You can choose between the following providers:
+* **EoaEtheresProvider**   
+  Use this provider if you want to use a private key to sign transactions.
+* **BrowserWalletEthersProvider**  
+  Use this provider if you have e.g. metamask installed and want to use it to sign transactions.
+
+```typescript
+import { Provider, EoaEtheresProvider, BrowserWalletEthersProvider } from '@circles/circles-sdk-v2-providers';
+
+const wallet = new ethers.Wallet('0x123...'); // Supply your private key
+const provider1: Provider = new EoaEtheresProvider('http://localhost:8545', wallet);
+await provider1.init();
+// or
+const provider2: Provider = new BrowserWalletEthersProvider();
+await provider2.init();
 ```
+At a later point we will add more providers, e.g. for Safe.
+
+### Configure the Circles SDK
+In order to use the sdk you must supply the contracts addresses and a provider:
+
+```typescript
+import { Sdk } from '@circles/circles-sdk-v2';
+
+const v1HubAddress = '0x123...';
+const v2HubAddress = '0x123...';
+const provider = // Choose one of the providers from the previous step
+
+const sdk = new Sdk(v1HubMock, v1HubAddress, v2HubAddress, provider);
+```
+
+### Use the Circles SDK
+#### Create an avatar
+To interact with Circles, you need an avatar. You can create one by calling `createAvatar`.  
+The address can be any address (EOA, smart contrabuiltin ct wallet) that you control.
+
+```typescript
+const avatar = await sdk.createAvatar("0x123..."); // Supply the avatar address
+await avatar.init();
+```
+Depending on your previous usage of the address, the avatar will be initialized in one of these states:
+```typescript
+enum AvatarState {
+  Unregistered,                 // The address has not been used with Circles before
+  V1_Human,                     // The address is only a V1 human
+  V1_StoppedHuman,              // The address is only a V1 human that has been stopped
+  V1_Organization,              // The address is only a V1 organization
+  V2_Human,                     // The address is only a V2 human
+  V2_Group,                     // The address is only a V2 group
+  V2_Organization,              // The address is only a V2 organizations
+  V1_StoppedHuman_and_V2_Human, // The address is a V1 human that has been stopped and a V2 human
+  Unknown                       // The address has been used with Circles before, but the state is unknown
+}
+```
+
+#### Get the avatar's state
