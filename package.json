@@ -11,7 +11,7 @@
     "packages/providers"
   ],
   "scripts": {
-    "build": "npm run build --workspaces"
+    "build": "./buildContracts.sh && npm run build --workspaces"
   },
   "keywords": [],
   "author": "",

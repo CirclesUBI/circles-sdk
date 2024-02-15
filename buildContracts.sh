@@ -27,5 +27,3 @@ mv temp.package.json package.json
 # Build the v2 contracts
 cd ./packages/circles-contracts-v2
 forge build
-
-npm run build
