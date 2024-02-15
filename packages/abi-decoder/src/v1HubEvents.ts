@@ -23,13 +23,13 @@ export type TrustEvent = Event & {
   limit: bigint;
 };
 
-export type V1Event =
+export type V1HubEvent =
   HubTransferEvent
   | OrganizationSignupEvent
   | SignupEvent
   | TrustEvent;
 
-export type ParsedV1Event<T extends V1Event> = ParsedEvent<T>;
+export type ParsedV1HubEvent<T extends V1HubEvent> = ParsedEvent<T>;
 
 const parseHubTransferEvent = (log: ethers.LogDescription): HubTransferEvent => ({
   from: getAddress(log.args[0]),
@@ -55,10 +55,10 @@ const parseTrustEvent = (log: ethers.LogDescription): TrustEvent => ({
 export class V1HubEvents implements EventDecoder {
   private readonly contractInterface: ethers.Interface = ethers.Interface.from(HubV1.abi);
 
-  decodeEventData<T extends V1Event>(log: {
+  decodeEventData<T extends V1HubEvent>(log: {
     topics: string[],
     data: string
-  }) : ParsedV1Event<T> {
+  }) : ParsedV1HubEvent<T> {
     const decoded = this.contractInterface.parseLog(log);
 
     if (!decoded) {

@@ -5,6 +5,7 @@ import HUB_V2 from '../../circles-contracts/out/Hub.sol/Hub.json';
 import multihashes, { HashCode, HashName } from 'multihashes';
 import { V2HubEventNames } from './abi-decoder/v2HubEvents.test';
 import { V1HubEventNames } from './abi-decoder/v1HubEvents.test';
+import { V1TokenEvents } from './abi-decoder/v1TokenEvents.test';
 
 export const V1_HUB_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const V2_HUB_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
@@ -32,7 +33,7 @@ export const createLog = (contractInterface: ethers.Interface, eventName: string
   data: string
 } => {
   const eventSignature = contractInterface.getEvent(eventName);
-  if (!eventSignature || (!(eventName in V2HubEventNames) && !(eventName in V1HubEventNames))) {
+  if (!eventSignature || (!(eventName in V2HubEventNames) && !(eventName in V1HubEventNames) && !(eventName in V1TokenEvents))) {
     throw new Error('Invalid event name');
   }
   return contractInterface.encodeEventLog(eventSignature, eventArgs);
@@ -42,7 +43,9 @@ export const uintToAddress = (uint: bigint) => ethers.getAddress('0x' + uint.toS
 
 export const decodeMultihash = (cidV0: string) => {
   const multihashBytes = multihashes.fromB58String(cidV0);
-  return multihashes.decode(multihashBytes);
+  const decodedMultihash = multihashes.decode(multihashBytes);
+
+  return decodedMultihash;
 }
 
 export const encodeMultihash = (decodedCidV0Digest: Uint8Array, decodedMultihash: {

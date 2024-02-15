@@ -9,6 +9,7 @@
   "dependencies": {
     "@circles/circles-sdk-v2-abi-encoder": "^0.0.1",
     "@circles/circles-sdk-v2-abi-decoder": "^0.0.1",
+    "@circles/circles-sdk-v2": "^0.0.1",
     "@circles/circles-contracts": "3.3.2",
     "ethers": "^6.10.0"
   },

@@ -1,4 +1,4 @@
-import { BigNumberish, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
 export const V2HubFunctionNames = {
   'BETA_64x64': null,
@@ -144,19 +144,19 @@ export class V2HubCalls {
     return this.encodeFunctionData('hubV1', []);
   }
 
-  static inflationaryBurn(_id: string, _value: string): string {
+  static inflationaryBurn(_id: string, _value: bigint): string {
     return this.encodeFunctionData('inflationaryBurn', [_id, _value]);
   }
 
-  static inflationaryBurnBatch(_ids: string[], _values: string[]): string {
+  static inflationaryBurnBatch(_ids: string[], _values: bigint[]): string {
     return this.encodeFunctionData('inflationaryBurnBatch', [_ids, _values]);
   }
 
-  static inflationarySafeBatchTransferFrom(_from: string, _to: string, _ids: string[], _values: string[], _data: string): string {
+  static inflationarySafeBatchTransferFrom(_from: string, _to: string, _ids: string[], _values: bigint[], _data: string): string {
     return this.encodeFunctionData('inflationarySafeBatchTransferFrom', [_from, _to, _ids, _values, _data]);
   }
 
-  static inflationarySafeTransferFrom(_from: string, _to: string, _id: string, _value: string, _data: string): string {
+  static inflationarySafeTransferFrom(_from: string, _to: string, _id: string, _value: bigint, _data: string): string {
     return this.encodeFunctionData('inflationarySafeTransferFrom', [_from, _to, _id, _value, _data]);
   }
 
@@ -212,7 +212,7 @@ export class V2HubCalls {
     return this.encodeFunctionData('registerCustomGroup', [_mint, _treasury, _name, _symbol, _cidV0Digest]);
   }
 
-  static registerGroup(_mint: string, _name: string, _symbol: string, _cidV0Digest: string): string {
+  static registerGroup(_mint: string, _name: string, _symbol: string, _cidV0Digest: Uint8Array): string {
     return this.encodeFunctionData('registerGroup', [_mint, _name, _symbol, _cidV0Digest]);
   }
 
@@ -236,7 +236,7 @@ export class V2HubCalls {
     return this.encodeFunctionData('setApprovalForAll', [operator, approved]);
   }
 
-  static setIpfsCidV0(_ipfsCid: string): string {
+  static setIpfsCidV0(_ipfsCid: Uint8Array): string {
     return this.encodeFunctionData('setIpfsCidV0', [_ipfsCid]);
   }
 
@@ -288,7 +288,7 @@ export class V2HubCalls {
     return this.encodeFunctionData('uri', [_id]);
   }
 
-  static wrapInflationaryERC20(_tokenId: string, _amount: string): string {
+  static wrapInflationaryERC20(_tokenId: string, _amount: bigint): string {
     return this.encodeFunctionData('wrapInflationaryERC20', [_tokenId, _amount]);
   }
 }

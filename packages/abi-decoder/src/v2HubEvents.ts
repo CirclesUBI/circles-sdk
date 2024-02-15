@@ -80,7 +80,7 @@ export type URIEvent = Event & {
   id: bigint;
 };
 
-export type V2Event =
+export type V2HubEvent =
   ApprovalForAllEvent
   | CidV0Event
   | DemurragedTransferBatchEvent
@@ -94,7 +94,7 @@ export type V2Event =
   | TrustEvent
   | URIEvent;
 
-export type ParsedV2Event<T extends V2Event> = ParsedEvent<T>;
+export type ParsedV2HubEvent<T extends V2HubEvent> = ParsedEvent<T>;
 
 const parseApprovalForAllEvent = (log: ethers.LogDescription): ApprovalForAllEvent => ({
   account: getAddress(log.args[0]),
@@ -178,10 +178,10 @@ const parseURIEvent = (log: ethers.LogDescription): URIEvent => ({
 export class V2HubEvents implements EventDecoder {
   private readonly contractInterface: ethers.Interface = ethers.Interface.from(HubV2.abi);
 
-  decodeEventData<T extends V2Event>(log: {
+  decodeEventData<T extends V2HubEvent>(log: {
     topics: string[],
     data: string
-  }) : ParsedV2Event<T> {
+  }) : ParsedV2HubEvent<T> {
     const decoded = this.contractInterface.parseLog(log);
 
     if (!decoded) {

@@ -44,8 +44,8 @@ export class V1HubCalls {
     return this.encodeFunctionData('initialIssuance', []);
   }
 
-  static limits(owner: string, spender: string): string {
-    return this.encodeFunctionData('limits', [owner, spender]);
+  static limits(truster: string, trustee: string): string {
+    return this.encodeFunctionData('limits', [truster, trustee]);
   }
 
   static name(): string {

@@ -130,6 +130,10 @@ export type TrustInputs = {
   _expiry: bigint;
 };
 
+export type PersonalMintInputs = NoInputs;
+export type OperatorPathTransferInputs = NoInputs;
+export type StopInputs = NoInputs;
+
 export type NoInputs = [];
 
 export type V2HubFunctionInputs =
@@ -156,6 +160,9 @@ export type V2HubFunctionInputs =
   | WrapDemurrageERC20Inputs
   | WrapInflationaryERC20Inputs
   | TrustInputs
+  | OperatorPathTransferInputs
+  | PersonalMintInputs
+  | StopInputs
   | NoInputs;
 
 export type V2HubFunctionCall = {
@@ -259,7 +266,7 @@ const decodeRegisterCustomGroup = (callData: string): RegisterCustomGroupInputs 
     _treasury: decoded[1],
     _name: decoded[2],
     _symbol: decoded[3],
-    _cidV0Digest: decoded[4]
+    _cidV0Digest: new Uint8Array(Buffer.from(decoded[4].substring(2), 'hex'))
   };
 };
 
@@ -269,14 +276,14 @@ const decodeRegisterGroup = (callData: string): RegisterGroupInputs => {
     _mint: decoded[0],
     _name: decoded[1],
     _symbol: decoded[2],
-    _cidV0Digest: decoded[3]
+    _cidV0Digest: new Uint8Array(Buffer.from(decoded[3].substring(2), 'hex'))
   };
 };
 
 const decodeRegisterHuman = (callData: string): RegisterHumanInputs => {
   const decoded = contractInterface.decodeFunctionData('registerHuman', callData);
   return {
-    _cidV0Digest: decoded[0]
+    _cidV0Digest: new Uint8Array(Buffer.from(decoded[0].substring(2), 'hex'))
   };
 };
 
@@ -284,7 +291,7 @@ const decodeRegisterOrganization = (callData: string): RegisterOrganizationInput
   const decoded = contractInterface.decodeFunctionData('registerOrganization', callData);
   return {
     _name: decoded[0],
-    _cidV0Digest: decoded[1]
+    _cidV0Digest: new Uint8Array(Buffer.from(decoded[1].substring(2), 'hex'))
   };
 };
 
@@ -321,13 +328,8 @@ const decodeSetApprovalForAll = (callData: string): SetApprovalForAllInputs => {
 const decodeSetIpfsCidV0 = (callData: string): SetIpfsCidV0Inputs => {
   const decoded = contractInterface.decodeFunctionData('setIpfsCidV0', callData);
   return {
-    _ipfsCid: decoded[0]
+    _ipfsCid: new Uint8Array(Buffer.from(decoded[0].substring(2), 'hex'))
   };
-};
-
-const decodeSingleSourcePathTransfer = (callData: string): SingleSourcePathTransferInputs => {
-  // Placeholder for future implementation specifics
-  return {};
 };
 
 const decodeUnwrapInflationaryERC20 = (callData: string): UnwrapInflationaryERC20Inputs => {
@@ -336,11 +338,6 @@ const decodeUnwrapInflationaryERC20 = (callData: string): UnwrapInflationaryERC2
     _tokenId: BigInt(decoded[0].toString()),
     _amount: BigInt(decoded[1].toString())
   };
-};
-
-const decodeWrapDemurrageERC20 = (callData: string): WrapDemurrageERC20Inputs => {
-  // Placeholder for future implementation specifics
-  return {};
 };
 
 const decodeWrapInflationaryERC20 = (callData: string): WrapInflationaryERC20Inputs => {
@@ -357,14 +354,12 @@ const decodeTrust = (callData: string): TrustInputs => {
     _trustReceiver: decoded[0],
     _expiry: BigInt(decoded[1].toString())
   };
-}
+};
 
 export class V2HubCalls {
-  private readonly contractInterface: ethers.Interface = ethers.Interface.from(HubV2.abi);
-
   decodeFunctionCallData(callData: string): V2HubFunctionCall {
     const methodId = callData.slice(0, 10);
-    const functionFragment = this.contractInterface.getFunction(methodId);
+    const functionFragment = contractInterface.getFunction(methodId);
 
     if (!functionFragment) {
       throw new Error('Invalid function call data');
@@ -426,20 +421,20 @@ export class V2HubCalls {
       case 'setIpfsCidV0':
         inputs = decodeSetIpfsCidV0(callData);
         break;
-      case 'singleSourcePathTransfer':
-        inputs = decodeSingleSourcePathTransfer(callData);
-        break;
       case 'unwrapInflationaryERC20':
         inputs = decodeUnwrapInflationaryERC20(callData);
-        break;
-      case 'wrapDemurrageERC20':
-        inputs = decodeWrapDemurrageERC20(callData);
         break;
       case 'wrapInflationaryERC20':
         inputs = decodeWrapInflationaryERC20(callData);
         break;
       case 'trust':
         inputs = decodeTrust(callData);
+        break;
+      case 'wrapDemurrageERC20':
+      case 'singleSourcePathTransfer':
+      case 'operatorPathTransfer':
+      case 'personalMint':
+      case 'stop':
         break;
       default:
         throw new Error(`Function ${functionFragment.name} not implemented`);

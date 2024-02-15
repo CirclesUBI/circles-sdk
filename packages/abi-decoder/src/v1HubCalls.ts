@@ -46,11 +46,9 @@ const decodeTrust = (callData: string): TrustInputs => {
 };
 
 export class V1HubCalls {
-  private readonly contractInterface: ethers.Interface = ethers.Interface.from(HubV1.abi);
-
   decodeFunctionCallData(callData: string): V1HubFunctionCall {
     const methodId = callData.slice(0, 10);
-    const functionFragment = this.contractInterface.getFunction(methodId);
+    const functionFragment = contractInterface.getFunction(methodId);
 
     if (!functionFragment) {
       throw new Error('Invalid function call data');

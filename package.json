@@ -4,11 +4,11 @@
   "description": "Circles v2 SDK",
   "workspaces": [
     "packages/circles-contracts",
-    "packages/abi-encoder",
     "packages/abi-decoder",
     "packages/sdk",
     "packages/tests",
-    "packages/circles-contracts-v2"
+    "packages/circles-contracts-v2",
+    "packages/providers"
   ],
   "scripts": {
     "build": "npm run build --workspaces"

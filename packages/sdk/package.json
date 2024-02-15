@@ -6,7 +6,9 @@
     "build": "npx tsc"
   },
   "dependencies": {
-    "@circles-sdk-v2/circles-v2-abi-encoder": "0.0.1",
+    "@circles/circles-sdk-v2-abi-encoder": "0.0.1",
+    "@circles/circles-sdk-v2-providers": "0.0.1",
+    "multihashes": "^4.0.3",
     "ethers": "^6.10.0"
   },
   "devDependencies": {
