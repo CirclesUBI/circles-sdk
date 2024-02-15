@@ -2,8 +2,11 @@
 The Circles SDK is a library that allows you to interact with the Circles protocol.
 It supports version 1 and 2 of the Circles contracts.
 
+*Warning: This library is in a very early development stage. Things are broken and the api surface is pretty much WIP.*
+
 ## Build
-Currently, there are no npm packages, so you must build the SDK yourself if you want to use it.
+Currently, there are no npm packages, so you must build the SDK yourself if you want to use it.   
+If you want to run a local environment with anvil, see the section *Run locally*.
 
 ### Prerequisites
 Make sure you have all the following prerequisites properly installed:
@@ -26,7 +29,7 @@ npm run build
 ```
 
 ## Getting started
-### Choose and initialize a provider
+### Choose a provider
 
 You can choose between the following providers:
 * **EoaEtheresProvider**   
@@ -133,7 +136,6 @@ if (avatar.state !== AvatarState.V1_StoppedHuman_and_V2_Human) {
 }
 ```
 
-
 #### Invite a friend
 If you are already a member of Circles, you can invite a friend to join.  
 After the end of the registration period, this is the only way for new people to register at Circles.
@@ -182,4 +184,83 @@ await invitedAvatar.init();
 if (invitedAvatar.state !== AvatarState.V2_Human) {
   throw new Error('Something went wrong');
 }
+```
+
+#### Update your profile
+In Circles v2, every human has a profile. The profile is a JSON object that is stored on IPFS.
+The profile is identified by a CIDv0 (Content Identifier). The CID is updatable for the case that the profile changes in the future.
+
+The profile schema is defined in [ERC-1155 Metadata URI JSON Schema](https://eips.ethereum.org/EIPS/eip-1155#erc-1155-metadata-uri-json-schema).
+
+Use this method, if
+* ... you want to update your profile.
+* ... you have been invited and don't have a profile yet.
+
+```typescript
+const cidV0 = 'Qm...'; // New CIDv0 of your profile
+const txReceipt = await avatar.updateProfile(cidV0);
+```
+
+## Run locally
+For testing and development purposes, it makes sense to run a local environment with anvil.
+
+### Prerequisites
+* build the SDK as described in the previous section.
+
+### Run anvil
+```bash
+anvil --port 8545 --gas-limit 8000000 --accounts 10
+```
+When [anvil](https://book.getfoundry.sh/reference/anvil/) was started with default values, you can use the following values to connect to:
+* URL: http://localhost:8545
+* Address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+* Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+If you need more accounts, see anvil's console output.
+
+### Deploy the contracts
+The SDK comes with a script that deploys all relevant contracts with `forge create`.
+The `deployContracts.sh` script can be configured with environment variables or an `.env` file.
+
+Create custom .env files if you want to deploy to other targets. For a local deployment, you can use `.env.anvil`:
+```bash
+./deployContracts.sh .env.anvil
+```
+
+After the deployment, the script will print the addresses of the deployed contracts.
+```
+Summary:
+========
+V1 Hub: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+V2 Hub: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+```
+
+### Configure the Circles SDK
+You can use the following code to configure the Circles SDK so that it uses the local anvil environment.
+Here we're using the values from above:
+```typescript
+import { Sdk } from '@circles/circles-sdk-v2';
+
+const rpcUrl = 'http://localhost:8545';
+const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const v1HubAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const v2HubAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+
+const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl, wallet);
+const wallet = new ethers.Wallet(privateKey, jsonRpcProvider);
+
+const provider = new EoaEtheresProvider(jsonRpcProvider, wallet);
+await provider.init();
+
+const sdk = new Sdk(v1HubAddress, v2HubAddress, provider);
+const avatar = await sdk.createAvatar(wallet.address);
+await avatar.init();
+
+console.log(`Avatar ${avatar.address} state:`, avatar.state);
+```
+
+### Run tests
+To run the 'jest' tests, use the following command in the repository root directory:
+```bash
+npm run test
 ```

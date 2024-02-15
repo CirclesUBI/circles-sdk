@@ -11,7 +11,8 @@
     "packages/providers"
   ],
   "scripts": {
-    "build": "./buildContracts.sh && npm run build --workspaces"
+    "build": "./buildContracts.sh && npm run build --workspaces",
+    "test": "rm -rf ./packages/tests/dist && cd ./packages/tests && npx jest"
   },
   "keywords": [],
   "author": "",

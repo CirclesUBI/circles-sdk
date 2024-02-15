@@ -1,7 +1,7 @@
 import { ethers, HDNodeWallet } from 'ethers';
-import HUB_V1 from '../../circles-contracts/out/Hub.sol/Hub.json';
-import CRC_V1 from '../../circles-contracts/out/Token.sol/Token.json';
-import HUB_V2 from '../../circles-contracts/out/Hub.sol/Hub.json';
+import HUB_V1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
+import CRC_V1 from '@circles/circles-contracts/out/Token.sol/Token.json';
+import HUB_V2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
 import multihashes, { HashCode, HashName } from 'multihashes';
 import { V2HubEventNames } from './abi-decoder/v2HubEvents.test';
 import { V1HubEventNames } from './abi-decoder/v1HubEvents.test';
