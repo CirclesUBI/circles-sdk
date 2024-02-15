@@ -2,7 +2,7 @@ import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
 import { V1Hub } from './v1Hub';
 import { V1Token } from './v1Token';
 import { ethers } from 'ethers';
-import { EventEmitter } from '@circles-sdk-v2/circles-v2-test/dist/tests/test/sdk/eventEmitter';
+import { EventEmitter } from '../eventEmitter';
 
 export enum V1AvatarState {
   NotInitialized,

@@ -1,5 +1,5 @@
-# Circles SDK v2
-The Circles SDK is a library that allows you to interact with the Circles UBI protocol.
+# Circles SDK
+The Circles SDK is a library that allows you to interact with the Circles protocol.
 It supports version 1 and 2 of the Circles contracts.
 
 ## Build
@@ -13,10 +13,8 @@ Currently, there are no npm packages, so you must build the SDK yourself if you 
 
 ### Clone the repository:
 This is a monorepo using npm workspaces.
-It references the [v1](https://github.com/CirclesUBI/circles-contracts) as well as the [v2](https://github.com/CirclesUBI/circles-contracts-v2) contracts as submodules
-and thus must be cloned with the `--recurse-submodules` flag.
 ```bash
-git clone --recurse-submodules https://github.com/CirclesUBI/circles-sdk.git
+git clone https://github.com/CirclesUBI/circles-sdk.git
 cd circles-sdk
 ```
 

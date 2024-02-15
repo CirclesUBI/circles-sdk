@@ -1,6 +1,6 @@
 import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
 import { V2Hub } from './v2Hub';
-import { EventEmitter } from '@circles-sdk-v2/circles-v2-test/dist/tests/test/sdk/eventEmitter';
+import { EventEmitter } from '../eventEmitter';
 
 export enum V2AvatarState {
   NotInitialized,
