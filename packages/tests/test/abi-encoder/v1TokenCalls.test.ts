@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import TokenV1 from '@circles/circles-contracts/out/Token.sol/Token.json';
 import { generateRandomAddress } from '../util';
-import { V1TokenCalls as V1TokenCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/dist/v1TokenCalls';
+import { V1TokenCalls as V1TokenCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/dist';
 import {
   ApproveInputs,
   DecreaseAllowanceInputs,
@@ -9,7 +9,7 @@ import {
   TransferFromInputs,
   TransferInputs,
   V1TokenCalls as V1TokenCallsDecoder
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v1TokenCalls';
+} from '@circles/circles-sdk-v2-abi-decoder/dist';
 
 describe('V1TokenCalls', () => {
   const contractInterface = new ethers.Interface(TokenV1.abi);

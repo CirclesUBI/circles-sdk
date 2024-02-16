@@ -1,4 +1,4 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 import { Avatar } from './avatar';
 import { V2Hub } from './v2/v2Hub';
 import { V1Hub } from './v1/v1Hub';

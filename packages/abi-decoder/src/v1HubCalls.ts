@@ -8,7 +8,7 @@ export type TransferThroughInputs = {
   wads: bigint[];
 };
 
-export type TrustInputs = {
+export type TrustInputs_v1 = {
   user: string;
   limit: bigint;
 };
@@ -17,7 +17,7 @@ export type NoInputs = [];
 
 export type V1HubFunctionInputs =
   | TransferThroughInputs
-  | TrustInputs
+  | TrustInputs_v1
   | NoInputs;
 
 export type V1HubFunctionCall = {
@@ -37,7 +37,7 @@ const decodeTransferThrough = (callData: string): TransferThroughInputs => {
   };
 };
 
-const decodeTrust = (callData: string): TrustInputs => {
+const decodeTrust = (callData: string): TrustInputs_v1 => {
   const decoded = contractInterface.decodeFunctionData('trust', callData);
   return {
     user: decoded[0],

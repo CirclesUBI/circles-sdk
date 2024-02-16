@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
+import { NoInputs } from './noInputs';
 
 export type BurnInputs = {
   _id: bigint;
@@ -125,7 +126,7 @@ export type WrapInflationaryERC20Inputs = {
   _amount: bigint;
 };
 
-export type TrustInputs = {
+export type TrustInputs_v2 = {
   _trustReceiver: string;
   _expiry: bigint;
 };
@@ -133,8 +134,6 @@ export type TrustInputs = {
 export type PersonalMintInputs = NoInputs;
 export type OperatorPathTransferInputs = NoInputs;
 export type StopInputs = NoInputs;
-
-export type NoInputs = [];
 
 export type V2HubFunctionInputs =
   | BurnInputs
@@ -159,7 +158,7 @@ export type V2HubFunctionInputs =
   | UnwrapInflationaryERC20Inputs
   | WrapDemurrageERC20Inputs
   | WrapInflationaryERC20Inputs
-  | TrustInputs
+  | TrustInputs_v2
   | OperatorPathTransferInputs
   | PersonalMintInputs
   | StopInputs
@@ -348,7 +347,7 @@ const decodeWrapInflationaryERC20 = (callData: string): WrapInflationaryERC20Inp
   };
 };
 
-const decodeTrust = (callData: string): TrustInputs => {
+const decodeTrust = (callData: string): TrustInputs_v2 => {
   const decoded = contractInterface.decodeFunctionData('trust', callData);
   return {
     _trustReceiver: decoded[0],

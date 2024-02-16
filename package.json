@@ -8,7 +8,8 @@
     "packages/sdk",
     "packages/tests",
     "packages/circles-contracts-v2",
-    "packages/providers"
+    "packages/providers",
+    "packages/examples/svelte-playground"
   ],
   "scripts": {
     "build": "./buildContracts.sh && npm run build --workspaces",

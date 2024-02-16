@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { V1HubCalls as V1HubCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/src/v1HubCalls';
-import { V1HubCalls as V1HubCallsDecoder } from '@circles/circles-sdk-v2-abi-decoder/src/v1HubCalls';
+import { V1HubCalls as V1HubCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/dist';
+import { V1HubCalls as V1HubCallsDecoder } from '@circles/circles-sdk-v2-abi-decoder/dist';
 import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
 import { generateRandomAddress } from '../util';
 

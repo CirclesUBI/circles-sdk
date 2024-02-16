@@ -1,10 +1,10 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
-import { V2HubCalls } from '@circles/circles-sdk-v2-abi-encoder/src/v2HubCalls';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
+import { V2HubCalls } from '@circles/circles-sdk-v2-abi-encoder/dist';
 import { ethers, TransactionReceipt } from 'ethers';
 import {
   ParsedV2HubEvent, V2HubEvent,
   V2HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v2HubEvents';
+} from '@circles/circles-sdk-v2-abi-decoder/dist';
 import { EventEmitter } from '../eventEmitter';
 
 export type TrustMarker = {

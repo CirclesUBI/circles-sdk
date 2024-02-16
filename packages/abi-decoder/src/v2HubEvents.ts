@@ -69,7 +69,7 @@ export type TransferSingleEvent = Event & {
   value: bigint;
 };
 
-export type TrustEvent = Event & {
+export type TrustEvent_v2 = Event & {
   truster: string;
   trustee: string;
   expiryTime: bigint;
@@ -91,7 +91,7 @@ export type V2HubEvent =
   | RegisterOrganizationEvent
   | TransferBatchEvent
   | TransferSingleEvent
-  | TrustEvent
+  | TrustEvent_v2
   | URIEvent;
 
 export type ParsedV2HubEvent<T extends V2HubEvent> = ParsedEvent<T>;
@@ -164,7 +164,7 @@ const parseTransferSingleEvent = (log: ethers.LogDescription): TransferSingleEve
   value: log.args[4]
 });
 
-const parseTrustEvent = (log: ethers.LogDescription): TrustEvent => ({
+const parseTrustEvent = (log: ethers.LogDescription): TrustEvent_v2 => ({
   truster: log.args[0],
   trustee: log.args[1],
   expiryTime: log.args[2]

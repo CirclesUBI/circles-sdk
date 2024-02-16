@@ -12,7 +12,7 @@ export class EoaEthersProvider implements Provider {
 
   initializeProvider: () => Promise<void> = async () => {
     return;
-  }
+  };
 
   async call(args: { to: string, data: string }): Promise<string> {
     return await this.provider.call(args);

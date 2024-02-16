@@ -1,14 +1,13 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 import { V1Avatar, V1AvatarState } from './v1/v1Avatar';
 import { V2Avatar, V2AvatarState } from './v2/v2Avatar';
 import { V1Hub } from './v1/v1Hub';
 import { V2Hub } from './v2/v2Hub';
-import { ParsedV1HubEvent, V1HubEvent } from '@circles/circles-sdk-v2-abi-decoder/dist/v1HubEvents';
-import { ParsedV2HubEvent, V2HubEvent } from '@circles/circles-sdk-v2-abi-decoder/dist/v2HubEvents';
+import { ParsedV1HubEvent, V1HubEvent, ParsedV2HubEvent, V2HubEvent } from '@circles/circles-sdk-v2-abi-decoder/dist';
 import {
   ParsedV1TokenEvent,
   V1TokenEvent
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v1TokenEvents';
+} from '@circles/circles-sdk-v2-abi-decoder/dist';
 import { ethers, TransactionReceipt } from 'ethers';
 import { cidV0Digest } from './utils';
 import { EventEmitter } from './eventEmitter';

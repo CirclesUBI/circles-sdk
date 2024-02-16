@@ -1,7 +1,7 @@
 import {
   HubTransferEvent, OrganizationSignupEvent, SignupEvent, TrustEvent,
   V1HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v1HubEvents';
+} from '@circles/circles-sdk-v2-abi-decoder/dist';
 import { ethers } from 'ethers';
 import { createLog } from '../util';
 import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';

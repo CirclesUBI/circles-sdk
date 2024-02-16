@@ -1,10 +1,10 @@
-import { V1HubCalls } from '@circles/circles-sdk-v2-abi-encoder/src/v1HubCalls';
+import { V1HubCalls } from '@circles/circles-sdk-v2-abi-encoder/dist';
 import { ethers, TransactionReceipt } from 'ethers';
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 import { V1Token } from './v1Token';
 import {
   ParsedV1HubEvent, V1HubEvent, V1HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v1HubEvents';
+} from '@circles/circles-sdk-v2-abi-decoder/dist';
 import { EventEmitter } from '../eventEmitter';
 
 export type TokenFactory = (address: string) => V1Token;

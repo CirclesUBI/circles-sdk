@@ -1,6 +1,6 @@
-import { V1TokenCalls } from '@circles/circles-sdk-v2-abi-encoder/src/v1TokenCalls';
+import { V1TokenCalls } from '@circles/circles-sdk-v2-abi-encoder/dist';
 import { ethers } from 'ethers';
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 
 export class V1Token {
   readonly address: string;

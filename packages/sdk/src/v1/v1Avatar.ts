@@ -1,4 +1,4 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 import { V1Hub } from './v1Hub';
 import { V1Token } from './v1Token';
 import { ethers } from 'ethers';

@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import TokenV1 from '@circles/circles-contracts/out/Token.sol/Token.json';
+import { NoInputs } from './noInputs';
 
 export type ApproveInputs = {
   spender: string;
@@ -15,8 +16,6 @@ export type IncreaseAllowanceInputs = {
   spender: string;
   addedValue: bigint;
 };
-
-export type NoInputs = [];
 
 export type TransferInputs = {
   dst: string;

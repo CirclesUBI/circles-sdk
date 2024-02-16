@@ -1,4 +1,4 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
+import { Provider } from '@circles/circles-sdk-v2-providers/dist';
 import { V2Hub } from './v2Hub';
 import { EventEmitter } from '../eventEmitter';
 
