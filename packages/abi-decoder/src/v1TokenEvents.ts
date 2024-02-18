@@ -1,5 +1,5 @@
 import { ethers, getAddress } from 'ethers';
-import TokenV1 from '@circles/circles-contracts/out/Token.sol/Token.json';
+import TokenV1 from '@circles/circles-contracts/build/contracts/Token.json';
 import { Event, EventDecoder, ParsedEvent } from './eventDecoder';
 
 export type TokenTransferEvent = Event & {

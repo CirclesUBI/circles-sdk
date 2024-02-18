@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import TokenV1 from '@circles/circles-contracts/out/Token.sol/Token.json';
+import TokenV1 from '@circles/circles-contracts/build/contracts/Token.json';
 
 export const V1TokenFunctionNames = {
   'allowance': null,
@@ -76,7 +76,7 @@ export class V1TokenCalls {
     return this.encodeFunctionData('decimals', []);
   }
 
-  static name(): string {
+  static tokenName(): string {
     return this.encodeFunctionData('name', []);
   }
 

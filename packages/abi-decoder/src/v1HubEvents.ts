@@ -1,5 +1,5 @@
 import { ethers, getAddress } from 'ethers';
-import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
+import HubV1 from '@circles/circles-contracts/build/contracts/Hub.json';
 import { Event, EventDecoder, ParsedEvent } from './eventDecoder';
 
 export type HubTransferEvent = Event & {
@@ -58,11 +58,12 @@ export class V1HubEvents implements EventDecoder {
   decodeEventData<T extends V1HubEvent>(log: {
     topics: string[],
     data: string
-  }) : ParsedV1HubEvent<T> {
+  }) : ParsedV1HubEvent<T>|undefined {
     const decoded = this.contractInterface.parseLog(log);
 
     if (!decoded) {
-      throw new Error('Invalid event data');
+      console.log(`Couldn't decode event:`, log);
+      return undefined;
     }
 
     let eventData: any;

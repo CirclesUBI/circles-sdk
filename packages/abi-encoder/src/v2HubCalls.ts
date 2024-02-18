@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
+
 export const V2HubFunctionNames = {
   'BETA_64x64': null,
   'GAMMA_64x64': null,

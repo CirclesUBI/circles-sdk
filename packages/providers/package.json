@@ -1,14 +1,16 @@
 {
-  "name": "@circles/circles-sdk-v2-providers",
-  "version": "0.0.1",
-  "description": "Circles v2 providers",
+  "name": "@circles-sdk/providers",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
   "scripts": {
-    "build": "npx tsc"
+    "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
   "dependencies": {
-    "ethers": "^6.10.0"
+    "ethers": "^6.11.1"
   },
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

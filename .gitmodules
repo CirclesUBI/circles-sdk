@@ -1,7 +1,7 @@
 [submodule "packages/circles-contracts-v2"]
 	path = packages/circles-contracts-v2
 	url = https://github.com/CirclesUBI/circles-contracts-v2.git
-	branch = 20240213_addPackageJson
+	branch = develop
 [submodule "packages/circles-contracts"]
 	path = packages/circles-contracts
 	url = https://github.com/CirclesUBI/circles-contracts.git

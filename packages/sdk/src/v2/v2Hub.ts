@@ -1,11 +1,11 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist';
-import { V2HubCalls } from '@circles/circles-sdk-v2-abi-encoder/dist';
+import { Provider } from '@circles-sdk/providers/dist';
+import { V2HubCalls } from '@circles-sdk/abi-encoder/dist';
 import { ethers, TransactionReceipt } from 'ethers';
 import {
   ParsedV2HubEvent, V2HubEvent,
   V2HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist';
-import { EventEmitter } from '../eventEmitter';
+} from '@circles-sdk/abi-decoder/dist';
+import {Observable} from "../observable";
 
 export type TrustMarker = {
   previous: string;
@@ -16,12 +16,16 @@ export class V2Hub {
   private readonly provider: Provider;
   private readonly eventDecoder: V2HubEvents = new V2HubEvents();
 
-  private readonly _onEvent: EventEmitter<ParsedV2HubEvent<V2HubEvent>> = new EventEmitter();
-  public readonly onEvent = this._onEvent.subscribe;
+  public readonly events: Observable<ParsedV2HubEvent<V2HubEvent>>;
+  private readonly emitEvent: (event:ParsedV2HubEvent<V2HubEvent>) => void;
 
   constructor(provider: Provider, address: string) {
     this.provider = provider;
     this.address = address;
+
+    const eventsObservable = Observable.create<ParsedV2HubEvent<V2HubEvent>>();
+    this.events = eventsObservable.property;
+    this.emitEvent = (e) => eventsObservable.emit(e);
   }
 
   BETA_64x64 = async (): Promise<bigint> =>
@@ -254,25 +258,25 @@ export class V2Hub {
     await this.provider.call({
       to: this.address,
       data: V2HubCalls.isApprovedForAll(account, operator)
-    }) === '0x01';
+    }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
 
   isGroup = async (group: string): Promise<boolean> =>
     await this.provider.call({
       to: this.address,
       data: V2HubCalls.isGroup(group)
-    }) === '0x01';
+    }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
 
   isHuman = async (human: string): Promise<boolean> =>
     await this.provider.call({
       to: this.address,
       data: V2HubCalls.isHuman(human)
-    }) === '0x01';
+    }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
 
   isOrganization = async (organization: string): Promise<boolean> =>
     await this.provider.call({
       to: this.address,
       data: V2HubCalls.isOrganization(organization)
-    }) === '0x01';
+    }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
 
   mintPolicies = async (group: string): Promise<string> =>
     await this.provider.call({
@@ -436,7 +440,7 @@ export class V2Hub {
     await this.provider.call({
       to: this.address,
       data: V2HubCalls.stopped(human)
-    }) === "0x01";
+    }) === "0x0000000000000000000000000000000000000000000000000000000000000001";
 
   symbols = async (address: string): Promise<string> =>
     await this.provider.call({
@@ -522,6 +526,6 @@ export class V2Hub {
       topics: log.topics.map(a => a),
       data: log.data
     });
-    this._onEvent.emit(event);
+    this.emitEvent(event);
   });
 }

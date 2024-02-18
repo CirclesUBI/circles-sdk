@@ -25,32 +25,9 @@ else
     load_env "$1"
 fi
 
-cd packages/circles-contracts
-npm i
-
-echo "Deploying V1 Hub ..."
-
-# Default values are used if variables not set by .env file
-V1_HUB_INFLATION="${V1_HUB_INFLATION}"
-V1_HUB_PERIOD="${V1_HUB_PERIOD}"
-V1_HUB_SYMBOL="${V1_HUB_SYMBOL}"
-V1_HUB_NAME="${V1_HUB_NAME}"
-V1_HUB_SIGNUP_BONUS="${V1_HUB_SIGNUP_BONUS}"
-V1_HUB_INITIAL_ISSUANCE="${V1_HUB_INITIAL_ISSUANCE}"
-V1_HUB_TIMEOUT="${V1_HUB_TIMEOUT}"
-
-cd contracts
-V1_HUB_DEPLOYMENT=$(forge create Hub \
-  --rpc-url ${RPC_URL} \
-  --private-key ${PRIVATE_KEY} \
-  --constructor-args ${V1_HUB_INFLATION} ${V1_HUB_PERIOD} ${V1_HUB_SYMBOL} ${V1_HUB_NAME} ${V1_HUB_SIGNUP_BONUS} ${V1_HUB_INITIAL_ISSUANCE} ${V1_HUB_TIMEOUT})
-
-V1_HUB_ADDRESS=$(echo "$V1_HUB_DEPLOYMENT" | grep "Deployed to:" | awk '{print $3}')
-echo "V1 Hub deployed at ${V1_HUB_ADDRESS}"
-
 # Deploy the v2 contracts using `forge create`
 echo "Deploying V2 Hub ..."
-cd ../../circles-contracts-v2/src/hub
+cd ./packages/circles-contracts-v2/src/hub
 V2_HUB_V1_HUB=${V1_HUB_ADDRESS}
 V2_DEMURRAGE_ZERO_DAY="${V2_DEMURRAGE_ZERO_DAY}"
 V2_HUB_STANDARD_TREASURY="${V2_HUB_STANDARD_TREASURY}"
@@ -63,6 +40,14 @@ V2_HUB_DEPLOYMENT=$(forge create Hub \
   --constructor-args ${V2_HUB_V1_HUB} ${V2_DEMURRAGE_ZERO_DAY} ${V2_HUB_STANDARD_TREASURY} ${V2_HUB_BOOTSTRAP_TIME} ${V2_HUB_FALLBACK_URL})
 V2_HUB_ADDRESS=$(echo "$V2_HUB_DEPLOYMENT" | grep "Deployed to:" | awk '{print $3}')
 echo "V2 Hub deployed at ${V2_HUB_ADDRESS}"
+
+CTOR_ARGS=$(cast abi-encode "constructor(address,uint256,address,uint256,string)" \
+  ${V2_HUB_V1_HUB} \
+  ${V2_DEMURRAGE_ZERO_DAY} \
+  ${V2_HUB_STANDARD_TREASURY} \
+  ${V2_HUB_BOOTSTRAP_TIME} \
+  ${V2_HUB_FALLBACK_URL})
+echo "CTOR_ARGS: $CTOR_ARGS"
 
 echo ""
 echo "Summary:"

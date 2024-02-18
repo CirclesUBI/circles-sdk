@@ -1,6 +1,6 @@
-import { V1TokenCalls } from '@circles/circles-sdk-v2-abi-encoder/dist';
+import { V1TokenCalls } from '@circles-sdk/abi-encoder/dist';
 import { ethers } from 'ethers';
-import { Provider } from '@circles/circles-sdk-v2-providers/dist';
+import { Provider } from '@circles-sdk/providers/src/provider';
 
 export class V1Token {
   readonly address: string;
@@ -98,7 +98,7 @@ export class V1Token {
   name = async (): Promise<string> =>
     await this.provider.call({
       to: this.address,
-      data: V1TokenCalls.name()
+      data: V1TokenCalls.tokenName()
     });
 
   symbol = async (): Promise<string> =>
@@ -153,7 +153,7 @@ export class V1Token {
     await this.provider.call({
       to: this.address,
       data: V1TokenCalls.stopped()
-    }) === '0x01';
+    }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
 
   update = async (): Promise<ethers.TransactionReceipt> => {
     const tx = await this.provider.sendTransaction({

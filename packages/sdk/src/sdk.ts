@@ -1,4 +1,4 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist';
+import { Provider } from '@circles-sdk/providers/dist';
 import { Avatar } from './avatar';
 import { V2Hub } from './v2/v2Hub';
 import { V1Hub } from './v1/v1Hub';
@@ -23,7 +23,7 @@ export class Sdk {
   }
 
   getInvitationFee = async () =>
-    (await this.v2Hub.WELCOME_BONUS()) * 2n;
+    (await this.v2Hub.WELCOME_BONUS()) * BigInt(2);
 
   isRegistrationPeriodOver: () => Promise<boolean> = async () =>
     (await this.v2Hub.invitationOnlyTime()) < BigInt(Date.now() / 1000);

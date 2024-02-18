@@ -1,35 +1,22 @@
 {
-  "name": "circles-sdk-v2",
-  "version": "0.0.1",
-  "description": "Circles v2 SDK",
+  "private": true,
   "workspaces": [
-    "packages/circles-contracts",
-    "packages/abi-decoder",
-    "packages/sdk",
-    "packages/tests",
-    "packages/circles-contracts-v2",
-    "packages/providers",
-    "packages/examples/svelte-playground"
+    "./packages/abi-decoder",
+    "./packages/abi-encoder",
+    "./packages/providers",
+    "./packages/sdk",
+    "./packages/circles-contracts-v2"
   ],
   "scripts": {
-    "build": "./buildContracts.sh && npm run build --workspaces",
-    "test": "rm -rf ./packages/tests/dist && cd ./packages/tests && npx jest"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "ethers": "^6.10.0"
+    "test": "jest",
+    "build": "cd packages/circles-contracts && npx truffle compile && cd ../.. && npm run build -w @circles/circles-contracts-v2 -w @circles-sdk/abi-decoder -w @circles-sdk/abi-encoder -w @circles-sdk/providers -w @circles-sdk/sdk"
   },
   "devDependencies": {
-    "@circles/safe-contracts": "^1.0.20",
-    "@ethersproject/providers": "^5.7.2",
-    "@types/jest": "^29.5.11",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "eslint": "^8.56.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
     "jest": "^29.7.0",
-    "prettier": "^3.2.4",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "ethers": "^6.11.1"
   }
 }

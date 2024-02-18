@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
+import HubV1 from '@circles/circles-contracts/build/contracts/Hub.json';
 
 export const V1HubFunctionNames = {
   'deployedAt': null,
@@ -48,7 +48,7 @@ export class V1HubCalls {
     return this.encodeFunctionData('limits', [truster, trustee]);
   }
 
-  static name(): string {
+  static hubName(): string {
     return this.encodeFunctionData('name', []);
   }
 

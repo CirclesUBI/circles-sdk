@@ -7,7 +7,7 @@ export class BrowserWalletEthersProvider implements Provider {
   private provider?: ethers.BrowserProvider;
   private signer?: ethers.Signer;
 
-  public async initializeProvider(): Promise<void> {
+  public async initialize(): Promise<void> {
     if (!window.ethereum) {
       throw new Error('No browser wallet like MetaMask installed.');
     }

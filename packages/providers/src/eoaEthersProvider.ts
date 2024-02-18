@@ -10,7 +10,7 @@ export class EoaEthersProvider implements Provider {
     this.signer = signer;
   }
 
-  initializeProvider: () => Promise<void> = async () => {
+  initialize: () => Promise<void> = async () => {
     return;
   };
 

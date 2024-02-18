@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
+import HubV1 from '@circles/circles-contracts/build/contracts/Hub.json';
 
 export type TransferThroughInputs = {
   tokenOwners: string[];
