@@ -5,8 +5,7 @@
     "./packages/abi-encoder",
     "./packages/providers",
     "./packages/sdk",
-    "./packages/circles-contracts-v2",
-    "./packages/tests"
+    "./packages/circles-contracts-v2"
   ],
   "scripts": {
     "test": "jest",
