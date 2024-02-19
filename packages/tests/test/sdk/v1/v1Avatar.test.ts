@@ -1,4 +1,4 @@
-import { V1Avatar, V1AvatarState } from '@circles/circles-sdk-v2/dist';
+import { V1Avatar, V1AvatarState } from '@circles-sdk/sdk/dist/v1/v1Avatar';
 import { ethers } from 'ethers';
 import { generateRandomAddress } from '../../util';
 import { v1HubMock } from './v1HubMock';

@@ -14,7 +14,7 @@ import {
   TrustEvent_v2,
   URIEvent,
   V2HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist';
+} from '@circles-sdk/abi-decoder/dist';
 import { createLog, uintToAddress } from '../util';
 
 export const V2HubEventNames = {

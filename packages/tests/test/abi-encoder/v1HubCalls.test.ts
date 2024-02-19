@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { V1HubCalls as V1HubCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/dist';
-import { V1HubCalls as V1HubCallsDecoder } from '@circles/circles-sdk-v2-abi-decoder/dist';
+import { V1HubCalls as V1HubCallsEncoder } from '@circles-sdk/abi-encoder/dist';
+import { V1HubCalls as V1HubCallsDecoder } from '@circles-sdk/abi-decoder/dist';
 import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
 import { generateRandomAddress } from '../util';
 
@@ -70,7 +70,7 @@ describe('V1HubCalls', () => {
   });
 
   test('name() encodes and decodes correctly', () => {
-    const encoded = V1HubCallsEncoder.name();
+    const encoded = V1HubCallsEncoder.hubName();
     const decoded = contractInterface.parseTransaction({ data: encoded });
 
     expect(decoded?.name).toBe('name');
