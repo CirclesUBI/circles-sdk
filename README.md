@@ -17,12 +17,17 @@ Make sure you have all the following prerequisites installed:
 ### Clone the repository:
 This is a monorepo using npm workspaces.
 ```bash
-git clone https://github.com/CirclesUBI/circles-sdk.git
+git clone --branch 20240215-examples https://github.com/CirclesUBI/circles-sdk.git 
 cd circles-sdk
+git submodule update --init --recursive --remote
 ```
 
 ### Build the SDK
 ```bash
+# Install the v1-contract's dependencies
+cd packages/circles-contracts && npm install && cd ../..
+
+# Install all other dependencies and build the sdk
 npm install
 npm run build
 ```
@@ -52,6 +57,14 @@ Summary:
 ========
 V1 Hub: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 V2 Hub: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+```
+
+### Run the example application
+The SDK comes with a svelte example application that demonstrates how to use the SDK.
+```bash
+cd examples/svelte
+npm install
+npm run dev
 ```
 
 ### Run tests
