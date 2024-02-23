@@ -4,7 +4,6 @@
   "description": "Circles v2 SDK",
   "workspaces": [
     "packages/circles-contracts",
-    "packages/abi-decoder",
     "packages/sdk",
     "packages/tests",
     "packages/circles-contracts-v2",

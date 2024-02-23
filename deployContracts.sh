@@ -36,7 +36,9 @@ V1_HUB_SIGNUP_BONUS="${V1_HUB_SIGNUP_BONUS}"
 V1_HUB_INITIAL_ISSUANCE="${V1_HUB_INITIAL_ISSUANCE}"
 V1_HUB_TIMEOUT="${V1_HUB_TIMEOUT}"
 
-cd packages/circles-contracts/contracts
+cd packages/circles-contracts/
+mkdir contracts
+cd contracts
 V1_HUB_DEPLOYMENT=$(forge create Hub \
   --rpc-url ${RPC_URL} \
   --private-key ${PRIVATE_KEY} \
