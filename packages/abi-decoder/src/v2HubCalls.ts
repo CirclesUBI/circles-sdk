@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
-import { NoInputs } from './noInputs';
+import { NoInputs } from './noInputs.js';
 
 export type BurnInputs = {
   _id: bigint;

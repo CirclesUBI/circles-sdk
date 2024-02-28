@@ -82,11 +82,13 @@ export class V2Hub {
       data: V2HubCalls.avatars(address)
     });
 
-  balanceOf = async (account: string, id: string): Promise<bigint> =>
-    BigInt(await this.provider.call({
+  balanceOf = async (account: string, id: string): Promise<bigint> => {
+    const r = await this.provider.call({
       to: this.address,
       data: V2HubCalls.balanceOf(account, id)
-    }));
+    });
+    return BigInt(r);
+  }
 
   // balanceOfBatch = async (accounts: string[], ids: string[]): Promise<bigint[]> =>
   //   await this.provider.call({

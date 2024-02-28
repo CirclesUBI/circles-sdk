@@ -1,5 +1,5 @@
 {
-  "name": "@circles-sdk/providers",
+  "name": "@circles-sdk/pathfinder",
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
@@ -8,6 +8,7 @@
     "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
   "dependencies": {
+    "cross-fetch": "^4.0.0",
     "ethers": "^6.11.1"
   },
   "keywords": [],

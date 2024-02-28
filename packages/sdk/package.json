@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist/* && npx tsc -p tsconfig.json"
+    "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,8 @@
     "@circles-sdk/abi-decoder": "^0.0.2",
     "@circles-sdk/abi-encoder": "^0.0.2",
     "@circles-sdk/providers": "^0.0.2",
+    "@circles-sdk/pathfinder": "^0.0.2",
+    "@circles-sdk/pathfinder-v2": "^0.0.2",
     "ethers": "^6.11.1",
     "multihashes": "^4.0.3"
   }

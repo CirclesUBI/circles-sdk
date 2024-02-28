@@ -1,12 +1,173 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="%sveltekit.assets%/favicon.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    %sveltekit.head%
+    <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        .button {
+            border: none;
+            background-color: #007bff;
+            color: white;
+            margin: 3px;
+            padding: 10px 20px;
+            margin-right: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            border: none;
+            background-color: #007bff;
+            color: white;
+            margin: 3px;
+            padding: 10px 20px;
+            margin-right: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        label, input, select, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        pre {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 0;
+        }
+
+        .collapsible-section {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px; /* Space between sections */
+        }
+
+        .section-header {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc; /* Separates header from content visually */
+            border-top-left-radius: 4px; /* Rounded corners on the top */
+            border-top-right-radius: 4px;
+        }
+
+        .section-content {
+            padding: 10px;
+            background-color: #fff; /* Light background for the content */
+            border-bottom-left-radius: 4px; /* Rounded corners on the bottom */
+            border-bottom-right-radius: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: start;
+        }
+
+        button + button {
+            margin-left: 10px;
+        }
+
+        /* Additional styles for button states */
+        .button-ready {
+            background-color: #007bff; /* Blue */
+        }
+
+        .button-working {
+            background-color: #ffc107; /* Yellow */
+        }
+
+        .button-error, .button-retry {
+            background-color: #dc3545; /* Red */
+        }
+
+        .button-done {
+            background-color: #28a745; /* Green */
+        }
+
+        .button-disabled {
+            background-color: #6c757d; /* Grey */
+        }
+
+        /* Disabled state is already styled in your existing CSS */
+        /* Add a loading spinner for the working state if desired */
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+        }
+
+        .retry-icon {
+        }
+
+        .warning-icon {
+            color: #ffc107; /* Yellow */
+        }
+
+        .checkmark-icon {
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        input:read-only {
+            background-color: transparent;
+            border: none;
+        }
+    </style>
+</head>
+<body data-sveltekit-preload-data="hover">
+<div style="display: contents">%sveltekit.body%</div>
+</body>
 </html>

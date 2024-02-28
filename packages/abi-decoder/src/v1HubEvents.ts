@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import HubV1 from '@circles/circles-contracts/build/contracts/Hub.json';
-import { Event, EventDecoder, ParsedEvent } from './eventDecoder';
+import { Event, EventDecoder, ParsedEvent } from './eventDecoder.js';
 
 export type HubTransferEvent = Event & {
   from: string;

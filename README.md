@@ -14,24 +14,20 @@ Make sure you have all the following prerequisites installed:
 * [nodejs](https://nodejs.org/)
 * [foundry](https://getfoundry.sh/)
 
-### Clone the repository:
+### 1) Clone the repository:
 This is a monorepo using npm workspaces.
 ```bash
 git clone --branch 20240215-examples https://github.com/CirclesUBI/circles-sdk.git 
 cd circles-sdk
-git submodule update --init --recursive --remote
 ```
 
-### Build the SDK
+### 2) Build the SDK
 ```bash
-# Install the v1-contract's dependencies
-cd packages/circles-contracts && npm install && cd ../..
-
-# Install all other dependencies and build the sdk
-npm install
+./buildContracts.sh
 npm run build
 ```
-### Run anvil
+
+### 3) Run anvil
 ```bash
 anvil --port 8545 --gas-limit 8000000 --accounts 10
 ```
@@ -42,7 +38,7 @@ When [anvil](https://book.getfoundry.sh/reference/anvil/) was started with defau
 
 If you need more accounts, see anvil's console output.
 
-### Deploy the contracts
+### 4) Deploy the contracts
 The SDK comes with a script that deploys all relevant contracts with `forge create`.
 The `deployContracts.sh` script can be configured with environment variables or an `.env` file.
 
@@ -59,21 +55,20 @@ V1 Hub: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 V2 Hub: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 ```
 
-### Run the example application
-The SDK comes with a svelte example application that demonstrates how to use the SDK.
+### 5) Run the example application
 ```bash
-cd examples/svelte
+cd examples/svelte-playground
 npm install
 npm run dev
 ```
 
-### Run tests
+### 6) Run tests
 To run the 'jest' tests, use the following command in the repository root directory:
 ```bash
 npm run test
 ```
 
-### Configure the Circles SDK
+### 7) Configure the Circles SDK
 You can use the following code to configure the Circles SDK so that it uses the local anvil environment.
 Here we're using the values from above:
 ```typescript

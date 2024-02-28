@@ -9,13 +9,21 @@ export class ObservableProperty<TValue> extends Observable<TValue> {
     get value(): TValue | undefined {
         return this._value;
     }
+
     private _value?: TValue;
 
     protected constructor() {
         super();
     }
 
-    protected emit (value: TValue) {
+    subscribe(subscriber: (value: TValue) => void): (() => void) {
+        if (this._value !== undefined) {
+            subscriber(this._value);
+        }
+        return super.subscribe(subscriber);
+    }
+
+    protected emit(value: TValue) {
         this._value = value;
         super.emit(value);
     }

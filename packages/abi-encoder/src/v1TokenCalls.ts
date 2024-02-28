@@ -39,9 +39,13 @@ export class V1TokenCalls {
   static encodeFunctionData(functionName: V1TokenFunctionName, args: any[] = []): string {
     return this.contractInterface.encodeFunctionData(functionName, args);
   }
-  
+
   static balanceOf(account: string): string {
     return this.encodeFunctionData('balanceOf', [account]);
+  }
+
+  static look(): string {
+    return this.encodeFunctionData('look', []);
   }
 
   static transfer(dst: string, wad: bigint): string {

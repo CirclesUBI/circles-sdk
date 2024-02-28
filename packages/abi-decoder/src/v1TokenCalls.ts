@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import TokenV1 from '@circles/circles-contracts/build/contracts/Token.json';
-import { NoInputs } from './noInputs';
+import { NoInputs } from './noInputs.js';
 
 export type ApproveInputs = {
   spender: string;

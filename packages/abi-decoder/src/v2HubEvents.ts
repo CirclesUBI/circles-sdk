@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
-import { Event, EventDecoder, ParsedEvent } from './eventDecoder';
+import { Event, EventDecoder, ParsedEvent } from './eventDecoder.js';
 
 export type ApprovalForAllEvent = Event &  {
   account: string;

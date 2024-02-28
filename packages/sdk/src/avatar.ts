@@ -76,6 +76,10 @@ export class Avatar {
         ]);
         console.log(`Avatar 1 state: ${this.v1Avatar.state.value}, Avatar 2 state: ${this.v2Avatar.state.value}.`);
 
+        if (this.v1Avatar.v1Token) {
+            this.v1Avatar.v1Token.events.subscribe(this.setLastEvent);
+        }
+
         if (this.v1Avatar.state.value === V1AvatarState.NotInitialized
             || this.v2Avatar.state.value === V2AvatarState.NotInitialized) {
             throw new Error('Avatar not initialized');
@@ -86,14 +90,11 @@ export class Avatar {
     };
 
     private updateState = () => {
-        // Default to Unknown to cover all cases not explicitly handled
         let newState: AvatarState = AvatarState.Unknown;
 
-        // Extract states for easier comparison
         const v1State = this.v1Avatar.state.value;
         const v2State = this.v2Avatar.state.value;
 
-        // Handle cases where both V1 and V2 are in specific states
         if (v1State === V1AvatarState.NotInitialized && v2State === V2AvatarState.NotInitialized) {
             newState = AvatarState.NotInitialized;
         } else if (v1State === V1AvatarState.Unregistered && v2State === V2AvatarState.Unregistered) {
@@ -128,9 +129,19 @@ export class Avatar {
             }
         }
 
-        // Finally, update the state
         this.setState(newState);
     };
+
+    getMintableAmount = () => {
+        if (!this.canMint()) {
+            throw new Error(`Avatar cannot mint in state: ${this.state.value}`)
+        }
+        if (this.livesInV1()) {
+            return this.v1Avatar.v1Token?.getMintableAmount();
+        } else if (this.livesInV2()) {
+            return this.v2Avatar.getMintableAmount();
+        }
+    }
 
     /**
      * Get the avatar's balance of a token.
@@ -148,12 +159,10 @@ export class Avatar {
             return v2TokenBalance;
         }
 
-        const v1Token = this.v1Hub.getToken(tokenOrAvatar);
-        if (!v1Token) {
+        if (!this.v1Avatar.v1Token) {
             throw new Error(`Token not found: ${tokenOrAvatar} (address is neither a v1 token nor a v2 human- or group-avatar)`);
         }
-
-        return await v1Token.balanceOf(this.address);
+        return await this.v1Avatar.v1Token.balanceOf(this.address);
     }
 
     migrateAvatar = async (cidV0: string): Promise<void> => {
@@ -225,4 +234,79 @@ export class Avatar {
 
     updateProfile = async (cidV0: string): Promise<TransactionReceipt> =>
         await this.v2Hub.setIpfsCidV0(cidV0Digest(cidV0))
+
+    transfer = async (to: string, amount: bigint): Promise<TransactionReceipt> => {
+        if (!this.canTransfer()) {
+            throw new Error(`Avatar cannot transfer in state: ${this.state.value}`)
+        }
+        if (this.livesInV1()) {
+            return await this.v1Avatar.transfer(to, amount);
+        } else if (this.livesInV2()) {
+            return await this.v2Avatar.transfer(to, amount);
+        } else {
+            throw new Error(`Transfer not implemented for state: ${this.state.value}`)
+        }
+    }
+
+    trust = async (avatar: string): Promise<TransactionReceipt> => {
+        if (!this.isRegistered()) {
+            throw new Error(`Avatar cannot trust in state: ${this.state.value}`)
+        }
+        if (this.livesInV1()) {
+            return await this.v1Avatar.trust(avatar);
+        } else if (this.livesInV2()) {
+            return await this.v2Avatar.trust(avatar);
+        } else {
+            throw new Error(`Trust not implemented for state: ${this.state.value}`)
+        }
+    }
+
+    untrust = async (avatar: string): Promise<TransactionReceipt> => {
+        if (!this.isRegistered()) {
+            throw new Error(`Avatar cannot untust in state: ${this.state.value}`)
+        }
+        if (this.livesInV1()) {
+            return await this.v1Avatar.untust(avatar);
+        } else if (this.livesInV2()) {
+            return await this.v2Avatar.untust(avatar);
+        } else {
+            throw new Error(`Untust not implemented for state: ${this.state.value}`)
+        }
+    }
+
+    isRegistered = () => this.state.value !== AvatarState.NotInitialized
+        && this.state.value !== AvatarState.Unknown
+        && this.state.value !== AvatarState.Unregistered;
+
+    isHuman = () => this.state.value === AvatarState.V1_Human
+        || this.state.value === AvatarState.V2_Human
+        || this.state.value === AvatarState.V1_StoppedHuman
+        || this.state.value === AvatarState.V1_StoppedHuman_and_V2_Human;
+
+    isOrganization = () => this.state.value === AvatarState.V1_Organization
+        || this.state.value === AvatarState.V2_Organization;
+
+    isGroup = () => this.state.value === AvatarState.V2_Group;
+
+    canMint = () => this.canMintInV1() || this.canMintInV2();
+
+    canInvite = () => this.isHuman() && this.livesInV2();
+
+    canTrust = () => this.isRegistered();
+
+    canTransfer = () => this.isHuman() || this.isOrganization();
+
+    private livesInV1 = () => this.state.value === AvatarState.V1_Human
+        || this.state.value === AvatarState.V1_Organization
+        || this.state.value === AvatarState.V1_StoppedHuman;
+
+    private livesInV2 = () => this.state.value === AvatarState.V2_Human
+        || this.state.value === AvatarState.V1_StoppedHuman_and_V2_Human
+        || this.state.value === AvatarState.V2_Organization
+        || this.state.value === AvatarState.V2_Group;
+
+    private canMintInV1 = () => this.state.value === AvatarState.V1_Human;
+
+    private canMintInV2 = () => this.state.value === AvatarState.V2_Human
+        || this.state.value === AvatarState.V1_StoppedHuman_and_V2_Human;
 }

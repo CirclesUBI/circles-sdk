@@ -1,7 +1,7 @@
 import {V1HubCalls} from '@circles-sdk/abi-encoder/dist';
 import {ethers, TransactionReceipt} from 'ethers';
 import {Provider} from '@circles-sdk/providers/dist';
-import {V1Token} from './v1Token';
+import {V1Token} from './v1Token.js';
 import {
     ParsedV1HubEvent, V1HubEvent, V1HubEvents
 } from '@circles-sdk/abi-decoder/dist';
@@ -147,6 +147,32 @@ export class V1Hub {
         this.emitEvents(receipt);
         return receipt;
     };
+
+    trust = async (user: string): Promise<ethers.TransactionReceipt> => {
+        const tx = await this.provider.sendTransaction({
+            to: this.address,
+            data: V1HubCalls.trust(user)
+        });
+        const receipt = await tx.wait();
+        if (!receipt || receipt.status !== 1) {
+            throw new Error('Trust failed');
+        }
+        this.emitEvents(receipt);
+        return receipt;
+    };
+
+    untrust = async (user: string): Promise<ethers.TransactionReceipt> => {
+        const tx = await this.provider.sendTransaction({
+            to: this.address,
+            data: V1HubCalls.untrust(user)
+        });
+        const receipt = await tx.wait();
+        if (!receipt || receipt.status !== 1) {
+            throw new Error('Untrust failed');
+        }
+        this.emitEvents(receipt);
+        return receipt;
+    }
 
     private emitEvents = (receipt: TransactionReceipt) => receipt.logs.forEach(log => {
         const event = this.eventDecoder.decodeEventData({
