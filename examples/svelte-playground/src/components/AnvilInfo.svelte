@@ -10,7 +10,7 @@
   import { createEventDispatcher } from 'svelte';
   import Collapsible from './Collapsible.svelte';
 
-  let rpcUrl: string = 'http://localhost:8545';
+  let rpcUrl: string = '';
   let provider: ethers.JsonRpcProvider;
   let anvilCurrentBlock: number;
   let anvilCurrentTime: string;

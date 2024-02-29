@@ -1,95 +1,122 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
-    import {Observable, Sdk, V1Hub} from '@circles-sdk/sdk/dist';
-    import {EoaEthersProvider} from '@circles-sdk/providers/dist';
-    import {ethers} from "ethers";
-    import {type Avatar, AvatarState} from "@circles-sdk/sdk/dist/sdk/src/avatar";
+  import AnvilInfo, { type BlockInfo } from '../components/AnvilInfo.svelte';
 
-    const rpcUrl = 'http://localhost:8545';
-    const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+  import { Avatar, Sdk } from '@circles-sdk/sdk/dist/sdk/src';
+  import AvatarComponent from '../components/Avatar.svelte';
+  import { ethers, HDNodeWallet } from 'ethers';
+  import HorizontalLayout from '../components/HorizontalLayout.svelte';
+  import Collapsible from '../components/Collapsible.svelte';
+  import { EoaEthersProvider } from '@circles-sdk/providers/dist';
+  import PromiseButton from '../components/ActionButton.svelte';
+  import EventList, { subscribeAvatar } from '../components/EventList.svelte';
+  import { onMount } from 'svelte';
+
+  const rpcUrl = 'https://rpc.gnosis.gateway.fm';
+
+  const hubv1Address = '0x29b9a7fBb8995b2423a71cC17cf9810798F6C543';
+  const hubv2Address = '0xb3389C1759ce8E11dBed22ad96B44E706cc0E3eb';
+
+  const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
+  const mainWallet = new ethers.Wallet('', jsonRpcProvider);
+
+
+  const onBlockInfo = async (e: CustomEvent<BlockInfo>) => {
+    console.log(e.detail);
+  };
+
+  let avatars: Avatar[] = [];
+
+  onMount(async () => {
+    const index = localStorage.getItem('avatars') || '[]';
+    const addresses = JSON.parse(index);
+    for (const address of addresses) {
+      const avatarRecord = JSON.parse(localStorage.getItem(`avatar_${address}`) || '');
+      if (!avatarRecord.privateKey) {
+        continue;
+      }
+      const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
+      const ethersWallet = new ethers.Wallet(avatarRecord.privateKey, jsonRpcProvider);
+      const provider = new EoaEthersProvider(jsonRpcProvider, ethersWallet);
+      const sdk = new Sdk(hubv1Address, hubv2Address, provider);
+      const avatar = await sdk.getAvatar(address);
+      await avatar.initialize();
+
+      subscribeAvatar(avatar);
+
+      avatars = [...avatars, avatar];
+    }
+  });
+
+  const createAvatar = async () => {
     const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
-    const wallet = new ethers.Wallet(privateKey, jsonRpcProvider);
-    const provider = new EoaEthersProvider(jsonRpcProvider, wallet);
+    const subWallet = await randomFundedWallet(jsonRpcProvider);
+    const provider = new EoaEthersProvider(jsonRpcProvider, subWallet);
+    const sdk = new Sdk(hubv1Address, hubv2Address, provider);
+    const avatar = await sdk.getAvatar(await subWallet.getAddress());
+    await avatar.initialize();
 
-    const v1HubAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-    const v1Hub = new V1Hub(provider, v1HubAddress);
+    localStorage.setItem(`avatar_${await subWallet.getAddress()}`, JSON.stringify({
+      address: await subWallet.getAddress(),
+      privateKey: subWallet.privateKey
+    }));
 
-    const v2HubAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+    const index = localStorage.getItem('avatars') || '[]';
+    localStorage.setItem('avatars', JSON.stringify([...JSON.parse(index), await subWallet.getAddress()]));
+
+    subscribeAvatar(avatar);
+
+    avatars = [...avatars, avatar];
+  };
 
 
-    let avatar: Avatar;
-    let state: Observable<AvatarState>;
+  const skipDays = async (days: number) => {
+    const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
+    await jsonRpcProvider.send('evm_increaseTime', [days * 24 * 60 * 60]);
+    await jsonRpcProvider.send('evm_mine', []);
+  };
 
-    onMount(async () => {
-        await provider.initialize();
+  const skipSeconds = async (seconds: number) => {
+    const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
+    await jsonRpcProvider.send('evm_increaseTime', [seconds]);
+    await jsonRpcProvider.send('evm_mine', []);
+  };
 
-        const sdk = new Sdk(v1HubAddress, v2HubAddress, provider);
-
-        avatar = await sdk.getAvatar(wallet.address)
-        state = avatar.state;
-
-        await avatar.initialize();
+  export const randomFundedWallet = async (jsonRpcProvider: ethers.JsonRpcProvider): Promise<HDNodeWallet> => {
+    const subWallet = ethers.Wallet.createRandom().connect(jsonRpcProvider);
+    const tx = await mainWallet.sendTransaction({
+      to: subWallet.address,
+      value: ethers.parseEther('0.0075')
     });
-
-    const registerV1Human = async () => {
-        const receipt = await v1Hub.signup();
-        console.log(receipt);
-        await avatar.initialize();
-    }
-
-    const stopV1 = async () => {
-        const receipt = await avatar.stopV1();
-        console.log(receipt);
-    }
-
-    const registerV2Human = async () => {
-        const receipt = await avatar.registerHuman("QmPK1s3pNYLi9ERiq3BDxKa4XosgWwFRQUydHUtz4YgpqB");
-        console.log(receipt);
-    }
-
-    const personalMint = async () => {
-        const receipt = await avatar.personalMint();
-        console.log(receipt);
-    }
+    await tx.wait();
+    return subWallet;
+  };
 </script>
-{#if avatar}
-    <fieldset>
-        <legend>Avatar</legend>
-        <p>Address: {avatar.address}</p>
-        <p>
-            Balance:
-            {#await (avatar.getTokenBalance())}
-            {:then balance}
-                {balance}
-            {:catch error}
-                {error}
-            {/await}
-        </p>
-        <p>
-            State: {$state}
-        </p>
-    </fieldset>
-    {#if $state === AvatarState.Unregistered}
-        Avatar is not yet registered<br/>
-        <button on:click={registerV1Human}>Register v1 human</button>
-    {:else if $state === AvatarState.V1_StoppedHuman}
-        Avatar is v1 only and the minting is stopped<br/>
-        <button on:click={registerV2Human}>Register v2 human</button>
-    {:else if $state === AvatarState.V1_Human}
-        Avatar is a v1 human.<br/>
-        <button on:click={stopV1}>Stop v1 token</button><br/>
-        <button on:click={personalMint}>Mint outstanding personal tokens</button>
-    {:else if $state === AvatarState.V1_Organization}
-        Avatar is a v1 organization
-    {:else if $state === AvatarState.V2_Human}
-        Avatar is a v2 human<br/>
-        <button on:click={personalMint}>Mint outstanding personal tokens</button>
-    {:else if $state === AvatarState.V2_Organization}
-        Avatar is a v2 organization
-    {:else if $state === AvatarState.V2_Group}
-        Avatar is a v2 group
-    {:else if $state === AvatarState.V1_StoppedHuman_and_V2_Human}
-        Avatar is a v2 human and has a stopped v1 token<br/>
-        <button on:click={personalMint}>Mint outstanding personal tokens</button>
-    {/if}
-{/if}
+<!--<AnvilInfo on:newBlock={onBlockInfo} />-->
+<Collapsible label={`Tools`} isOpen={true}>
+  <PromiseButton action={() => createAvatar()}>
+    Create Avatar
+  </PromiseButton>
+  <PromiseButton action={() => skipSeconds(60*60)}>
+    Skip 1 hour &gt;&gt;
+  </PromiseButton>
+  <PromiseButton action={() => skipDays(1)}>
+    Skip 1 day &gt;&gt;
+  </PromiseButton>
+  <PromiseButton action={() => skipDays(7)}>
+    Skip 7 days &gt;&gt;
+  </PromiseButton>
+</Collapsible>
+<HorizontalLayout>
+  <EventList />
+  {#each avatars as avatar}
+    <AvatarComponent {avatar} />
+  {/each}
+</HorizontalLayout>
+<!--
+<h1>v1</h1>
+<V1Info v1LastMint="0" v1MintableAmount="0" v1OwnTokenBalance="0" v1TokenAddress="0" />
+<V1Actions address="0" isStopped={true} />
+<h1>v2</h1>
+<V2Info v2LastMint="0" v2MintableAmount="0" v2OwnTokenBalance="0" v2TokenId="0" />
+<V2Actions address="0" isStopped={true} />
+-->

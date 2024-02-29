@@ -28,7 +28,7 @@
                 ownTokenBalance = "0";
             });
         }
-    }, 1000);
+    }, 5000);
 </script>
 
 <div>

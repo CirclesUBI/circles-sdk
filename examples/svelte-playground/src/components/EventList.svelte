@@ -6,7 +6,7 @@
 
     let events = writable<AvatarEvent[]>([]);
 
-    export function addAvatar(avatar: Avatar) {
+    export function subscribeAvatar(avatar: Avatar) {
         avatar.lastEvent.subscribe((event) => {
             const e = get(events);
             e.unshift(event);

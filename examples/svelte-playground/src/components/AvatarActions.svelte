@@ -8,6 +8,9 @@
     import TransferHistoryItem from "./TransferHistoryItem.svelte";
     import Trust from "./Trust.svelte";
     import InviteHuman from "./InviteHuman.svelte";
+    import SignupHuman from './SignupHuman.svelte';
+    import SignupOrganization from './SignupOrganization.svelte';
+    import SignupGroup from './SignupGroup.svelte';
 
     export let avatar: Avatar;
 
@@ -46,13 +49,23 @@
     $: isOrganization = $avatarState && avatar.isOrganization();
 </script>
 <Collapsible label="Signup" isOpen={!isRegistered || $avatarState === AvatarState.V1_StoppedHuman}>
-    <ActionButton disabled={isV1}
-                  action={signupV1}>Signup @ v1
-    </ActionButton>
+  <ActionButton disabled={isV1}
+                action={signupV1}>Signup Human @ v1
+  </ActionButton>
 
-    <ActionButton disabled={isV2 || $avatarState !== AvatarState.V1_StoppedHuman}
-                  action={() => avatar.registerHuman(defaultProfile)}>Signup @ v2
-    </ActionButton>
+  <ActionButton disabled={isV1}
+                action={signupV1}>Signup Organization @ v1
+  </ActionButton>
+
+  <Collapsible label="Signup Human @ v2" isLocked={isV2 || $avatarState !== AvatarState.V1_StoppedHuman}>
+    <SignupHuman {avatar} />
+  </Collapsible>
+  <Collapsible label="Signup Organization @ v2" isLocked={$avatarState !== AvatarState.Unregistered}>
+    <SignupOrganization {avatar} />
+  </Collapsible>
+  <Collapsible label="Signup Group @ v2" isLocked={$avatarState !== AvatarState.Unregistered}>
+    <SignupGroup {avatar} />
+  </Collapsible>
 </Collapsible>
 <Collapsible label="Actions" isOpen={isRegistered}>
     <ActionButton disabled={$avatarState !== AvatarState.V1_Human}
