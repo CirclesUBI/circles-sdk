@@ -1,7 +1,6 @@
 {
   "private": true,
   "workspaces": [
-    "packages/circles-contracts",
     "./packages/abi-encoder",
     "./packages/providers",
     "./packages/sdk",

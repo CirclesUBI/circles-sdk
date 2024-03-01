@@ -44,6 +44,7 @@
 
 <button on:click={executeAction}
         style="display: inline-block;"
+        title="{errorMessage}"
         class:button-ready={state === 'Ready'}
         class:button-working={state === 'Working'}
         class:button-error={(state === 'Error' || state === 'Retry')}

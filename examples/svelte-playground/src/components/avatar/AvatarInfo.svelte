@@ -10,24 +10,35 @@
     $: avatarState = avatar.state;
     $: avatarStateString = $avatarState?.toString();
 
-    setInterval(() => {
-        if ($avatarState === AvatarState.V1_Human
-            || $avatarState === AvatarState.V2_Human
-            || $avatarState === AvatarState.V1_StoppedHuman_and_V2_Human) {
-            avatar.getMintableAmount()?.then((amount) => {
-                mintableAmount = amount.toString();
-            }).catch((e) => {
-                console.warn(e);
-                mintableAmount = "0";
-            });
+    $: {
+      if (avatarStateString) {
+        updateAmounts();
+      }
+    }
 
-            avatar.getTokenBalance()?.then((balance) => {
-                ownTokenBalance = balance.toString();
-            }).catch((e) => {
-                console.warn(e);
-                ownTokenBalance = "0";
-            });
-        }
+    function updateAmounts() {
+      if (!($avatarState === AvatarState.V1_Human
+        || $avatarState === AvatarState.V2_Human
+        || $avatarState === AvatarState.V1_StoppedHuman_and_V2_Human)) {
+        return;
+      }
+
+      avatar.getMintableAmount()?.then((amount) => {
+        mintableAmount = amount.toString();
+      }).catch((e) => {
+        console.warn(e);
+        mintableAmount = '0';
+      });
+      avatar.getTokenBalance()?.then((balance) => {
+        ownTokenBalance = balance.toString();
+      }).catch((e) => {
+        console.warn(e);
+        ownTokenBalance = '0';
+      });
+    }
+
+    setInterval(() => {
+      updateAmounts();
     }, 5000);
 </script>
 

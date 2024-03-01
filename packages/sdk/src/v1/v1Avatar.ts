@@ -1,91 +1,91 @@
-import {Provider} from '@circles-sdk/providers/dist';
-import {V1Hub} from './v1Hub';
-import {V1Token} from './v1Token';
-import {ethers} from 'ethers';
-import {ObservableProperty} from "../observableProperty";
-import {calculatePath} from "@circles-sdk/pathfinder/dist";
-import {TransferPath} from "@circles-sdk/pathfinder/src";
+import { Provider } from '@circles-sdk/providers/dist';
+import { V1Hub } from './v1Hub';
+import { V1Token } from './v1Token';
+import { ethers } from 'ethers';
+import { ObservableProperty } from '../observableProperty';
+import { calculatePath } from '@circles-sdk/pathfinder/dist';
+import { TransferPath } from '@circles-sdk/pathfinder/src';
 
 export enum V1AvatarState {
-    NotInitialized,
-    Unregistered,
-    Human,
-    StoppedHuman,
-    Organization
+  NotInitialized,
+  Unregistered,
+  Human,
+  StoppedHuman,
+  Organization
 }
 
 export class V1Avatar {
-    private readonly provider: Provider;
-    private readonly v1Hub: V1Hub;
-    private readonly avatarAddress: string;
+  private readonly provider: Provider;
+  private readonly v1Hub: V1Hub;
+  private readonly avatarAddress: string;
 
-    get v1Token(): V1Token | undefined {
-        return this._v1Token;
+  get v1Token(): V1Token | undefined {
+    return this._v1Token;
+  }
+
+  private _v1Token?: V1Token;
+
+  public readonly state: ObservableProperty<V1AvatarState>;
+  private readonly setState: (state: V1AvatarState) => void;
+
+  constructor(v1Hub: V1Hub, avatarAddress: string, provider: Provider) {
+    this.v1Hub = v1Hub;
+    this.avatarAddress = avatarAddress;
+    this.provider = provider;
+
+    const stateProperty = ObservableProperty.create<V1AvatarState>();
+    this.state = stateProperty.property;
+    this.setState = stateProperty.emit;
+  }
+
+  async initialize() {
+    const [isOrganization, tokenAddress] = await Promise.all([
+      this.v1Hub.organizations(this.avatarAddress),
+      this.v1Hub.userToToken(this.avatarAddress)
+    ]);
+
+    let newState = this.state.value;
+    newState = isOrganization
+      ? V1AvatarState.Organization
+      : V1AvatarState.Unregistered;
+
+    this._v1Token = tokenAddress && ethers.getAddress(tokenAddress) != ethers.ZeroAddress
+      ? this.v1Hub.getToken(tokenAddress)
+      : undefined;
+
+    if (this._v1Token) {
+      newState = V1AvatarState.Human;
+
+      const stopped = await this._v1Token.stopped();
+      if (stopped) {
+        newState = V1AvatarState.StoppedHuman;
+      }
     }
 
-    private _v1Token?: V1Token;
+    this.setState(newState);
+  }
 
-    public readonly state: ObservableProperty<V1AvatarState>;
-    private readonly setState: (state: V1AvatarState) => void;
+  async transfer(to: string, amount: bigint) {
+    // TODO: Validate inputs
+    const transferPath: TransferPath = await calculatePath({
+      from: this.avatarAddress,
+      to,
+      amount
+    });
 
-    constructor(v1Hub: V1Hub, avatarAddress: string, provider: Provider) {
-        this.v1Hub = v1Hub;
-        this.avatarAddress = avatarAddress;
-        this.provider = provider;
+    return await this.v1Hub.transferThrough(
+      transferPath.path.map(step => step.tokenOwner),
+      transferPath.path.map(step => step.from),
+      transferPath.path.map(step => step.to),
+      transferPath.path.map(step => step.amount)
+    );
+  }
 
-        const stateProperty = ObservableProperty.create<V1AvatarState>();
-        this.state = stateProperty.property;
-        this.setState = stateProperty.emit;
-    }
+  async trust(avatar: string) {
+    return await this.v1Hub.trust(avatar);
+  }
 
-    async initialize() {
-        const [isOrganization, tokenAddress] = await Promise.all([
-            this.v1Hub.organizations(this.avatarAddress),
-            this.v1Hub.userToToken(this.avatarAddress)
-        ]);
-
-        let newState = this.state.value;
-        newState = isOrganization
-            ? V1AvatarState.Organization
-            : V1AvatarState.Unregistered;
-
-        this._v1Token = tokenAddress && ethers.getAddress(tokenAddress) != ethers.ZeroAddress
-            ? this.v1Hub.getToken(tokenAddress)
-            : undefined;
-
-        if (this._v1Token) {
-            newState = V1AvatarState.Human;
-
-            const stopped = await this._v1Token.stopped();
-            if (stopped) {
-                newState = V1AvatarState.StoppedHuman;
-            }
-        }
-
-        this.setState(newState);
-    }
-
-    async transfer(to: string, amount: bigint) {
-        // TODO: Validate inputs
-        const transferPath: TransferPath = await calculatePath({
-            from: this.avatarAddress,
-            to,
-            amount
-        });
-
-        return await this.v1Hub.transferThrough(
-            transferPath.path.map(step => step.tokenOwner),
-            transferPath.path.map(step => step.from),
-            transferPath.path.map(step => step.to),
-            transferPath.path.map(step => step.amount),
-        );
-    }
-
-    async trust(avatar: string) {
-        return await this.v1Hub.trust(avatar);
-    }
-
-    async untust(avatar: string) {
-        return await this.v1Hub.untrust(avatar);
-    }
+  async untust(avatar: string) {
+    return await this.v1Hub.untrust(avatar);
+  }
 }

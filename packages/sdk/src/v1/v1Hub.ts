@@ -21,7 +21,7 @@ export class V1Hub {
         this.provider = provider;
         this.address = address;
 
-        const eventsObservable = Observable.create<ParsedV1HubEvent<V1HubEvent>>();
+        const eventsObservable= Observable.create<ParsedV1HubEvent<V1HubEvent>>();
         this.events = eventsObservable.property;
         this.emitEvent = (e) => eventsObservable.emit(e);
     }

@@ -122,11 +122,14 @@ export class V2Hub {
     return receipt;
   }
 
-  calculateIssuance = async (human: string): Promise<bigint> =>
-    BigInt(await this.provider.call({
+  calculateIssuance = async (human: string): Promise<bigint> => {
+    const callData = V2HubCalls.calculateIssuance(human);
+    const callResult = await this.provider.call({
       to: this.address,
-      data: V2HubCalls.calculateIssuance(human)
-    }));
+      data: callData
+    });
+    return BigInt(callResult);
+  }
 
   createERC20InflationWrapper = async (tokenId: string, name: string, symbol: string): Promise<ethers.TransactionReceipt> => {
     const tx = await this.provider.sendTransaction({

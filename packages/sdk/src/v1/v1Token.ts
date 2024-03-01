@@ -2,10 +2,8 @@ import { V1TokenCalls } from '@circles-sdk/abi-encoder/dist';
 import {ethers, TransactionReceipt} from 'ethers';
 import { Provider } from '@circles-sdk/providers/src/provider.js';
 import {
-  ParsedV1HubEvent,
   ParsedV1TokenEvent,
-  V1HubEvent,
-  V1HubEvents, V1TokenEvent,
+  V1TokenEvent,
   V1TokenEvents
 } from "@circles-sdk/abi-decoder/dist";
 import {Observable} from "../observable";

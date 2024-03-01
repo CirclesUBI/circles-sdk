@@ -13,13 +13,6 @@
         margin-bottom: 1rem;
     }
 
-    /*.section-header {*/
-    /*    background-color: #f0f0f0;*/
-    /*    padding: 10px;*/
-    /*    font-weight: bold;*/
-    /*    cursor: pointer;*/
-    /*}*/
-
     .section-content {
         padding: 10px;
         background-color: #f9f9f9;

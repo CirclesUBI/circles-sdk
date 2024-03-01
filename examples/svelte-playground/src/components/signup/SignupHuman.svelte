@@ -1,6 +1,6 @@
 <script lang="ts">
   import {Avatar} from "@circles-sdk/sdk/dist/sdk/src/avatar";
-  import ActionButton from "./ActionButton.svelte";
+  import ActionButton from '../common/ActionButton.svelte';
 
   export let avatar: Avatar;
 

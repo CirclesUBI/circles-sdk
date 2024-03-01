@@ -1,6 +1,8 @@
 <script lang="ts">
     import {Avatar} from "@circles-sdk/sdk/dist/sdk/src/avatar";
-    import ActionButton from "./ActionButton.svelte";
+    import ActionButton from "../common/ActionButton.svelte";
+    import TransferHistory from './TransferHistory.svelte';
+    import Collapsible from '../common/VerticalCollapsible.svelte';
 
     export let avatar: Avatar;
 
@@ -29,3 +31,6 @@
         Transfer
     </ActionButton>
 </div>
+<Collapsible label="History" isOpen={false}>
+  <TransferHistory {avatar} />
+</Collapsible>

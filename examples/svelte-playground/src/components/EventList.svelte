@@ -15,7 +15,7 @@
     }
 </script>
 <script lang="ts">
-    import Collapsible from "./Collapsible.svelte";
+    import Collapsible from "./common/VerticalCollapsible.svelte";
 </script>
 <div>
     <ul>

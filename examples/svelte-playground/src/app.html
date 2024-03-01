@@ -6,6 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     %sveltekit.head%
     <style>
+        :root {
+            /* Green Shades */
+            --green-primary: #4CAF50; /* Primary Green */
+            --green-light: #81C784; /* Lighter Shade of Green */
+            --green-dark: #388E3C; /* Darker Shade of Green */
+
+            /* Blue Shades */
+            --blue-primary: #2196F3; /* Primary Blue */
+            --blue-light: #64B5F6; /* Lighter Shade of Blue */
+            --blue-dark: #1976D2; /* Darker Shade of Blue */
+
+            /* Grey Shades */
+            --grey-primary: #9E9E9E; /* Primary Grey */
+            --grey-light: #BDBDBD; /* Lighter Shade of Grey */
+            --grey-dark: #616161; /* Darker Shade of Grey */
+
+            /* Additional Shades for Extended Use */
+            --green-extra-light: #C8E6C9; /* Extra Light Shade of Green */
+            --green-extra-dark: #1B5E20; /* Extra Dark Shade of Green */
+            --blue-extra-light: #BBDEFB; /* Extra Light Shade of Blue */
+            --blue-extra-dark: #0D47A1; /* Extra Dark Shade of Blue */
+            --grey-extra-light: #E0E0E0; /* Extra Light Shade of Grey */
+            --grey-extra-dark: #424242; /* Extra Dark Shade of Grey */
+        }
+
         * {
             font-family: Arial, sans-serif;
         }
@@ -24,7 +49,7 @@
 
         .button {
             border: none;
-            background-color: #007bff;
+            background-color: var(--blue-primary);
             color: white;
             margin: 3px;
             padding: 10px 20px;
@@ -36,7 +61,7 @@
 
         button {
             border: none;
-            background-color: #007bff;
+            background-color: var(--blue-primary);
             color: white;
             margin: 3px;
             padding: 10px 20px;
@@ -47,7 +72,7 @@
         }
 
         button:disabled {
-            background-color: #ccc;
+            background-color: var(--grey-light);
             cursor: not-allowed;
         }
 
@@ -61,7 +86,7 @@
             padding: 8px;
             margin-top: 5px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid var(--grey-extra-light);
             border-radius: 4px;
         }
 
@@ -70,14 +95,14 @@
         }
 
         pre {
-            border: 1px solid #ddd;
+            border: 1px solid var(--grey-extra-light);
             padding: 10px;
             border-radius: 4px;
             margin: 0;
         }
 
         .collapsible-section {
-            border: 1px solid #ccc;
+            border: 1px solid var(--grey-extra-light);
             border-radius: 4px;
             margin-bottom: 10px; /* Space between sections */
         }
@@ -86,8 +111,8 @@
             font-weight: bold;
             cursor: pointer;
             padding: 10px;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ccc; /* Separates header from content visually */
+            background-color: var(--grey-extra-light);
+            border-bottom: 1px solid var(--grey-extra-light); /* Separates header from content visually */
             border-top-left-radius: 4px; /* Rounded corners on the top */
             border-top-right-radius: 4px;
         }
@@ -110,7 +135,7 @@
 
         /* Additional styles for button states */
         .button-ready {
-            background-color: #007bff; /* Blue */
+            background-color: var(--blue-primary); /* Blue */
         }
 
         .button-working {
@@ -132,8 +157,8 @@
         /* Disabled state is already styled in your existing CSS */
         /* Add a loading spinner for the working state if desired */
         .loading-spinner {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3498db; /* Blue */
+            border: 4px solid var(--grey-extra-light); /* Light grey */
+            border-top: 4px solid var(--blue-primary); /* Blue */
             border-radius: 50%;
             width: 20px;
             height: 20px;
