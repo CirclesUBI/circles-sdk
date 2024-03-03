@@ -27,6 +27,8 @@ jobs:
           sudo apt-get install -y jq
           curl -L https://foundry.paradigm.xyz | bash
           source $HOME/.cargo/env
+          source /home/runner/.bashrc
+          foundryup
 
       - name: Build Contracts
         run: |
