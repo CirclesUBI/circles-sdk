@@ -27,6 +27,7 @@ jobs:
       - name: Build Contracts
         run: |
           ./buildContracts.sh
+          npm i
 
       - name: Build SDK
         run: |
