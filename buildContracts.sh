@@ -12,11 +12,12 @@ git submodule update --init --recursive --remote
 # Remove the v1 package from the workspaces
 jq 'del(.workspaces[0])' package.json > temp.package.json
 mv temp.package.json package.json
-npm install
 
 # Build the v1 contracts
 cd ./packages/circles-contracts
-npm install
+npm install @openzeppelin/contracts@^3.4.0-solc-0.7
+npm install @gnosis.pm/safe-contracts@^1.3.0
+npm install @circles/safe-contracts@=1.0.14
 forge build
 cd ../..
 

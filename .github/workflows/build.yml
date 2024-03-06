@@ -19,14 +19,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '21' # Adjust this to your project's Node.js version
+          node-version: '21'
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Build Contracts
         run: |
-          npm i
           ./buildContracts.sh
 
       - name: Build SDK
