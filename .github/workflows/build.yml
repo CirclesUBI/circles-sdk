@@ -32,3 +32,9 @@ jobs:
         run: |
           npm i
           npm run build
+
+      - name: Build example app
+        run: |
+          cd examples/svelte-playground
+          npm i
+          npm run build
