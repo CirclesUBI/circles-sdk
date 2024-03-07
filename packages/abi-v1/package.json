@@ -1,17 +1,15 @@
 {
-  "name": "@circles-sdk/pathfinder",
+  "name": "@circles-sdk/abi-v1",
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
-  "dependencies": {
-    "cross-fetch": "^4.0.0",
-    "ethers": "^6.11.1"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^6.11.1"
+  }
 }
