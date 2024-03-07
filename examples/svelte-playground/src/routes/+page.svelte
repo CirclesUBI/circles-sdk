@@ -10,20 +10,30 @@
   import { onMount } from 'svelte';
   import HorizontalCollapsible from '../components/common/HorizontalCollapsible.svelte';
   import { AvatarState } from '@circles-sdk/sdk/dist/sdk/src/avatar';
+  import {
+    PUBLIC_ANVIL_RPC_URL
+    , PUBLIC_ANVIL_HUB_V1
+    , PUBLIC_ANVIL_HUB_V2
+    , PUBLIC_ANVIL_PRIVATE_KEY
+    , PUBLIC_GC_RPC_URL
+    , PUBLIC_GC_HUB_V1
+    , PUBLIC_GC_HUB_V2
+    , PUBLIC_GC_PRIVATE_KEY
+  } from '$env/static/public';
 
   let environment = 'gnosisChain';
   const environments = {
     gnosisChain: {
-      rpcUrl: 'https://circles-rpc.circlesubi.id',
-      hubv1Address: '0x29b9a7fBb8995b2423a71cC17cf9810798F6C543',
-      hubv2Address: '0xb3389C1759ce8E11dBed22ad96B44E706cc0E3eb',
-      mainWallet: ''
+      rpcUrl: PUBLIC_GC_RPC_URL,
+      hubv1Address: PUBLIC_GC_HUB_V1,
+      hubv2Address: PUBLIC_GC_HUB_V2,
+      mainWallet: PUBLIC_GC_PRIVATE_KEY
     },
     anvil: {
-      rpcUrl: 'http://localhost:8545',
-      hubv1Address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      hubv2Address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-      mainWallet: 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+      rpcUrl: PUBLIC_ANVIL_RPC_URL,
+      hubv1Address: PUBLIC_ANVIL_HUB_V1,
+      hubv2Address: PUBLIC_ANVIL_HUB_V2,
+      mainWallet: PUBLIC_ANVIL_PRIVATE_KEY
     }
   };
 
@@ -250,7 +260,9 @@
   {/if}
 </VerticalCollapsible>
 <HorizontalLayout>
-  <EventList />
+  <HorizontalCollapsible label="Events" isOpen={false}>
+    <EventList />
+  </HorizontalCollapsible>
   {#each avatars as avatar}
     <HorizontalCollapsible label={titleByState(avatar)} isOpen={true}
                            headerTextColor={textColorByState(avatar)}
