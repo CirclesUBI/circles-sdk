@@ -4,8 +4,14 @@
   import type { AvatarEvent } from '@circles-sdk/sdk/dist/sdk/src/avatar';
   import { onMount } from 'svelte';
 
+  const events = writable<AvatarEvent[]>([]);
 
-  let events = writable<AvatarEvent[]>([]);
+  const bigintReplacer = (key: string, value: any) => {
+    if (typeof value === 'bigint') {
+      return value.toString();
+    }
+    return value;
+  };
 
   export function subscribeAvatar(avatar: Avatar) {
     avatar.lastEvent.subscribe((event) => {
@@ -13,21 +19,13 @@
       e.unshift(event);
       events.set(e);
 
-      const replacer = (key: string, value: any) => {
-        if (typeof value === 'bigint') {
-          return value.toString();
-        }
-        return value;
-      };
-
-      // append the event to the local storage
       const storedEvents = localStorage.getItem('avatarEvents');
       if (storedEvents) {
         const parsedEvents = JSON.parse(storedEvents);
         parsedEvents.push(event);
-        localStorage.setItem('avatarEvents', JSON.stringify(parsedEvents, replacer));
+        localStorage.setItem('avatarEvents', JSON.stringify(parsedEvents, bigintReplacer));
       } else {
-        localStorage.setItem('avatarEvents', JSON.stringify([event], replacer));
+        localStorage.setItem('avatarEvents', JSON.stringify([event], bigintReplacer));
       }
     });
   }
@@ -47,13 +45,7 @@
     {#each $events as event}
       <li>
         <Collapsible label={event.name} isOpen={false}>
-                    <pre>{JSON.stringify(event.data, (a, b, c) => {
-                      if (typeof b === 'bigint') {
-                        return b.toString();
-                      } else {
-                        return b;
-                      }
-                    }, 2)}</pre>
+          <pre>{JSON.stringify(event.data, bigintReplacer, 2)}</pre>
         </Collapsible>
       </li>
     {/each}

@@ -248,14 +248,31 @@
     {/each}
   </select>
   {#if environment === 'anvil'}
+    <PromiseButton action={async () => {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`${chainId}_`)) {
+          localStorage.removeItem(key);
+        }
+      }
+      avatars = [];
+    }}>
+      Clear avatars
+    </PromiseButton>
     <PromiseButton action={() => skipSeconds(60*60)}>
-      Skip 1 hour &gt;&gt;
+      &gt;&gt; 1 hour
     </PromiseButton>
     <PromiseButton action={() => skipDays(1)}>
-      Skip 1 day &gt;&gt;
+      &gt;&gt; 1 day
     </PromiseButton>
     <PromiseButton action={() => skipDays(7)}>
-      Skip 7 days &gt;&gt;
+      &gt;&gt; 7 days
+    </PromiseButton>
+    <PromiseButton action={() => skipDays(30)}>
+      &gt;&gt; 30 days
+    </PromiseButton>
+    <PromiseButton action={() => skipDays(30)}>
+      &gt;&gt; 90 days
     </PromiseButton>
   {/if}
 </VerticalCollapsible>

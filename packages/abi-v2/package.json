@@ -1,5 +1,5 @@
 {
-  "name": "@circles-sdk/abi-decoder",
+  "name": "@circles-sdk/abi-v2",
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@circles/circles-contracts": "^3.3.2",
-    "@circles/circles-contracts-v2": "^0.2.1",
     "ethers": "^6.11.1"
   }
 }
