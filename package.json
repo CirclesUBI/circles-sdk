@@ -2,17 +2,15 @@
   "private": true,
   "workspaces": [
     "packages/circles-contracts",
-    "packages/abi-decoder",
-    "packages/abi-encoder",
-    "packages/providers",
-    "packages/sdk",
-    "packages/circles-contracts-v2",
+    "packages/abi-v1",
+    "packages/abi-v2",
     "packages/pathfinder",
-    "packages/pathfinder-v2"
+    "packages/pathfinder-v2",
+    "packages/sdk"
   ],
   "scripts": {
     "test": "jest",
-    "build": "cd packages/circles-contracts && npx truffle compile && cd ../.. && npm run build -w @circles/circles-contracts-v2 -w @circles-sdk/abi-decoder -w @circles-sdk/abi-encoder -w @circles-sdk/providers  -w @circles-sdk/pathfinder -w @circles-sdk/pathfinder-v2 -w @circles-sdk/sdk"
+    "build": "./buildContracts.sh && ./generateCode.sh && npm run build -w @circles/circles-contracts-v2 -w @circles-sdk/abi-v1 -w @circles-sdk/abi-v2 -w @circles-sdk/pathfinder -w @circles-sdk/pathfinder-v2 -w @circles-sdk/sdk"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
