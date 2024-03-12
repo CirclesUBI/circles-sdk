@@ -3,7 +3,9 @@
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
   "scripts": {
     "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
