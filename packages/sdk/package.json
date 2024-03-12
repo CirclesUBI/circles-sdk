@@ -12,7 +12,6 @@
   "dependencies": {
     "@circles-sdk/abi-v1": "^0.0.2",
     "@circles-sdk/abi-v2": "^0.0.2",
-    "@circles-sdk/providers": "^0.0.2",
     "@circles-sdk/pathfinder": "^0.0.2",
     "@circles-sdk/pathfinder-v2": "^0.0.2",
     "ethers": "^6.11.1",
