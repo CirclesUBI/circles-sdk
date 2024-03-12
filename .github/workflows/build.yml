@@ -24,12 +24,9 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
-      - name: Build Contracts
+      - name: Build Contracts & SDK
         run: |
           ./buildContracts.sh
-
-      - name: Build SDK
-        run: |
           npm i
           npm run build
 
