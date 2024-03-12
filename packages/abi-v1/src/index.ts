@@ -10,3 +10,5 @@ export { V1TokenEvents } from './V1TokenEvents';
 export { V1TokenFunctionInputs } from './V1TokenFunctionInputTypes';
 export { V1TokenFunctionNames } from './V1TokenFunctionNames';
 export { V1Token } from './V1TokenWrapper';
+import * as _V1TokenAbi from './V1TokenAbi.json';
+export const V1TokenAbi = _V1TokenAbi;

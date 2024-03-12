@@ -4,11 +4,11 @@ import { V1Data } from './v1/v1Data';
 import { ethers, TransactionReceipt } from 'ethers';
 import { cidV0Digest } from './utils';
 import { ObservableProperty } from './observableProperty';
-import { ParsedV1HubEvent, V1HubEvent } from '../../abi-v1/src/V1HubEvents';
-import { ParsedV1TokenEvent, V1TokenEvent } from '../../abi-v1/src/V1TokenEvents';
-import { ParsedV2HubEvent, V2HubEvent } from '../../abi-v2/src/V2HubEvents';
-import { V1Hub } from '../../abi-v1/src/V1HubWrapper';
-import { V2Hub } from '../../abi-v2/src/V2HubWrapper';
+import { ParsedV1HubEvent, V1HubEvent } from '@circles-sdk/abi-v1/dist/V1HubEvents';
+import { ParsedV1TokenEvent, V1TokenEvent } from '@circles-sdk/abi-v1/dist/V1TokenEvents';
+import { ParsedV2HubEvent, V2HubEvent } from '@circles-sdk/abi-v2/dist/V2HubEvents';
+import { V1Hub } from '@circles-sdk/abi-v1/dist/V1HubWrapper';
+import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
 
 export enum AvatarState {
   NotInitialized,

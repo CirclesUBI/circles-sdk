@@ -1,6 +1,6 @@
 import { ObservableProperty } from '../observableProperty';
 import { ethers, TransactionReceipt } from 'ethers';
-import { V2Hub } from '../../../abi-v2/src/V2HubWrapper';
+import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
 
 export enum V2AvatarState {
   NotInitialized,
