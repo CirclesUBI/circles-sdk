@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import * as inputTypes from './V2HubFunctionInputTypes';
-import * as contractAbi from './V2HubAbi.json';
+import contractAbi from './V2HubAbi.json';
 import { V2HubFunctionName } from './V2HubFunctionNames';
 
 export class V2HubDecoders {

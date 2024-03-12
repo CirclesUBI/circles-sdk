@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import * as inputTypes from './V1TokenFunctionInputTypes';
-import * as contractAbi from './V1TokenAbi.json';
+import contractAbi from './V1TokenAbi.json';
 import { V1TokenFunctionName } from './V1TokenFunctionNames';
 
 export class V1TokenDecoders {

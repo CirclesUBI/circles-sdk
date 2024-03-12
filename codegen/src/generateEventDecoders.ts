@@ -56,7 +56,7 @@ export const generateEventDecoders = (contractName: string, output: OutputBuffer
 
   output.writeLine(`import { ethers, getAddress } from 'ethers';
 import { Event, EventDecoder, ParsedEvent } from './common';
-import * as contractAbi from './${contractName}Abi.json';
+import contractAbi from './${contractName}Abi.json';
 
 ${eventTypes}
 

@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import { Event, EventDecoder, ParsedEvent } from './common';
-import * as contractAbi from './V1HubAbi.json';
+import contractAbi from './V1HubAbi.json';
 
 export type HubTransferEvent = Event & {
   from: string;
@@ -22,6 +22,8 @@ export type TrustEvent = Event & {
   user: string;
   limit: bigint;
 };
+
+
 
 export type V1HubEvent =
   HubTransferEvent |

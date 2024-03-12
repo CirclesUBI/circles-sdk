@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import { ObservableProperty } from '../observableProperty';
 import { calculatePath } from '@circles-sdk/pathfinder/dist';
 import { TransferPath } from '@circles-sdk/pathfinder/src';
-import { V1Hub } from '../../../abi-v1/src/V1HubWrapper';
-import { V1Token } from '../../../abi-v1/src/V1TokenWrapper';
+import { V1Hub } from '@circles-sdk/abi-v1/dist/V1HubWrapper';
+import { V1Token } from '@circles-sdk/abi-v1/dist/V1TokenWrapper';
 
 export enum V1AvatarState {
   NotInitialized,
@@ -43,12 +43,11 @@ export class V1Avatar {
       this.v1Hub.userToToken(this.avatarAddress)
     ]);
 
-    let newState = this.state.value;
-    newState = isOrganization
+    let newState: V1AvatarState = isOrganization
       ? V1AvatarState.Organization
       : V1AvatarState.Unregistered;
 
-    this._v1Token = tokenAddress && ethers.getAddress(tokenAddress) != ethers.ZeroAddress
+    this._v1Token = tokenAddress && tokenAddress != ethers.ZeroAddress
       ? new V1Token(this.provider, tokenAddress)
       : undefined;
 

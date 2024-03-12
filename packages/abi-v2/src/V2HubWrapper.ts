@@ -30,10 +30,10 @@ export class V2Hub {
   }
   
   CIRCLES_STOPPED_V1 = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.CIRCLES_STOPPED_V1()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 DEMURRAGE_WINDOW = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -78,10 +78,10 @@ MINIMUM_DONATION = async (): Promise<bigint> => {
     }));
     };
 SENTINEL = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.SENTINEL()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 WELCOME_BONUS = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -90,10 +90,10 @@ WELCOME_BONUS = async (): Promise<bigint> => {
     }));
     };
 avatars = async (arg0: string): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.avatars({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 balanceOf = async (_account: string, _id: bigint): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -138,16 +138,16 @@ day = async (_timestamp: bigint): Promise<bigint> => {
     }));
     };
 getDeterministicAddress = async (_tokenId: bigint, _bytecodeHash: Uint8Array): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.getDeterministicAddress({ _tokenId: _tokenId, _bytecodeHash: _bytecodeHash })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 hubV1 = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.hubV1()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 inflation_day_zero = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -216,23 +216,23 @@ isValidSymbol = async (_symbol: string): Promise<boolean> => {
     }) === '0x0000000000000000000000000000000000000000000000000000000000000001';
     };
 migration = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.migration()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 mintPolicies = async (arg0: string): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.mintPolicies({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 mintTimes = async (arg0: string): Promise<[string, bigint]> => {
       const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["address", "uint96"], await this.provider.call({
       to: this.address,
       data: this.callEncoder.mintTimes({ arg0: arg0 })
     }));
-return [decoded[0], BigInt(decoded[1])];
+return [await (async () => { const val = decoded[0]; return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })(), BigInt(decoded[1])];
     };
 names = async (arg0: string): Promise<string> => {
       return await this.provider.call({
@@ -241,10 +241,10 @@ names = async (arg0: string): Promise<string> => {
     });
     };
 standardTreasury = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.standardTreasury()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 stopped = async (_human: string): Promise<boolean> => {
       return await this.provider.call({
@@ -271,10 +271,10 @@ toTokenId = async (_avatar: string): Promise<bigint> => {
     }));
     };
 tokenIDToInfERC20 = async (arg0: bigint): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.tokenIDToInfERC20({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 tokenIdToCidV0Digest = async (arg0: bigint): Promise<Uint8Array> => {
       return ethers.getBytes(await this.provider.call({
@@ -283,17 +283,17 @@ tokenIdToCidV0Digest = async (arg0: bigint): Promise<Uint8Array> => {
     }));
     };
 treasuries = async (arg0: string): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.treasuries({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 trustMarkers = async (arg0: string, arg1: string): Promise<[string, bigint]> => {
       const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["address", "uint96"], await this.provider.call({
       to: this.address,
       data: this.callEncoder.trustMarkers({ arg0: arg0, arg1: arg1 })
     }));
-return [decoded[0], BigInt(decoded[1])];
+return [await (async () => { const val = decoded[0]; return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })(), BigInt(decoded[1])];
     };
 uri = async (_id: bigint): Promise<string> => {
       return await this.provider.call({

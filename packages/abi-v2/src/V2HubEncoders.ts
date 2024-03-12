@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import * as inputTypes from './V2HubFunctionInputTypes';
-import * as contractAbi from './V2HubAbi.json';
+import contractAbi from './V2HubAbi.json';
 
 export class V2HubCalls {
     private readonly contractInterface: ethers.Interface = new ethers.Interface(contractAbi);

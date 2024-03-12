@@ -2,8 +2,12 @@
   "private": true,
   "workspaces": [
     "packages/circles-contracts",
+    "packages/circles-contracts-v2",
+    "packages/abi-v1",
+    "packages/abi-v2",
     "packages/pathfinder",
-    "packages/pathfinder-v2"
+    "packages/pathfinder-v2",
+    "packages/sdk"
   ],
   "scripts": {
     "test": "jest",

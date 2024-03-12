@@ -1,4 +1,4 @@
-import { ethers, ParamType } from 'ethers';
+import { ParamType } from 'ethers';
 
 export const solidityToTypeScriptTypes = (solidityType: string): string => {
   switch (true) {
@@ -28,7 +28,7 @@ export const generateDecoder = (type: string, valueExpression?: string): string 
     case type.startsWith('uint') || type.startsWith('int'):
       return `BigInt(${valueExpression})`;
     case type.startsWith('address'):
-      return valueExpression;
+      return `await (async () => { const val = ${valueExpression}; return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })()`;
     case type.startsWith('bool'):
       return `${valueExpression} === '0x0000000000000000000000000000000000000000000000000000000000000001'`;
     case type.startsWith('bytes'):

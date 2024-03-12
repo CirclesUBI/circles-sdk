@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import { Event, EventDecoder, ParsedEvent } from './common';
-import * as contractAbi from './V2HubAbi.json';
+import contractAbi from './V2HubAbi.json';
 
 export type ApprovalForAllEvent = Event & {
   account: string;

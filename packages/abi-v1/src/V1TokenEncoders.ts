@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 import * as inputTypes from './V1TokenFunctionInputTypes';
-import * as contractAbi from './V1TokenAbi.json';
+import contractAbi from './V1TokenAbi.json';
 
 export class V1TokenCalls {
-    private readonly contractInterface: ethers.Interface = new ethers.Interface(<any[]>contractAbi);
+    private readonly contractInterface: ethers.Interface = new ethers.Interface(contractAbi);
 
         allowance(params: inputTypes.AllowanceInputs): string {
         return this.contractInterface.encodeFunctionData('allowance', [params.owner, params.spender]);

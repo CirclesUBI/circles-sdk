@@ -60,10 +60,10 @@ findInflationOffset = async (): Promise<bigint> => {
     }));
     };
 hub = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.hub()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 hubDeployedAt = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -96,10 +96,10 @@ name = async (): Promise<string> => {
     });
     };
 owner = async (): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.owner()
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 period = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({

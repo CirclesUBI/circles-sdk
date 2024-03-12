@@ -83,7 +83,7 @@ export const generateCallDecoders = (contractName: string, output: OutputBuffer,
 
   output.writeLine(`import { ethers, getAddress } from 'ethers';
 import * as inputTypes from './${contractName}FunctionInputTypes';
-import * as contractAbi from './${contractName}Abi.json';
+import contractAbi from './${contractName}Abi.json';
 import { ${contractName}FunctionName } from './${contractName}FunctionNames';
 
 export class ${contractName}Decoders {

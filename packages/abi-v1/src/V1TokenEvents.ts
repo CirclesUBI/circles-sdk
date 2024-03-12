@@ -1,6 +1,6 @@
 import { ethers, getAddress } from 'ethers';
 import { Event, EventDecoder, ParsedEvent } from './common';
-import * as contractAbi from './V1TokenAbi.json';
+import contractAbi from './V1TokenAbi.json';
 
 export type ApprovalEvent = Event & {
   owner: string;

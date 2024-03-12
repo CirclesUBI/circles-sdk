@@ -114,10 +114,10 @@ pow = async (base: bigint, exponent: bigint): Promise<bigint> => {
     }));
     };
 seen = async (arg0: bigint): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.seen({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 signupBonus = async (): Promise<bigint> => {
       return BigInt(await this.provider.call({
@@ -138,16 +138,16 @@ timeout = async (): Promise<bigint> => {
     }));
     };
 tokenToUser = async (arg0: string): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.tokenToUser({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 userToToken = async (arg0: string): Promise<string> => {
-      return await this.provider.call({
+      return await (async () => { const val = await this.provider.call({
       to: this.address,
       data: this.callEncoder.userToToken({ arg0: arg0 })
-    });
+    }); return val == "0x" ? ethers.ZeroAddress : ethers.getAddress(val.slice(-40)); })();
     };
 validation = async (arg0: string): Promise<[boolean, bigint, bigint]> => {
       const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["bool", "uint256", "uint256"], await this.provider.call({
