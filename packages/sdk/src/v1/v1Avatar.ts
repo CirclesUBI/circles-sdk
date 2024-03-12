@@ -1,10 +1,9 @@
-import { Provider } from '@circles-sdk/providers/dist';
-import { V1Hub } from './v1Hub';
-import { V1Token } from './v1Token';
 import { ethers } from 'ethers';
 import { ObservableProperty } from '../observableProperty';
 import { calculatePath } from '@circles-sdk/pathfinder/dist';
 import { TransferPath } from '@circles-sdk/pathfinder/src';
+import { V1Hub } from '../../../abi-v1/src/V1HubWrapper';
+import { V1Token } from '../../../abi-v1/src/V1TokenWrapper';
 
 export enum V1AvatarState {
   NotInitialized,
@@ -15,7 +14,7 @@ export enum V1AvatarState {
 }
 
 export class V1Avatar {
-  private readonly provider: Provider;
+  private readonly provider: ethers.Provider;
   private readonly v1Hub: V1Hub;
   private readonly avatarAddress: string;
 
@@ -28,7 +27,7 @@ export class V1Avatar {
   public readonly state: ObservableProperty<V1AvatarState>;
   private readonly setState: (state: V1AvatarState) => void;
 
-  constructor(v1Hub: V1Hub, avatarAddress: string, provider: Provider) {
+  constructor(v1Hub: V1Hub, avatarAddress: string, provider: ethers.Provider) {
     this.v1Hub = v1Hub;
     this.avatarAddress = avatarAddress;
     this.provider = provider;
@@ -50,7 +49,7 @@ export class V1Avatar {
       : V1AvatarState.Unregistered;
 
     this._v1Token = tokenAddress && ethers.getAddress(tokenAddress) != ethers.ZeroAddress
-      ? this.v1Hub.getToken(tokenAddress)
+      ? new V1Token(this.provider, tokenAddress)
       : undefined;
 
     if (this._v1Token) {
@@ -82,10 +81,10 @@ export class V1Avatar {
   }
 
   async trust(avatar: string) {
-    return await this.v1Hub.trust(avatar);
+    return await this.v1Hub.trust(avatar, BigInt(100));
   }
 
   async untust(avatar: string) {
-    return await this.v1Hub.untrust(avatar);
+    return await this.v1Hub.trust(avatar, BigInt(0));
   }
 }

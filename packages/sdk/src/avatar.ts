@@ -1,18 +1,14 @@
-import { Provider } from '@circles-sdk/providers/dist';
 import { V1Avatar, V1AvatarState } from './v1/v1Avatar';
 import { V2Avatar, V2AvatarState } from './v2/v2Avatar';
-import { V1Hub } from './v1/v1Hub';
-import { V2Hub } from './v2/v2Hub';
 import { V1Data } from './v1/v1Data';
-import { ParsedV1HubEvent, V1HubEvent } from '@circles-sdk/abi-decoder/dist';
-import { ParsedV2HubEvent, V2HubEvent } from '@circles-sdk/abi-decoder/dist';
-import {
-  ParsedV1TokenEvent,
-  V1TokenEvent
-} from '@circles-sdk/abi-decoder/dist';
 import { ethers, TransactionReceipt } from 'ethers';
 import { cidV0Digest } from './utils';
 import { ObservableProperty } from './observableProperty';
+import { ParsedV1HubEvent, V1HubEvent } from '../../abi-v1/src/V1HubEvents';
+import { ParsedV1TokenEvent, V1TokenEvent } from '../../abi-v1/src/V1TokenEvents';
+import { ParsedV2HubEvent, V2HubEvent } from '../../abi-v2/src/V2HubEvents';
+import { V1Hub } from '../../abi-v1/src/V1HubWrapper';
+import { V2Hub } from '../../abi-v2/src/V2HubWrapper';
 
 export enum AvatarState {
   NotInitialized,
@@ -33,7 +29,7 @@ export type AvatarEvent =
   | ParsedV2HubEvent<V2HubEvent>
 
 export class Avatar {
-  private readonly provider: Provider;
+  private readonly provider: ethers.Provider;
   readonly v1Hub: V1Hub;
   readonly v1Data: V1Data = new V1Data('https://circles-rpc.circlesubi.id');
   readonly v2Hub: V2Hub;
@@ -49,7 +45,7 @@ export class Avatar {
   public readonly lastEvent: ObservableProperty<AvatarEvent>;
   private readonly setLastEvent: (event: AvatarEvent) => void;
 
-  constructor(v1Hub: V1Hub, v2Hub: V2Hub, avatarAddress: string, provider: Provider) {
+  constructor(v1Hub: V1Hub, v2Hub: V2Hub, avatarAddress: string, provider: ethers.Provider) {
     this.provider = provider;
     this.address = avatarAddress;
 
@@ -139,7 +135,7 @@ export class Avatar {
       throw new Error(`Avatar cannot mint in state: ${this.state.value}`);
     }
     if (this.livesInV1()) {
-      return this.v1Avatar.v1Token?.getMintableAmount();
+      return this.v1Avatar.v1Token?.look() ?? Promise.resolve(BigInt(0));
     } else if (this.livesInV2()) {
       return this.v2Avatar.getMintableAmount();
     }
@@ -156,7 +152,7 @@ export class Avatar {
       throw new Error(`Invalid address: ${tokenOrAvatar}`);
     }
 
-    const v2TokenBalance = await this.v2Hub.balanceOf(this.address, tokenOrAvatar);
+    const v2TokenBalance = await this.v2Hub.balanceOf(this.address, BigInt(tokenOrAvatar));
     if (v2TokenBalance > BigInt(0)) {
       return v2TokenBalance;
     }
@@ -178,7 +174,7 @@ export class Avatar {
     // TODO: migrate tokens
   };
 
-  registerHuman = async (cidV0: string): Promise<TransactionReceipt> => {
+  registerHuman = async (cidV0: string): Promise<TransactionReceipt | null> => {
     if (this.state.value !== AvatarState.V1_StoppedHuman) {
       throw new Error('Avatar must be V1 stopped human');
     }
@@ -187,10 +183,10 @@ export class Avatar {
     return txReceipt;
   };
 
-  inviteHuman = async (address: string): Promise<TransactionReceipt> =>
+  inviteHuman = async (address: string): Promise<TransactionReceipt | null> =>
     await this.v2Hub.inviteHuman(address);
 
-  registerOrganization = async (name: string, cidV0: string): Promise<TransactionReceipt> => {
+  registerOrganization = async (name: string, cidV0: string): Promise<TransactionReceipt | null> => {
     if (this.state.value !== AvatarState.Unregistered) {
       throw new Error('Avatar is already registered');
     }
@@ -199,7 +195,7 @@ export class Avatar {
     return txReceipt;
   };
 
-  registerGroup = async (mintPolicy: string, name: string, symbol: string, cidV0: string): Promise<TransactionReceipt> => {
+  registerGroup = async (mintPolicy: string, name: string, symbol: string, cidV0: string): Promise<TransactionReceipt | null> => {
     if (this.state.value !== AvatarState.Unregistered) {
       throw new Error('Avatar is already registered');
     }
@@ -208,8 +204,8 @@ export class Avatar {
     return txReceipt;
   };
 
-  personalMint = async (): Promise<TransactionReceipt> => {
-    let txReceipt: TransactionReceipt | undefined;
+  personalMint = async (): Promise<TransactionReceipt | null> => {
+    let txReceipt: TransactionReceipt | null = null;
     if (this.state.value === AvatarState.V1_Human && this.v1Avatar.v1Token) {
       txReceipt = await this.v1Avatar.v1Token.update();
     }
@@ -222,10 +218,10 @@ export class Avatar {
     return txReceipt;
   };
 
-  groupMint = async (group: string, collateral: string[], amounts: bigint[]) =>
-    await this.v2Hub.groupMint(group, collateral, amounts);
+  groupMint = async (group: string, collateral: string[], amounts: bigint[], data: Uint8Array) =>
+    await this.v2Hub.groupMint(group, collateral, amounts, data);
 
-  stopV1 = async (): Promise<TransactionReceipt> => {
+  stopV1 = async (): Promise<TransactionReceipt | null> => {
     if (this.state.value !== AvatarState.V1_Human || !this.v1Avatar.v1Token) {
       throw new Error('Avatar must be V1 human');
     }
@@ -234,10 +230,10 @@ export class Avatar {
     return txReceipt;
   };
 
-  updateProfile = async (cidV0: string): Promise<TransactionReceipt> =>
+  updateProfile = async (cidV0: string): Promise<TransactionReceipt | null> =>
     await this.v2Hub.setIpfsCidV0(cidV0Digest(cidV0));
 
-  transfer = async (to: string, amount: bigint): Promise<TransactionReceipt> => {
+  transfer = async (to: string, amount: bigint): Promise<TransactionReceipt | null> => {
     if (!this.canTransfer()) {
       throw new Error(`Avatar cannot transfer in state: ${this.state.value}`);
     }
@@ -250,7 +246,7 @@ export class Avatar {
     }
   };
 
-  trust = async (avatar: string): Promise<TransactionReceipt> => {
+  trust = async (avatar: string): Promise<TransactionReceipt | null> => {
     if (!this.isRegistered()) {
       throw new Error(`Avatar cannot trust in state: ${this.state.value}`);
     }
@@ -263,7 +259,7 @@ export class Avatar {
     }
   };
 
-  untrust = async (avatar: string): Promise<TransactionReceipt> => {
+  untrust = async (avatar: string): Promise<TransactionReceipt | null> => {
     if (!this.isRegistered()) {
       throw new Error(`Avatar cannot untust in state: ${this.state.value}`);
     }

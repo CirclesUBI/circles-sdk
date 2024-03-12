@@ -5,7 +5,7 @@ import {
   V1TokenEvents as V1TokenEventDecoder,
   TokenTransferEvent,
   TokenApprovalEvent
-} from '@circles-sdk/abi-decoder/dist';
+} from '@circles-sdk/abi-v1/dist';
 
 export const V1TokenEvents = {
   'Transfer': null,
