@@ -3,10 +3,10 @@ name: Build
 on:
   push:
     branches:
-      - 20240215-examples
+      - dev
   pull_request:
     branches:
-      - 20240215-examples
+      - dev
 
 jobs:
   build:
