@@ -1,0 +1,18 @@
+{
+  "name": "@circles-sdk/abi-v1",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "build": "rm -rf dist/* && tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "ethers": "^6.11.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

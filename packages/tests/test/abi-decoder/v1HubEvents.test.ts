@@ -1,7 +1,7 @@
 import {
   HubTransferEvent, OrganizationSignupEvent, SignupEvent, TrustEvent,
   V1HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v1HubEvents';
+} from '@circles-sdk/abi-decoder/dist';
 import { ethers } from 'ethers';
 import { createLog } from '../util';
 import HubV1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
@@ -23,8 +23,9 @@ describe('V1HubEvents', () => {
     const log = createLog(contractInterface, 'HubTransfer', [from, to, amount]);
 
     const decoded = new V1HubEvents().decodeEventData(log);
-    const eventData = <HubTransferEvent><unknown>decoded.data;
-    expect(decoded.name).toEqual('HubTransfer');
+    expect(decoded).toBeDefined();
+    const eventData = <HubTransferEvent><unknown>decoded!.data;
+    expect(decoded!.name).toEqual('HubTransfer');
     expect(eventData.from).toEqual(from);
     expect(eventData.to).toEqual(to);
     expect(eventData.amount).toEqual(amount);
@@ -36,8 +37,9 @@ describe('V1HubEvents', () => {
     const log = createLog(contractInterface, 'OrganizationSignup', [organization]);
 
     const decoded = new V1HubEvents().decodeEventData(log);
-    const eventData = <OrganizationSignupEvent><unknown>decoded.data;
-    expect(decoded.name).toEqual('OrganizationSignup');
+    expect(decoded).toBeDefined();
+    const eventData = <OrganizationSignupEvent><unknown>decoded!.data;
+    expect(decoded!.name).toEqual('OrganizationSignup');
     expect(eventData.organization).toEqual(organization);
   });
 
@@ -48,8 +50,9 @@ describe('V1HubEvents', () => {
     const log = createLog(contractInterface, 'Signup', [user, token]);
 
     const decoded = new V1HubEvents().decodeEventData(log);
-    const eventData = <SignupEvent><unknown>decoded.data;
-    expect(decoded.name).toEqual('Signup');
+    expect(decoded).toBeDefined();
+    const eventData = <SignupEvent><unknown>decoded!.data;
+    expect(decoded!.name).toEqual('Signup');
     expect(eventData.user).toEqual(user);
     expect(eventData.token).toEqual(token);
   });
@@ -61,8 +64,9 @@ describe('V1HubEvents', () => {
     const log = createLog(contractInterface, 'Trust', [canSendTo, user, limit]);
 
     const decoded = new V1HubEvents().decodeEventData(log);
-    const eventData = <TrustEvent><unknown>decoded.data;
-    expect(decoded.name).toEqual('Trust');
+    expect(decoded).toBeDefined();
+    const eventData = <TrustEvent><unknown>decoded!.data;
+    expect(decoded!.name).toEqual('Trust');
     expect(eventData.canSendTo).toEqual(canSendTo);
     expect(eventData.user).toEqual(user);
     expect(eventData.limit).toEqual(limit);

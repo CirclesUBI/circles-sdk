@@ -1,6 +1,6 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
-import { V2Hub } from './v2Hub';
-import { EventEmitter } from '../eventEmitter';
+import { ObservableProperty } from '../observableProperty';
+import { ethers, TransactionReceipt } from 'ethers';
+import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
 
 export enum V2AvatarState {
   NotInitialized,
@@ -12,23 +12,21 @@ export enum V2AvatarState {
 }
 
 export class V2Avatar {
-  private readonly provider: Provider;
+  private readonly provider: ethers.Provider;
   private readonly v2Hub: V2Hub;
   private readonly avatarAddress: string;
 
-  private readonly _onStateChanged: EventEmitter<V2AvatarState> = new EventEmitter();
-  public readonly onStateChanged = this._onStateChanged.subscribe;
+  public readonly state: ObservableProperty<V2AvatarState>;
+  private readonly setState: (state: V2AvatarState) => void;
 
-  get state(): V2AvatarState {
-    return this._state;
-  }
-
-  private _state: V2AvatarState = V2AvatarState.NotInitialized;
-
-  constructor(v2Hub: V2Hub, avatarAddress: string, provider: Provider) {
+  constructor(v2Hub: V2Hub, avatarAddress: string, provider: ethers.Provider) {
     this.v2Hub = v2Hub;
     this.avatarAddress = avatarAddress;
     this.provider = provider;
+
+    const stateProperty = ObservableProperty.create<V2AvatarState>();
+    this.state = stateProperty.property;
+    this.setState = stateProperty.emit;
   }
 
   async initialize() {
@@ -42,7 +40,7 @@ export class V2Avatar {
       this.v2Hub.isGroup(this.avatarAddress)
     ]);
 
-    this._state = isOrganization
+    let newState = isOrganization
       ? V2AvatarState.Organization
       : isGroup
         ? V2AvatarState.Group
@@ -52,7 +50,22 @@ export class V2Avatar {
 
     // We don't care about stopped v2 avatars during initialization because we assume
     // that they are not stopped. If required, this state must be checked manually.
+    this.setState(newState);
+  }
 
-    this._onStateChanged.emit(this._state);
+  async transfer(to: string, amount: bigint): Promise<TransactionReceipt> {
+    throw new Error('Not implemented');
+  }
+
+  async trust(avatar: string): Promise<TransactionReceipt | null> {
+    return await this.v2Hub.trust(avatar, BigInt('79228162514264337593543950335'));
+  }
+
+  async untust(avatar: string): Promise<TransactionReceipt | null> {
+    return await this.v2Hub.trust(avatar, BigInt('0'));
+  }
+
+  async getMintableAmount(): Promise<bigint> {
+    return await this.v2Hub.calculateIssuance(this.avatarAddress);
   }
 }

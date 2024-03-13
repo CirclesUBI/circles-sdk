@@ -1,10 +1,10 @@
-import { Provider } from '@circles/circles-sdk-v2-providers/dist/provider';
 import { Avatar } from './avatar';
-import { V2Hub } from './v2/v2Hub';
-import { V1Hub } from './v1/v1Hub';
+import { V1Hub } from '@circles-sdk/abi-v1/dist/V1HubWrapper';
+import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
+import { ethers } from 'ethers';
 
 export class Sdk {
-  private readonly provider: Provider;
+  private readonly provider: ethers.Provider;
 
   public readonly hubV1Address: string;
   public readonly v1Hub: V1Hub;
@@ -12,7 +12,7 @@ export class Sdk {
   public readonly hubV2Address: string;
   public readonly v2Hub: V2Hub;
 
-  constructor(hubV1Address: string, hubV2Address: string, provider: Provider) {
+  constructor(hubV1Address: string, hubV2Address: string, provider: ethers.Provider) {
     this.provider = provider;
 
     this.hubV1Address = hubV1Address;
@@ -23,7 +23,7 @@ export class Sdk {
   }
 
   getInvitationFee = async () =>
-    (await this.v2Hub.WELCOME_BONUS()) * 2n;
+    (await this.v2Hub.WELCOME_BONUS()) * BigInt(2);
 
   isRegistrationPeriodOver: () => Promise<boolean> = async () =>
     (await this.v2Hub.invitationOnlyTime()) < BigInt(Date.now() / 1000);

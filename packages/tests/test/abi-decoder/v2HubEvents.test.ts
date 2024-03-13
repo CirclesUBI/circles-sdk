@@ -11,10 +11,10 @@ import {
   RegisterOrganizationEvent,
   TransferBatchEvent,
   TransferSingleEvent,
-  TrustEvent,
+  TrustEvent_v2,
   URIEvent,
   V2HubEvents
-} from '@circles/circles-sdk-v2-abi-decoder/dist/v2HubEvents';
+} from '@circles-sdk/abi-decoder/dist';
 import { createLog, uintToAddress } from '../util';
 
 export const V2HubEventNames = {
@@ -201,7 +201,7 @@ describe('V2HubEvents', () => {
     const log = createLog(contractInterface, 'Trust', [truster, trustee, expiryTime]);
 
     const decoded = new V2HubEvents().decodeEventData(log);
-    const eventData = <TrustEvent><unknown>decoded.data;
+    const eventData = <TrustEvent_v2><unknown>decoded.data;
     expect(decoded.name).toEqual('Trust');
     expect(eventData.truster).toEqual(truster);
     expect(eventData.trustee).toEqual(trustee);

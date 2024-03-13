@@ -1,17 +1,17 @@
 {
-  "name": "@circles-sdk-v2/circles-v2-test",
-  "version": "0.0.1",
-  "description": "Circles v2 ABI encoders",
+  "name": "@circles-sdk/tests",
+  "version": "0.0.2",
+  "description": "Circles v2 SDK tests",
   "scripts": {
     "test": "runTests.sh",
     "build": "echo 'nop'"
   },
   "dependencies": {
-    "@circles/circles-sdk-v2-abi-encoder": "^0.0.1",
-    "@circles/circles-sdk-v2-abi-decoder": "^0.0.1",
-    "@circles/circles-sdk-v2": "^0.0.1",
-    "@circles/circles-contracts": "3.3.2",
-    "ethers": "^6.10.0"
+    "@circles-sdk/abi-v1": "^0.0.2",
+    "@circles-sdk/abi-v2": "^0.0.2",
+    "@circles-sdk/sdk": "^0.0.2",
+    "@circles/circles-contracts": "../circles-contracts",
+    "ethers": "^6.11.1"
   },
   "devDependencies": {
     "typescript": "^5.3.3",

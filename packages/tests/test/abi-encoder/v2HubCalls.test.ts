@@ -1,5 +1,5 @@
 import { ethers, keccak256 } from 'ethers';
-import { V2HubCalls as V2HubCallsEncoder } from '@circles/circles-sdk-v2-abi-encoder/src/v2HubCalls';
+import { V2HubCalls as V2HubCallsEncoder } from '@circles-sdk/abi-encoder/dist';
 import {
   InviteHumanAsOrganizationInputs,
   InviteHumanInputs,
@@ -8,7 +8,7 @@ import {
   RegisterGroupInputs,
   SetApprovalForAllInputs, SetIpfsCidV0Inputs, SingleSourcePathTransferInputs, StopInputs,
   V2HubCalls as V2HubCallsDecoder
-} from '@circles/circles-sdk-v2-abi-decoder/src/v2HubCalls';
+} from '@circles-sdk/abi-decoder/dist';
 import HubV2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
 import { HashCode, HashName } from 'multihashes';
 import { decodeMultihash, encodeMultihash, generateRandomAddress, uintToAddress } from '../util';
@@ -18,8 +18,8 @@ import {
   RegisterCustomGroupInputs,
   RegisterHumanInputs, RegisterOrganizationInputs,
   SafeBatchTransferFromInputs, SafeTransferFromInputs,
-  TrustInputs
-} from '@circles/circles-sdk-v2-abi-decoder/src/v2HubCalls';
+  TrustInputs_v2
+} from '@circles-sdk/abi-decoder/dist';
 
 describe('V2HubCalls', () => {
   const contractInterface = new ethers.Interface(HubV2.abi);
@@ -654,7 +654,7 @@ describe('V2HubCalls', () => {
     const expiry = BigInt('1234567890');
     const encoded = V2HubCallsEncoder.trust(trustReceiver, expiry);
     const decoded = new V2HubCallsDecoder().decodeFunctionCallData(encoded);
-    const inputs = <TrustInputs>decoded.inputs;
+    const inputs = <TrustInputs_v2>decoded.inputs;
 
     expect(decoded?.name).toBe('trust');
     expect(inputs._trustReceiver).toEqual(trustReceiver);
