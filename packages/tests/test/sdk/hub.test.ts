@@ -8,9 +8,11 @@ import {
   registerHuman,
   inviteHuman,
   mintCircles,
-  registerOrganization, getStoppedV1PersonAvatar, balanceOf
+  registerOrganization, getStoppedV1PersonAvatar, balanceOf, getV1TokenState
 } from "../util";
 import { ZeroAddress, ethers } from "ethers";
+import CRC_V1 from '@circles/circles-contracts/out/Token.sol/Token.json';
+
 
 describe('Hub', () => {
 
@@ -201,24 +203,40 @@ describe('Hub', () => {
         it(`only if INVITER (${msgSender}) is a ${REGISTERED_HUMAN}`, async () => {
           const provider = await getJsonRpcProvider();
           const unregisteredAvatar = await getUnregisteredAvatar();
-          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
           await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
           await provider.send("evm_mine", []);
+          await mintCircles(registeredHuman);
+
           const newUnregisteredAvatar = await getUnregisteredAvatar();
+
+          // const balance = await balanceOf(registeredHuman.address);
+
+          // const formattedBalance = ethers.formatEther(balance);
+
+          // console.log("registered balance: ", await balanceOf(formattedBalance));
 
           await expect(inviteHuman(newUnregisteredAvatar.address, registeredHuman)).resolves.not.toThrow();
 
           await expect(inviteHuman(newUnregisteredAvatar.address, unregisteredAvatar)).rejects.toThrow();
         }, 60000);
         it(`only if INVITEE is not already a ${REGISTERED_AVATAR}`, async () => {
-          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
-          const anotherRegisteredHuman = await registerHuman(await getUnregisteredAvatar());
+          const provider = await getJsonRpcProvider();
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredHuman);
+          const anotherRegisteredHuman = await registerHuman(await getStoppedV1PersonAvatar());
 
           await expect(inviteHuman(anotherRegisteredHuman.address, registeredHuman)).rejects.toThrow();
 
         }, 60000);
         it(`only if INVITER (${msgSender}) has enough ${personalCirclesToken}s to pay the invitation fee`, async () => {
-          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          const provider = await getJsonRpcProvider();
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredHuman);
           const newUnregisteredAvatar = await getUnregisteredAvatar();
 
           const inviterBalance = ethers.toBigInt(await balanceOf(registeredHuman.address));
@@ -235,12 +253,11 @@ describe('Hub', () => {
         }, 60000);
         it("mint INVITEE's welcome bonus", async () => {
           const provider = await getJsonRpcProvider();
-          const registeredHuman = await registerHuman(await getUnregisteredAvatar());
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
           await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
           await provider.send("evm_mine", []);
-          const invitee = await getUnregisteredAvatar();
-
           await mintCircles(registeredHuman);
+          const invitee = await getUnregisteredAvatar();
 
           const initialBalance = await balanceOf(invitee.address);
 
@@ -253,43 +270,194 @@ describe('Hub', () => {
           // Expect the final balance to be greater than the initial balance by the welcome bonus amount
           expect(finalBalance).toBeGreaterThan(Number(initialBalanceDisplay));
         }, 60000);
-        it(`charge INVITER (${msgSender}) the invitation fee`, async () => { });
-        it(`create a ${personalCirclesToken} for INVITEE`, async () => { });
+        it(`charge INVITER (${msgSender}) the invitation fee`, async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredHuman);
+          const newUnregisteredAvatar = await getUnregisteredAvatar();
+          const invitationFee = ethers.parseEther("144");
+          const initialBalance = await balanceOf(registeredHuman.address);
+
+          await inviteHuman(newUnregisteredAvatar.address, registeredHuman);
+
+          const finalBalance = await balanceOf(registeredHuman.address);
+
+          const balanceDifference = Number(initialBalance) - Number(finalBalance);
+          const numberInvitationFee = Number(invitationFee);
+
+          expect(balanceDifference).toEqual(numberInvitationFee);
+
+        }, 60000);
+        it(`create a ${personalCirclesToken} for INVITEE`, async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredHuman);
+          const invitee = await getUnregisteredAvatar();
+
+          await inviteHuman(invitee.address, registeredHuman);
+
+          const balance = await balanceOf(invitee.address);
+
+          expect(balance).toBeTruthy();
+        }, 60000);
 
         describe(`${UNREGISTERED_AVATAR} to ${INVITED_PAUSED_HUMAN} (ON: inviteHuman)`, () => {
-          it(`only if INVITEE's ${v1} token is ${V1_ACTIVE}`, async () => { });
-          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_PAUSED}`, async () => { });
+          it(`only if INVITEE's ${v1} token is ${V1_ACTIVE}`, async () => {
+            const provider = await getJsonRpcProvider();
+            const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+            await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+            await provider.send("evm_mine", []);
+            await mintCircles(registeredHuman);
+            const activeV1Invitee = await getActiveV1PersonAvatar();
+            const notActiveV1Invitee = await getStoppedV1PersonAvatar();
+
+            const stopped = await getV1TokenState(notActiveV1Invitee.v1TokenAddress);
+            const active = await getV1TokenState(activeV1Invitee.v1TokenAddress);
+
+            expect(stopped).toBe(true);
+            expect(active).toBe(false);
+
+            await expect(inviteHuman(activeV1Invitee.address, registeredHuman)).resolves.not.toThrow();
+            await expect(inviteHuman(notActiveV1Invitee.address, registeredHuman)).rejects.toThrow();
+          }, 60000);
+          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_PAUSED}`, async () => {
+            const provider = await getJsonRpcProvider();
+            const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+            await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+            await provider.send("evm_mine", []);
+            await mintCircles(registeredHuman);
+            const invitee = await getActiveV1PersonAvatar();
+
+            await inviteHuman(invitee.address, registeredHuman);
+          }, 60000);
         });
 
         describe(`${UNREGISTERED_AVATAR} to ${INVITED_ACTIVE_HUMAN} (ON: inviteHuman)`, () => {
-          it(`only if INVITEE's ${v1} token is ${V1_STOPPED}`, async () => { });
-          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => { });
+          it(`only if INVITEE's ${v1} token is ${V1_STOPPED}`, async () => {
+            const provider = await getJsonRpcProvider();
+            const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+            await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+            await provider.send("evm_mine", []);
+            await mintCircles(registeredHuman);
+            const activeV1Invitee = await getActiveV1PersonAvatar();
+            const notActiveV1Invitee = await getStoppedV1PersonAvatar();
+
+            const stopped = await getV1TokenState(notActiveV1Invitee.v1TokenAddress);
+            const active = await getV1TokenState(activeV1Invitee.v1TokenAddress);
+
+            expect(stopped).toBe(true);
+            expect(active).toBe(false);
+
+            await expect(inviteHuman(notActiveV1Invitee.address, registeredHuman)).resolves.not.toThrow();
+            await expect(inviteHuman(activeV1Invitee.address, registeredHuman)).rejects.toThrow();
+          }, 60000);
+          it(`set INVITEE's ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => {
+            const provider = await getJsonRpcProvider();
+            const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+            await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+            await provider.send("evm_mine", []);
+            await mintCircles(registeredHuman);
+            const inviteeV1Stopped = await getStoppedV1PersonAvatar();
+            const inviteeV1Active = await getActiveV1PersonAvatar();
+
+            expect(await inviteHuman(inviteeV1Stopped.address, registeredHuman)).not.toThrow();
+            expect(await inviteHuman(inviteeV1Active.address, registeredHuman)).rejects.toThrow();
+          }, 60000);
         });
       });
     });
 
     describe(`(${REGISTERED_HUMAN} | ${INVITED_HUMAN}) to ${MINTED_PERSONAL_CIRCLES} (ON: personalMint)`, () => {
-      it(`only if ${msgSender}'s ${v1} ${personalCirclesToken} is ${V1_STOPPED}`, async () => { });
+      it(`only if ${msgSender}'s ${v1} ${personalCirclesToken} is ${V1_STOPPED}`, async () => {
+        const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+        expect(registeredHuman).toBeTruthy();
+        expect(await mintCircles(registeredHuman)).toBeTruthy();
+      }, 60000);
 
       describe(`${INVITED_PAUSED_HUMAN} to ${INVITED_ACTIVE_HUMAN} (ON: personalMint)`, () => {
+        const twoWeeksInSeconds = 2 * 7 * 24 * 60 * 60;
         // If a UNREGISTERED_HUMAN was invited to v2 but still had n active v1 token then the minting state of the personal Circles token is V2_PAUSED.
         // If the INVITEE's v1 token was stopped in the meantime then the minting state of the personal Circles token will be set to V2_ACTIVE.
         // TODO: Should this be a separate function or do we integrate it into personalMint()?
-        it(`only if ${msgSender}'s ${personalCirclesToken}'s minting state is ${V2_PAUSED}`, async () => { });
-        it(`set ${msgSender}'s ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => { });
+        it(`only if ${msgSender}'s ${personalCirclesToken}'s minting state is ${V2_PAUSED}`, async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredV2Human = await registerHuman(await getStoppedV1PersonAvatar());
+          const activeV1Human = await getActiveV1PersonAvatar();
+
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredV2Human);
+
+          const invitedV1Active = await inviteHuman(activeV1Human.address, registeredV2Human);
+
+          expect(await mintCircles(invitedV1Active)).rejects.toThrow();
+
+          const tokenContract = new ethers.Contract(invitedV1Active.address, CRC_V1.abi, invitedV1Active.wallet);
+          const tx = await tokenContract.stop();
+          await tx.wait();
+
+          expect(await mintCircles(invitedV1Active)).resolves.not.toThrow();
+        }, 60000);
+        it(`set ${msgSender}'s ${personalCirclesToken}'s minting state to ${V2_ACTIVE}`, async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredV2Human = await registerHuman(await getStoppedV1PersonAvatar());
+          const activeV1Human = await getActiveV1PersonAvatar();
+
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredV2Human);
+
+          const invitedV1Active = await inviteHuman(activeV1Human.address, registeredV2Human);
+
+          expect(await mintCircles(invitedV1Active)).rejects.toThrow();
+
+          const tokenContract = new ethers.Contract(invitedV1Active.address, CRC_V1.abi, invitedV1Active.wallet);
+          const tx = await tokenContract.stop();
+          await tx.wait();
+
+          expect(await mintCircles(invitedV1Active)).resolves.not.toThrow();
+        }, 60000);
       });
 
       describe(`(${REGISTERED_HUMAN} | ${INVITED_ACTIVE_HUMAN}) to ${MINTED_PERSONAL_CIRCLES} (ON: personalMint)`, () => {
+        const twoWeeksInSeconds = 2 * 7 * 24 * 60 * 60;
+
         // Every human with an active v2 token can mint max. two weeks worth of personal Circles tokens.
-        it(`only if ${msgSender}'s ${personalCirclesToken} is ${V2_ACTIVE}`, async () => { });
-        it(`mint as many ${personalCirclesToken}s as ${msgSender} has missed since the last mint`, async () => { });
-        it(`mint max. two weeks worth of ${personalCirclesToken} for ${msgSender}`, async () => { });
+        it(`only if ${msgSender}'s ${personalCirclesToken} is ${V2_ACTIVE}`, async () => {
+          const provider = await getJsonRpcProvider();
+          const registeredV2Human = await registerHuman(await getStoppedV1PersonAvatar());
+          const activeV1Human = await getActiveV1PersonAvatar();
+
+          await provider.send("evm_increaseTime", [twoWeeksInSeconds]);
+          await provider.send("evm_mine", []);
+          await mintCircles(registeredV2Human);
+
+          const invitedV1Active = await inviteHuman(activeV1Human.address, registeredV2Human);
+
+          expect(await mintCircles(invitedV1Active)).rejects.toThrow();
+
+          expect(await mintCircles(registeredV2Human)).resolves.not.toThrow();
+
+        }, 60000);
+        // it(`mint as many ${personalCirclesToken}s as ${msgSender} has missed since the last mint`, async () => { });
+        // it(`mint max. two weeks worth of ${personalCirclesToken} for ${msgSender}`, async () => { });
         it(`set the lastMintTime of ${msgSender} to the current block time`, async () => { });
       });
     });
 
     describe(`Minting state of ${v1} Circles`, () => {
-      it(`can become ${V1_ACTIVE}`, async () => { });
+      // it(`can become ${V1_ACTIVE}`, async () => {
+      //   const registeredHuman = await registerHuman(await getStoppedV1PersonAvatar());
+      //   const tokenContract = new ethers.Contract(, CRC_V1.abi, registeredHuman.wallet);
+      //   const tx = await tokenContract.start();
+      //   await tx.wait();
+      //   const state = await tokenContract.stopped();
+      //   expect(state).toBe(false);
+      // });
       it(`can become ${V1_STOPPED}`, async () => { });
       it(`can't become ${V1_ACTIVE} again once ${V1_STOPPED}`, async () => { });
     });

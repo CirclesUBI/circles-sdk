@@ -114,6 +114,13 @@ export const getStoppedV1PersonAvatar = async (): Promise<V1PersonAvatar> => {
   };
 }
 
+export const getV1TokenState = async (v1TokenAddress: string): Promise<boolean> => {
+  const provider = await getJsonRpcProvider();
+  const tokenContract = new ethers.Contract(v1TokenAddress, CRC_V1.abi, provider);
+
+  return await tokenContract.stopped();
+}
+
 export type RegisteredHuman = Avatar & {
   type: "registeredHuman";
 };
@@ -182,7 +189,7 @@ export const getJsonRpcProvider = async (): Promise<ethers.JsonRpcProvider> => {
 export const balanceOf = async (userAddress: string): Promise<ethers.BigNumberish> => {
   const provider = await getJsonRpcProvider();
   const contract = new ethers.Contract(V2_HUB_ADDRESS, HUB_V2.abi, provider)
-  const tokenId = ethers.toBeHex(BigInt(userAddress))
+  const tokenId = userAddress;
 
   return await contract.balanceOf(userAddress, tokenId);
 }
