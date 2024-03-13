@@ -24,6 +24,7 @@ cd circles-sdk
 ### 2) Build the SDK
 ```bash
 ./buildContracts.sh
+npm i
 npm run build
 ```
 
