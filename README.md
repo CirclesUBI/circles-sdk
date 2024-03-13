@@ -30,7 +30,7 @@ npm run build
 
 ### 3) Run anvil
 ```bash
-anvil --port 8545 --gas-limit 8000000 --accounts 10
+anvil --port 8545 --gas-limit 8000000 --accounts 10 --code-size-limit 32000
 ```
 When [anvil](https://book.getfoundry.sh/reference/anvil/) was started with default values, you can use the following values to connect to:
 * URL: http://localhost:8545
@@ -60,6 +60,7 @@ V2 Hub: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 ```bash
 cd examples/svelte-playground
 npm install
+cp .env.example .env
 npm run dev
 ```
 
