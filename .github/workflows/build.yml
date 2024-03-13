@@ -1,10 +1,12 @@
-name: Build SDK Workflow
+name: Build
 
 on:
   push:
-    branches: [ 20240215-examples ]
+    branches:
+      - 20240215-examples
   pull_request:
-    branches: [ 20240215-examples ]
+    branches:
+      - 20240215-examples
 
 jobs:
   build:
