@@ -59,6 +59,7 @@ V2 Hub: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 ### 5) Run the example application
 ```bash
 cd examples/svelte-playground
+cp .env.example .env
 npm install
 npm run dev
 ```
@@ -93,25 +94,6 @@ const sdk = new Sdk(v1HubAddress, v2HubAddress, wallet);
 * You can create an avatar for any account to access its public data.
 
 ## Reference
-### Providers
-You can choose between the following providers:
-* **EoaEtheresProvider**   
-  Use this provider if you want to use a private key to sign transactions.
-* **BrowserWalletEthersProvider**  
-  Use this provider if you have e.g. metamask installed and want to use it to sign transactions.
-
-```typescript
-import {Provider, EoaEthersProvider, BrowserWalletEthersProvider} from '@circles-sdk/providers/dist';
-
-const wallet = new ethers.Wallet('0x123...'); // Supply your private key
-const provider1: Provider = new EoaEtheresProvider('http://localhost:8545', wallet);
-await provider1.init();
-// or
-const provider2: Provider = new BrowserWalletEthersProvider();
-await provider2.init();
-```
-At a later point we will add more providers, e.g. for Safe.
-
 ### Sdk configuration
 In order to use the sdk you must supply the contracts addresses and a provider:
 
@@ -120,9 +102,9 @@ import { Sdk } from '@circles-sdk/sdk';
 
 const v1HubAddress = '0x123...';
 const v2HubAddress = '0x123...';
-const provider = // Choose one of the providers from the previous step
+const wallet = ...; // An ethers wallet
 
-const sdk = new Sdk(v1HubAddress, v2HubAddress, provider);
+const sdk = new Sdk(v1HubAddress, v2HubAddress, wallet);
 ```
 
 ### Avatar
