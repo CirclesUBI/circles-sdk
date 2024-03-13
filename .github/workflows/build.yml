@@ -26,6 +26,7 @@ jobs:
 
       - name: Build Contracts & SDK
         run: |
+          echo "Building contracts and SDK"
           ./buildContracts.sh
           npm i
           npm run build
