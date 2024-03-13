@@ -24,6 +24,7 @@ cd circles-sdk
 ### 2) Build the SDK
 ```bash
 ./buildContracts.sh
+npm i
 npm run build
 ```
 
@@ -73,7 +74,6 @@ You can use the following code to configure the Circles SDK so that it uses the 
 Here we're using the values from above:
 ```typescript
 import {Sdk} from '@circles-sdk/sdk/dist';
-import {EoaEthersProvider} from '@circles-sdk/providers/dist';
 import {ethers} from "ethers";
 
 const privateKey = '0x..';
@@ -84,10 +84,8 @@ const v2HubAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 
 const jsonRpcProvider = new ethers.JsonRpcProvider(rpcUrl);
 const wallet = new ethers.Wallet(privateKey, jsonRpcProvider);
-const provider = new EoaEthersProvider(jsonRpcProvider, wallet);
-await provider.init();
 
-const sdk = new Sdk(v1HubAddress, v2HubAddress, provider);
+const sdk = new Sdk(v1HubAddress, v2HubAddress, wallet);
 ```
 
 ### Next steps
