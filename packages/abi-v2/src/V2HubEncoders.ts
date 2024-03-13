@@ -94,7 +94,7 @@ export class V2HubCalls {
     }
 
     groupMint(params: inputTypes.GroupMintInputs): string {
-        return this.contractInterface.encodeFunctionData('groupMint', [params._group, params._collateral, params._amounts, params._data]);
+        return this.contractInterface.encodeFunctionData('groupMint', [params._group, params._collateralAvatars, params._amounts, params._data]);
     }
 
     hubV1(): string {
@@ -167,6 +167,10 @@ export class V2HubCalls {
 
     names(params: inputTypes.NamesInputs): string {
         return this.contractInterface.encodeFunctionData('names', [params.arg0]);
+    }
+
+    operateFlowMatrix(params: inputTypes.OperateFlowMatrixInputs): string {
+        return this.contractInterface.encodeFunctionData('operateFlowMatrix', [params._flowVertices, params._flow, params._streams, params._packedCoordinates]);
     }
 
     operatorPathTransfer(): string {

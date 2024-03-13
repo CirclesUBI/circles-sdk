@@ -197,11 +197,10 @@ export class V2HubEvents implements EventDecoder {
   decodeEventData<T extends Event>(log: {
     topics: string[],
     data: string
-  }): ParsedEvent<T> {
+  }): ParsedEvent<T> | null {
     const decoded = this.contractInterface.parseLog(log);
-
     if (!decoded) {
-      throw new Error('Invalid event data');
+      return null;
     }
 
     let eventData: any;
@@ -246,7 +245,7 @@ export class V2HubEvents implements EventDecoder {
         eventData = parseURIEvent(decoded);
         break;
       default:
-        throw new Error(`Invalid event name: ${decoded.name}`);
+        return null;
     }
 
     return {

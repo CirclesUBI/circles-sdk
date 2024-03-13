@@ -60,7 +60,7 @@ export type GetDeterministicAddressInputs = {
 
 export type GroupMintInputs = {
   _group: string;
-  _collateral: string[];
+  _collateralAvatars: string[];
   _amounts: bigint[];
   _data: Uint8Array;
 };
@@ -125,6 +125,13 @@ export type MintTimesInputs = {
 
 export type NamesInputs = {
   arg0: string;
+};
+
+export type OperateFlowMatrixInputs = {
+  _flowVertices: string[];
+  _flow: any[];
+  _streams: any[];
+  _packedCoordinates: Uint8Array;
 };
 
 export type RegisterCustomGroupInputs = {
@@ -279,6 +286,7 @@ export type V2HubFunctionInputs =
   | MintPoliciesInputs
   | MintTimesInputs
   | NamesInputs
+  | OperateFlowMatrixInputs
   | RegisterCustomGroupInputs
   | RegisterGroupInputs
   | RegisterHumanInputs

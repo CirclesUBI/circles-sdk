@@ -12,7 +12,7 @@ export interface EventDecoder {
   decodeEventData<T extends Event>(log: {
     topics: string[],
     data: string
-  }): ParsedEvent<T>;
+  }): ParsedEvent<T> | null;
 }
 
 export type ObservableAndEmitter<TValue> = {

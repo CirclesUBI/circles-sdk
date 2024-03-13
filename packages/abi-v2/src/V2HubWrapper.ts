@@ -325,10 +325,10 @@ createERC20InflationWrapper = async (_tokenId: bigint, _name: string, _symbol: s
       return tx.wait();
     }
 
-groupMint = async (_group: string, _collateral: string[], _amounts: bigint[], _data: Uint8Array): Promise<ethers.TransactionReceipt | null> => {
+groupMint = async (_group: string, _collateralAvatars: string[], _amounts: bigint[], _data: Uint8Array): Promise<ethers.TransactionReceipt | null> => {
        const tx = await this.sendTransaction({
          to: this.address,
-         data: this.callEncoder.groupMint({ _group: _group, _collateral: _collateral, _amounts: _amounts, _data: _data })
+         data: this.callEncoder.groupMint({ _group: _group, _collateralAvatars: _collateralAvatars, _amounts: _amounts, _data: _data })
       });
       return tx.wait();
     }
@@ -345,6 +345,14 @@ migrate = async (_owner: string, _avatars: string[], _amounts: bigint[]): Promis
        const tx = await this.sendTransaction({
          to: this.address,
          data: this.callEncoder.migrate({ _owner: _owner, _avatars: _avatars, _amounts: _amounts })
+      });
+      return tx.wait();
+    }
+
+operateFlowMatrix = async (_flowVertices: string[], _flow: any[], _streams: any[], _packedCoordinates: Uint8Array): Promise<ethers.TransactionReceipt | null> => {
+       const tx = await this.sendTransaction({
+         to: this.address,
+         data: this.callEncoder.operateFlowMatrix({ _flowVertices: _flowVertices, _flow: _flow, _streams: _streams, _packedCoordinates: _packedCoordinates })
       });
       return tx.wait();
     }
