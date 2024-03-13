@@ -34,4 +34,5 @@ jobs:
         run: |
           cd examples/svelte-playground
           npm i
+          cp .env.example .env
           npm run build

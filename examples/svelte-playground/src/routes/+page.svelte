@@ -4,7 +4,6 @@
   import { ethers, HDNodeWallet } from 'ethers';
   import HorizontalLayout from '../components/common/HorizontalLayout.svelte';
   import VerticalCollapsible from '../components/common/VerticalCollapsible.svelte';
-  import { EoaEthersProvider } from '@circles-sdk/providers/dist';
   import PromiseButton from '../components/common/ActionButton.svelte';
   import EventList, { subscribeAvatar } from '../components/EventList.svelte';
   import { onMount } from 'svelte';
@@ -85,8 +84,7 @@
       }
       const jsonRpcProvider = new ethers.JsonRpcProvider(environments[environment].rpcUrl);
       const ethersWallet = new ethers.Wallet(avatarRecord.privateKey, jsonRpcProvider);
-      const provider = new EoaEthersProvider(jsonRpcProvider, ethersWallet);
-      const sdk = new Sdk(environments[environment].hubv1Address, environments[environment].hubv2Address, provider);
+      const sdk = new Sdk(environments[environment].hubv1Address, environments[environment].hubv2Address, ethersWallet);
       const avatar = await sdk.getAvatar(avatarId.replace(`${chainId}_`, ''));
       await avatar.initialize();
 
@@ -103,8 +101,7 @@
   const createAvatar = async () => {
     const jsonRpcProvider = new ethers.JsonRpcProvider(environments[environment].rpcUrl);
     const subWallet = await randomFundedWallet(jsonRpcProvider);
-    const provider = new EoaEthersProvider(jsonRpcProvider, subWallet);
-    const sdk = new Sdk(environments[environment].hubv1Address, environments[environment].hubv2Address, provider);
+    const sdk = new Sdk(environments[environment].hubv1Address, environments[environment].hubv2Address, subWallet);
     const avatar = await sdk.getAvatar(await subWallet.getAddress());
     await avatar.initialize();
 
