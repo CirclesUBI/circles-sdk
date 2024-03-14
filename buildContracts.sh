@@ -10,7 +10,7 @@
 git submodule update --init --recursive --remote
 
 # Remove the v1 package from the workspaces
-jq 'del(.workspaces[0])' package.json > temp.package.json
+jq 'del(.workspaces[0])' package.json > temp.package.json || exit
 mv temp.package.json package.json
 
 # Build the v1 contracts
