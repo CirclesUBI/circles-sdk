@@ -103,7 +103,7 @@ export class V2HubDecoders {
     const decoded = this.contractInterface.decodeFunctionData('groupMint', callData);
       return {
               _group: getAddress(decoded[0]),
-      _collateral: decoded[1].map((x: any) => getAddress(x)),
+      _collateralAvatars: decoded[1].map((x: any) => getAddress(x)),
       _amounts: decoded[2].map((x: any) => BigInt(x.toString())),
       _data: ethers.getBytes(decoded[3])
       };
@@ -200,6 +200,15 @@ export class V2HubDecoders {
     const decoded = this.contractInterface.decodeFunctionData('names', callData);
       return {
               arg0: getAddress(decoded[0])
+      };
+    };
+    decodeOperateFlowMatrixInputs(callData: string): inputTypes.OperateFlowMatrixInputs {
+    const decoded = this.contractInterface.decodeFunctionData('operateFlowMatrix', callData);
+      return {
+              _flowVertices: decoded[0].map((x: any) => getAddress(x)),
+      _flow: decoded[1].map((x: any) => x),
+      _streams: decoded[2].map((x: any) => x),
+      _packedCoordinates: ethers.getBytes(decoded[3])
       };
     };
 
@@ -446,6 +455,8 @@ export class V2HubDecoders {
         return this.decodeMintTimesInputs(callData);
             case 'names':
         return this.decodeNamesInputs(callData);
+            case 'operateFlowMatrix':
+        return this.decodeOperateFlowMatrixInputs(callData);
             case 'registerCustomGroup':
         return this.decodeRegisterCustomGroupInputs(callData);
             case 'registerGroup':

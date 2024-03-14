@@ -40,6 +40,7 @@ export const V2HubFunctionNames = {
     'mintPolicies': null,
     'mintTimes': null,
     'names': null,
+    'operateFlowMatrix': null,
     'operatorPathTransfer': null,
     'personalMint': null,
     'registerCustomGroup': null,
