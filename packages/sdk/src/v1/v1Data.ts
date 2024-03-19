@@ -71,7 +71,15 @@ export class V1Data {
     return allTransfers.sort((a, b) => b.timestamp - a.timestamp);
   }
 
-  async queryTrustRelations(address: string): Promise<any[]> {
+  async queryTrustRelations(address: string): Promise<{
+    user: string,
+    trusts: {
+      [address: string]: number
+    },
+    trustedBy: {
+      [address: string]: number
+    }
+  }> {
     const requestBody = {
       jsonrpc: '2.0',
       method: 'circles_getTrustRelations',
@@ -92,7 +100,7 @@ export class V1Data {
     }
 
     const responseData = await response.json();
-    return responseData?.result ? responseData.result : [];
+    return responseData?.result ? responseData.result : {};
   }
 
   async queryTrustEvents(address: string): Promise<any[]> {

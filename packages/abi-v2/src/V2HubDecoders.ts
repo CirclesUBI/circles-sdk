@@ -386,7 +386,7 @@ export class V2HubDecoders {
       };
     };
  
-    decode(callData: string): inputTypes.V2HubFunctionInputs {
+    decode(callData: string): { name: string, inputs: inputTypes.V2HubFunctionInputs} {
       if (callData.length < 10) {
         throw new Error(`Call data too short to encode a methodId: ${callData}`);
       }
@@ -397,116 +397,73 @@ export class V2HubDecoders {
       }
 
       if (functionFragment.inputs.length === 0) {
-        return <inputTypes.NoInputs>[];
+        return {
+          name: functionFragment.name,
+          inputs: <inputTypes.NoInputs>[]
+        };
       }
 
+      let decoded: any;
       switch (<V2HubFunctionName>functionFragment.name) {
-            case 'ToInflationAmount':
-        return this.decodeToInflationAmountInputs(callData);
-            case 'avatars':
-        return this.decodeAvatarsInputs(callData);
-            case 'balanceOf':
-        return this.decodeBalanceOfInputs(callData);
-            case 'balanceOfBatch':
-        return this.decodeBalanceOfBatchInputs(callData);
-            case 'balanceOfOnDay':
-        return this.decodeBalanceOfOnDayInputs(callData);
-            case 'burn':
-        return this.decodeBurnInputs(callData);
-            case 'calculateIssuance':
-        return this.decodeCalculateIssuanceInputs(callData);
-            case 'convertBatchInflationaryToDemurrageValues':
-        return this.decodeConvertBatchInflationaryToDemurrageValuesInputs(callData);
-            case 'convertInflationaryToDemurrageValue':
-        return this.decodeConvertInflationaryToDemurrageValueInputs(callData);
-            case 'createERC20InflationWrapper':
-        return this.decodeCreateERC20InflationWrapperInputs(callData);
-            case 'day':
-        return this.decodeDayInputs(callData);
-            case 'getDeterministicAddress':
-        return this.decodeGetDeterministicAddressInputs(callData);
-            case 'groupMint':
-        return this.decodeGroupMintInputs(callData);
-            case 'inflationaryBalanceOf':
-        return this.decodeInflationaryBalanceOfInputs(callData);
-            case 'inflationaryBalanceOfBatch':
-        return this.decodeInflationaryBalanceOfBatchInputs(callData);
-            case 'inviteHuman':
-        return this.decodeInviteHumanInputs(callData);
-            case 'isApprovedForAll':
-        return this.decodeIsApprovedForAllInputs(callData);
-            case 'isGroup':
-        return this.decodeIsGroupInputs(callData);
-            case 'isHuman':
-        return this.decodeIsHumanInputs(callData);
-            case 'isOrganization':
-        return this.decodeIsOrganizationInputs(callData);
-            case 'isTrusted':
-        return this.decodeIsTrustedInputs(callData);
-            case 'isValidName':
-        return this.decodeIsValidNameInputs(callData);
-            case 'isValidSymbol':
-        return this.decodeIsValidSymbolInputs(callData);
-            case 'migrate':
-        return this.decodeMigrateInputs(callData);
-            case 'mintPolicies':
-        return this.decodeMintPoliciesInputs(callData);
-            case 'mintTimes':
-        return this.decodeMintTimesInputs(callData);
-            case 'names':
-        return this.decodeNamesInputs(callData);
-            case 'operateFlowMatrix':
-        return this.decodeOperateFlowMatrixInputs(callData);
-            case 'registerCustomGroup':
-        return this.decodeRegisterCustomGroupInputs(callData);
-            case 'registerGroup':
-        return this.decodeRegisterGroupInputs(callData);
-            case 'registerHuman':
-        return this.decodeRegisterHumanInputs(callData);
-            case 'registerOrganization':
-        return this.decodeRegisterOrganizationInputs(callData);
-            case 'safeBatchTransferFrom':
-        return this.decodeSafeBatchTransferFromInputs(callData);
-            case 'safeInflationaryBatchTransferFrom':
-        return this.decodeSafeInflationaryBatchTransferFromInputs(callData);
-            case 'safeInflationaryTransferFrom':
-        return this.decodeSafeInflationaryTransferFromInputs(callData);
-            case 'safeTransferFrom':
-        return this.decodeSafeTransferFromInputs(callData);
-            case 'setApprovalForAll':
-        return this.decodeSetApprovalForAllInputs(callData);
-            case 'setIpfsCidV0':
-        return this.decodeSetIpfsCidV0Inputs(callData);
-            case 'stopped':
-        return this.decodeStoppedInputs(callData);
-            case 'supportsInterface':
-        return this.decodeSupportsInterfaceInputs(callData);
-            case 'symbols':
-        return this.decodeSymbolsInputs(callData);
-            case 'toDemurrageAmount':
-        return this.decodeToDemurrageAmountInputs(callData);
-            case 'toTokenId':
-        return this.decodeToTokenIdInputs(callData);
-            case 'tokenIDToInfERC20':
-        return this.decodeTokenIDToInfERC20Inputs(callData);
-            case 'tokenIdToCidV0Digest':
-        return this.decodeTokenIdToCidV0DigestInputs(callData);
-            case 'treasuries':
-        return this.decodeTreasuriesInputs(callData);
-            case 'trust':
-        return this.decodeTrustInputs(callData);
-            case 'trustMarkers':
-        return this.decodeTrustMarkersInputs(callData);
-            case 'unwrapInflationaryERC20':
-        return this.decodeUnwrapInflationaryERC20Inputs(callData);
-            case 'uri':
-        return this.decodeUriInputs(callData);
-            case 'wrapInflationaryERC20':
-        return this.decodeWrapInflationaryERC20Inputs(callData);
+          case 'ToInflationAmount': decoded = this.decodeToInflationAmountInputs(callData); break;
+          case 'avatars': decoded = this.decodeAvatarsInputs(callData); break;
+          case 'balanceOf': decoded = this.decodeBalanceOfInputs(callData); break;
+          case 'balanceOfBatch': decoded = this.decodeBalanceOfBatchInputs(callData); break;
+          case 'balanceOfOnDay': decoded = this.decodeBalanceOfOnDayInputs(callData); break;
+          case 'burn': decoded = this.decodeBurnInputs(callData); break;
+          case 'calculateIssuance': decoded = this.decodeCalculateIssuanceInputs(callData); break;
+          case 'convertBatchInflationaryToDemurrageValues': decoded = this.decodeConvertBatchInflationaryToDemurrageValuesInputs(callData); break;
+          case 'convertInflationaryToDemurrageValue': decoded = this.decodeConvertInflationaryToDemurrageValueInputs(callData); break;
+          case 'createERC20InflationWrapper': decoded = this.decodeCreateERC20InflationWrapperInputs(callData); break;
+          case 'day': decoded = this.decodeDayInputs(callData); break;
+          case 'getDeterministicAddress': decoded = this.decodeGetDeterministicAddressInputs(callData); break;
+          case 'groupMint': decoded = this.decodeGroupMintInputs(callData); break;
+          case 'inflationaryBalanceOf': decoded = this.decodeInflationaryBalanceOfInputs(callData); break;
+          case 'inflationaryBalanceOfBatch': decoded = this.decodeInflationaryBalanceOfBatchInputs(callData); break;
+          case 'inviteHuman': decoded = this.decodeInviteHumanInputs(callData); break;
+          case 'isApprovedForAll': decoded = this.decodeIsApprovedForAllInputs(callData); break;
+          case 'isGroup': decoded = this.decodeIsGroupInputs(callData); break;
+          case 'isHuman': decoded = this.decodeIsHumanInputs(callData); break;
+          case 'isOrganization': decoded = this.decodeIsOrganizationInputs(callData); break;
+          case 'isTrusted': decoded = this.decodeIsTrustedInputs(callData); break;
+          case 'isValidName': decoded = this.decodeIsValidNameInputs(callData); break;
+          case 'isValidSymbol': decoded = this.decodeIsValidSymbolInputs(callData); break;
+          case 'migrate': decoded = this.decodeMigrateInputs(callData); break;
+          case 'mintPolicies': decoded = this.decodeMintPoliciesInputs(callData); break;
+          case 'mintTimes': decoded = this.decodeMintTimesInputs(callData); break;
+          case 'names': decoded = this.decodeNamesInputs(callData); break;
+          case 'operateFlowMatrix': decoded = this.decodeOperateFlowMatrixInputs(callData); break;
+          case 'registerCustomGroup': decoded = this.decodeRegisterCustomGroupInputs(callData); break;
+          case 'registerGroup': decoded = this.decodeRegisterGroupInputs(callData); break;
+          case 'registerHuman': decoded = this.decodeRegisterHumanInputs(callData); break;
+          case 'registerOrganization': decoded = this.decodeRegisterOrganizationInputs(callData); break;
+          case 'safeBatchTransferFrom': decoded = this.decodeSafeBatchTransferFromInputs(callData); break;
+          case 'safeInflationaryBatchTransferFrom': decoded = this.decodeSafeInflationaryBatchTransferFromInputs(callData); break;
+          case 'safeInflationaryTransferFrom': decoded = this.decodeSafeInflationaryTransferFromInputs(callData); break;
+          case 'safeTransferFrom': decoded = this.decodeSafeTransferFromInputs(callData); break;
+          case 'setApprovalForAll': decoded = this.decodeSetApprovalForAllInputs(callData); break;
+          case 'setIpfsCidV0': decoded = this.decodeSetIpfsCidV0Inputs(callData); break;
+          case 'stopped': decoded = this.decodeStoppedInputs(callData); break;
+          case 'supportsInterface': decoded = this.decodeSupportsInterfaceInputs(callData); break;
+          case 'symbols': decoded = this.decodeSymbolsInputs(callData); break;
+          case 'toDemurrageAmount': decoded = this.decodeToDemurrageAmountInputs(callData); break;
+          case 'toTokenId': decoded = this.decodeToTokenIdInputs(callData); break;
+          case 'tokenIDToInfERC20': decoded = this.decodeTokenIDToInfERC20Inputs(callData); break;
+          case 'tokenIdToCidV0Digest': decoded = this.decodeTokenIdToCidV0DigestInputs(callData); break;
+          case 'treasuries': decoded = this.decodeTreasuriesInputs(callData); break;
+          case 'trust': decoded = this.decodeTrustInputs(callData); break;
+          case 'trustMarkers': decoded = this.decodeTrustMarkersInputs(callData); break;
+          case 'unwrapInflationaryERC20': decoded = this.decodeUnwrapInflationaryERC20Inputs(callData); break;
+          case 'uri': decoded = this.decodeUriInputs(callData); break;
+          case 'wrapInflationaryERC20': decoded = this.decodeWrapInflationaryERC20Inputs(callData); break;
       
       default:
         throw new Error(`Unknown function name '${functionFragment.name}' the code is out of sync with the ABI`);
     }
+    return {
+      name: functionFragment.name,
+      inputs: decoded
+    };
   }
   
 }

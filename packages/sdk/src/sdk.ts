@@ -1,6 +1,6 @@
 import { Avatar } from './avatar';
-import { V1Hub } from '@circles-sdk/abi-v1/dist/V1HubWrapper';
-import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
+import { V1Hub } from '@circles-sdk/abi-v1';
+import { V2Hub } from '@circles-sdk/abi-v2';
 import { ethers } from 'ethers';
 
 export class Sdk {

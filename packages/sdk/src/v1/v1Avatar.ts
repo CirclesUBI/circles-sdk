@@ -1,9 +1,7 @@
-import { ethers } from 'ethers';
+import { ethers, TransactionReceipt } from 'ethers';
 import { ObservableProperty } from '../observableProperty';
-import { calculatePath } from '@circles-sdk/pathfinder/dist';
-import { TransferPath } from '@circles-sdk/pathfinder/src';
-import { V1Hub } from '@circles-sdk/abi-v1/dist/V1HubWrapper';
-import { V1Token } from '@circles-sdk/abi-v1/dist/V1TokenWrapper';
+import { V1Hub } from '@circles-sdk/abi-v1';
+import { V1Token } from '@circles-sdk/abi-v1';
 
 export enum V1AvatarState {
   NotInitialized,
@@ -63,20 +61,22 @@ export class V1Avatar {
     this.setState(newState);
   }
 
-  async transfer(to: string, amount: bigint) {
+  async transfer(to: string, amount: bigint): Promise<TransactionReceipt> {
     // TODO: Validate inputs
-    const transferPath: TransferPath = await calculatePath({
-      from: this.avatarAddress,
-      to,
-      amount
-    });
+    // const transferPath: TransferPath = await calculatePath({
+    //   from: this.avatarAddress,
+    //   to,
+    //   amount: amount
+    // });
+    //
+    // return await this.v1Hub.transferThrough(
+    //   transferPath.path.map(step => step.tokenOwner),
+    //   transferPath.path.map(step => step.from),
+    //   transferPath.path.map(step => step.to),
+    //   transferPath.path.map(step => step.amount)
+    // );
 
-    return await this.v1Hub.transferThrough(
-      transferPath.path.map(step => step.tokenOwner),
-      transferPath.path.map(step => step.from),
-      transferPath.path.map(step => step.to),
-      transferPath.path.map(step => step.amount)
-    );
+    throw new Error("Not implemented");
   }
 
   async trust(avatar: string) {

@@ -1,8 +1,8 @@
 {
   "name": "@circles-sdk/abi-v2",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "typescript": "^5.3.3"
   },

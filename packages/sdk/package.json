@@ -1,8 +1,8 @@
 {
   "name": "@circles-sdk/sdk",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf dist/* && tsc -p tsconfig.json"
   },
@@ -10,10 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@circles-sdk/abi-v1": "^0.0.2",
-    "@circles-sdk/abi-v2": "^0.0.2",
-    "@circles-sdk/pathfinder": "^0.0.2",
-    "@circles-sdk/pathfinder-v2": "^0.0.2",
+    "@circles-sdk/abi-v1": "^0.0.4",
+    "@circles-sdk/abi-v2": "^0.0.4",
     "ethers": "^6.11.1",
     "multihashes": "^4.0.3"
   },

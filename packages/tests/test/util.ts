@@ -3,9 +3,8 @@ import HUB_V1 from '@circles/circles-contracts/out/Hub.sol/Hub.json';
 import CRC_V1 from '@circles/circles-contracts/out/Token.sol/Token.json';
 import HUB_V2 from '@circles/circles-contracts-v2/out/Hub.sol/Hub.json';
 import multihashes, { HashCode, HashName } from 'multihashes';
-import { V2HubEventNames } from './abi-decoder/v2HubEvents.test';
-import { V1HubEventNames } from './abi-decoder/v1HubEvents.test';
-import { V1TokenEvents } from './abi-decoder/v1TokenEvents.test';
+import { V2HubEvents } from '@circles-sdk/abi-v2';
+import { V1HubEvents, V1TokenEvents } from '@circles-sdk/abi-v1';
 
 export const V1_HUB_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const V2_HUB_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
@@ -33,13 +32,14 @@ export const createLog = (contractInterface: ethers.Interface, eventName: string
   data: string
 } => {
   const eventSignature = contractInterface.getEvent(eventName);
-  if (!eventSignature || (!(eventName in V2HubEventNames) && !(eventName in V1HubEventNames) && !(eventName in V1TokenEvents))) {
+  if (!eventSignature || (!(eventName in V2HubEvents) && !(eventName in V1HubEvents) && !(eventName in V1TokenEvents))) {
     throw new Error('Invalid event name');
   }
   return contractInterface.encodeEventLog(eventSignature, eventArgs);
 };
 
 export const uintToAddress = (uint: bigint) => ethers.getAddress('0x' + uint.toString(16).padStart(40, '0'));
+export const addressToUint = (address: string) => BigInt('0x' + address.slice(2));
 
 export const decodeMultihash = (cidV0: string) => {
   const multihashBytes = multihashes.fromB58String(cidV0);
@@ -59,6 +59,7 @@ export const encodeMultihash = (decodedCidV0Digest: Uint8Array, decodedMultihash
 }
 
 export const generateRandomAddress = () => ethers.Wallet.createRandom().address;
+export const generateRandomData = (length: number) => ethers.randomBytes(length);
 
 /**
  * Returns a fresh unregistered avatar.

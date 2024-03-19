@@ -1,6 +1,6 @@
 import { ObservableProperty } from '../observableProperty';
 import { ethers, TransactionReceipt } from 'ethers';
-import { V2Hub } from '@circles-sdk/abi-v2/dist/V2HubWrapper';
+import { V2Hub } from '@circles-sdk/abi-v2';
 
 export enum V2AvatarState {
   NotInitialized,
@@ -54,7 +54,22 @@ export class V2Avatar {
   }
 
   async transfer(to: string, amount: bigint): Promise<TransactionReceipt> {
-    throw new Error('Not implemented');
+    throw new Error(`Not implemented`)
+    // TODO: Implement
+    // const flowMatrix = await findFlowMatrix(this.avatarAddress, to, amount);
+    //
+    // const receipt = await this.v2Hub.operateFlowMatrix(
+    //   flowMatrix._flowVertices,
+    //   flowMatrix._flow,
+    //   flowMatrix._streams,
+    //   flowMatrix._packedCoordinates
+    // );
+    //
+    // if (!receipt) {
+    //   throw new Error('Transfer failed');
+    // }
+    //
+    // return receipt;
   }
 
   async trust(avatar: string): Promise<TransactionReceipt | null> {

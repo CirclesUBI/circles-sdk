@@ -1,5 +1,5 @@
 import { generateRandomAddress } from '../../util';
-import { V2Avatar, V2AvatarState } from '@circles-sdk/sdk/dist/v2/v2Avatar';
+import { V2Avatar, V2AvatarState } from '@circles-sdk/sdk';
 import { mockProvider } from '../mockProvider';
 import { v2HubMock } from './v2HubMock';
 

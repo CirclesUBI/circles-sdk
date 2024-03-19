@@ -1,6 +1,8 @@
 #!/bin/bash
 cd codegen
 npx tsc
+
+rm -rf ../packages/abi-v1/src/*
 node dist/main.js \
   ../packages/circles-contracts/out/Hub.sol/Hub.json \
   ../packages/abi-v1/src/ \
@@ -11,6 +13,7 @@ node dist/main.js \
   ../packages/abi-v1/src/ \
   V1Token
 
+rm -rf ../packages/abi-v2/src/*
 node dist/main.js \
   ../packages/circles-contracts-v2/out/Hub.sol/Hub.json \
   ../packages/abi-v2/src/ \
