@@ -26,9 +26,6 @@ const contractName = process.argv.length > 4 ? process.argv[4] : '';
 const contractJson = JSON.parse(fs.readFileSync(contractPath, 'utf8'));
 const abi = <ReadonlyArray<Fragment | JsonFragment | string>>contractJson.abi;
 
-const Index = new OutputBuffer('index.ts');
-generateIndexFile(contractName, Index);
-
 const CommonCode = new OutputBuffer('common.ts');
 generateCommon(CommonCode);
 
@@ -53,10 +50,21 @@ const eventFragments = abi
   .map(o => <EventFragment>Fragment.from(o));
 
 const EventDecoders = new OutputBuffer(`${contractName}Events.ts`);
-generateEventDecoders(contractName, EventDecoders, eventFragments);
+const eventTypeNames = generateEventDecoders(contractName, EventDecoders, eventFragments);
 
 const ContractWrapper = new OutputBuffer(`${contractName}Wrapper.ts`);
 generateContractWrapper(contractName, ContractWrapper, functionFragments);
+
+const Index = new OutputBuffer('index.ts');
+let writeCommon: boolean = true;
+if (fs.existsSync(`${outputDir}/index.ts`)) {
+  fs.readFileSync(`${outputDir}/index.ts`, 'utf8').split('\n').forEach((line: string) => {
+    Index.writeLine(line);
+  });
+  fs.truncateSync(`${outputDir}/index.ts`);
+  writeCommon = false;
+}
+generateIndexFile(contractName, eventTypeNames, writeCommon, Index);
 
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir);
@@ -69,4 +77,4 @@ fs.writeFileSync(`${outputDir}/${EventDecoders.name}`, EventDecoders.toString())
 fs.writeFileSync(`${outputDir}/${FunctionNames.name}`, FunctionNames.toString());
 fs.writeFileSync(`${outputDir}/${ContractWrapper.name}`, ContractWrapper.toString());
 fs.writeFileSync(`${outputDir}/${contractName}Abi.json`, JSON.stringify(abi));
-// fs.writeFileSync(`${outputDir}/${Index.name}`, Index.toString());
+fs.writeFileSync(`${outputDir}/${Index.name}`, Index.toString());
