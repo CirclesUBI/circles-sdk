@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "./buildContracts.sh && ./generateCode.sh && npm run build -w @circles/circles-contracts-v2 -w @circles-sdk/abi-v1 -w @circles-sdk/abi-v2 -w @circles-sdk/pathfinder -w @circles-sdk/pathfinder-v2 -w @circles-sdk/sdk",
-    "publish": "npm run build && npm publish -w @circles-sdk/abi-v1 -w @circles-sdk/abi-v2 -w @circles-sdk/pathfinder -w @circles-sdk/pathfinder-v2 -w @circles-sdk/sdk"
+    "build": "./buildContracts.sh && ./generateCode.sh && npm run build -w @circles/circles-contracts-v2 -w @circles-sdk/abi-v1 -w @circles-sdk/abi-v2 -w @circles-sdk/sdk",
+    "publish": "npm run build && npm publish -w @circles-sdk/abi-v1 -w @circles-sdk/abi-v2 -w @circles-sdk/sdk"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
