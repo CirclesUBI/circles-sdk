@@ -49,10 +49,10 @@ export class V1Avatar {
       ? new V1Token(this.provider, tokenAddress)
       : undefined;
 
-    if (this._v1Token) {
+    if (this.v1Token) {
       newState = V1AvatarState.Human;
 
-      const stopped = await this._v1Token.stopped();
+      const stopped = await this.v1Token.stopped();
       if (stopped) {
         newState = V1AvatarState.StoppedHuman;
       }

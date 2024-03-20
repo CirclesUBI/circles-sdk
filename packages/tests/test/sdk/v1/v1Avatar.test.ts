@@ -12,7 +12,7 @@ describe('V1Avatar', () => {
     beforeEach(() => {
       (v1HubMock.organizations as jest.Mock).mockClear();
       (v1HubMock.userToToken as jest.Mock).mockClear();
-      (v1HubMock.getToken as jest.Mock).mockClear();
+      (v1HubMock.v1Token as jest.Mock).mockClear();
     });
 
     it('initializes as an unregistered user', async () => {
@@ -24,35 +24,36 @@ describe('V1Avatar', () => {
       const avatar = new V1Avatar((v1HubMock as any), avatarAddress, mockProvider);
       await avatar.initialize();
 
-      expect(avatar.state).toBe(V1AvatarState.Unregistered);
+      expect(avatar.state.value).toBe(V1AvatarState.Unregistered);
     });
 
     it('initializes as a human', async () => {
       // has a token
       (v1HubMock.userToToken as jest.Mock).mockResolvedValue(tokenAddress);
       // token is not stopped
-      (v1HubMock.getToken as jest.Mock).mockReturnValue({
+      (v1HubMock.v1Token as jest.Mock).mockReturnValue({
         stopped: jest.fn().mockResolvedValue(false)
       });
 
       const avatar = new V1Avatar((v1HubMock as any), avatarAddress, mockProvider);
       await avatar.initialize();
 
-      expect(avatar.state).toBe(V1AvatarState.Human);
+      expect(avatar.state.value).toBe(V1AvatarState.Human);
     });
+
 
     it('initializes as a stopped human', async () => {
       // has a token
       (v1HubMock.userToToken as jest.Mock).mockResolvedValue(tokenAddress);
       // token is stopped
-      (v1HubMock.getToken as jest.Mock).mockReturnValue({
+      (v1HubMock.v1Token as jest.Mock).mockReturnValue({
         stopped: jest.fn().mockResolvedValue(true)
       });
 
       const avatar = new V1Avatar((v1HubMock as any), avatarAddress, mockProvider);
       await avatar.initialize();
 
-      expect(avatar.state).toBe(V1AvatarState.StoppedHuman);
+      expect(avatar.state.value).toBe(V1AvatarState.StoppedHuman);
     });
 
     it('initializes as an organization', async () => {
@@ -64,7 +65,7 @@ describe('V1Avatar', () => {
       const avatar = new V1Avatar((v1HubMock as any), avatarAddress, mockProvider);
       await avatar.initialize();
 
-      expect(avatar.state).toBe(V1AvatarState.Organization);
+      expect(avatar.state.value).toBe(V1AvatarState.Organization);
     });
   });
 });
