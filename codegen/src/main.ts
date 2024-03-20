@@ -50,10 +50,14 @@ const eventFragments = abi
   .map(o => <EventFragment>Fragment.from(o));
 
 const EventDecoders = new OutputBuffer(`${contractName}Events.ts`);
-const eventTypeNames = generateEventDecoders(contractName, EventDecoders, eventFragments);
-
+let eventTypeNames: string[] = [];
+if (eventFragments.length > 0) {
+  eventTypeNames = generateEventDecoders(contractName, EventDecoders, eventFragments);
+} else {
+  EventDecoders.writeLine(`export const empty = "";`)
+}
 const ContractWrapper = new OutputBuffer(`${contractName}Wrapper.ts`);
-generateContractWrapper(contractName, ContractWrapper, functionFragments);
+generateContractWrapper(contractName, ContractWrapper, functionFragments, eventFragments);
 
 const Index = new OutputBuffer('index.ts');
 let writeCommon: boolean = true;

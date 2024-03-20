@@ -6,7 +6,8 @@ import { ${contractName}Decoders } from './${contractName}Decoders';
 import * as ${contractName}InputTypes from './${contractName}FunctionInputTypes';
 import { ${contractName}FunctionName, ${contractName}FunctionNames } from './${contractName}FunctionNames';
 import { ${contractName}Calls } from './${contractName}Encoders';
-import { ${contractName}Events, ${contractName}Event ${eventTypeNames.length > 0 ? ', ' + eventTypeNames.join(', ') : ''} } from './${contractName}Events';
+` + (eventTypeNames.length > 0 ? `
+import { ${contractName}Events, ${contractName}Event ${eventTypeNames.length > 0 ? ', ' + eventTypeNames.join(', ') : ''} } from './${contractName}Events';` : '') + `
 import { ${(contractName == '' || !contractName) ? 'Wrapper' : contractName} } from './${contractName == '' || !contractName ? 'Wrapper' : contractName + 'Wrapper'}';
 
 export {
@@ -18,8 +19,9 @@ export {
   ${contractName}FunctionName,
   ${contractName}FunctionNames,
   ${contractName}Calls,
+  ` + (eventTypeNames.length > 0 ? `
   ${contractName}Events,
-  ${contractName}Event${eventTypeNames.length > 0 ? ', ' + eventTypeNames.join(', ') + ',' : ''}
+  ${contractName}Event${eventTypeNames.length > 0 ? ', ' + eventTypeNames.join(', ') + ',' : ''}` : '') + `
   ${contractName == '' || !contractName ? 'Wrapper' : contractName},
 };`);
 };
