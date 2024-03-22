@@ -1,6 +1,7 @@
 import { ObservableProperty } from '../observableProperty';
 import { ethers, TransactionReceipt } from 'ethers';
-import { V2Hub } from '@circles-sdk/abi-v2';
+import { V2Hub, V2HubCalls as V2HubCallsEncoder, V2HubInputTypes } from '@circles-sdk/abi-v2';
+import { generateRandomAddress, generateRandomData } from '@circles-sdk/tests/test/util';
 
 export enum V2AvatarState {
   NotInitialized,
@@ -70,6 +71,20 @@ export class V2Avatar {
     // }
     //
     // return receipt;
+  }
+
+  async groupMint(group:string, collateral: string[], amounts: bigint[], data: Uint8Array): Promise<TransactionReceipt> {
+    const txReceipt = await this.v2Hub.groupMint(group, collateral, amounts, data);
+    if (!txReceipt) {
+      throw new Error('Group mint failed');
+    }
+    return txReceipt;
+  }
+
+  async wrapInErc20() {
+  }
+
+  async unwrapFromErc20() {
   }
 
   async trust(avatar: string): Promise<TransactionReceipt | null> {

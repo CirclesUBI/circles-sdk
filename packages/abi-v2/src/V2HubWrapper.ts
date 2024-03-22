@@ -6,8 +6,8 @@ import { Observable } from "./common";
 export class V2Hub {
   readonly address: string;
   private readonly provider: ethers.Provider;
-  private readonly eventDecoder: V2HubEvents = new V2HubEvents();
   
+  private readonly eventDecoder: V2HubEvents = new V2HubEvents();
   public readonly events: Observable<ParsedV2HubEvent<V2HubEvent>>;
   private readonly emitEvent: (event: ParsedV2HubEvent<V2HubEvent>) => void;
 
@@ -17,9 +17,11 @@ export class V2Hub {
       this.provider = provider;
       this.address = address;
       
+  
       const events = Observable.create<ParsedV2HubEvent<V2HubEvent>>();
       this.events = events.property;
       this.emitEvent = events.emit;
+  
   }
   
   private sendTransaction(request: TransactionRequest) : Promise<TransactionResponse> {

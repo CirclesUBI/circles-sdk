@@ -94,10 +94,19 @@ V2_HUB_DEPLOYMENT=$(forge create Hub \
 V2_HUB_ADDRESS=$(echo "$V2_HUB_DEPLOYMENT" | grep "Deployed to:" | awk '{print $3}')
 echo "V2 Hub deployed at ${V2_HUB_ADDRESS}"
 
+echo "Deploying V2 Standard Mint Policy ..."
+cd ../groups
+V2_STANDARD_MINT_POLICY_DEPLOYMENT=$(forge create StandardMintPolicy \
+  --rpc-url ${RPC_URL} \
+  --private-key ${PRIVATE_KEY} \
+  --constructor-args ${V2_HUB_ADDRESS})
+V2_STANDARD_MINT_POLICY_ADDRESS=$(echo "$V2_STANDARD_MINT_POLICY_DEPLOYMENT" | grep "Deployed to:" | awk '{print $3}')
+
 echo ""
 echo "Summary:"
 echo "========"
 echo "V1 Hub: $V1_HUB_ADDRESS"
 echo "Migration: $MIGRATION_ADDRESS"
 echo "V2 Hub: $V2_HUB_ADDRESS"
+echo "V2 Standard Mint Policy: $V2_STANDARD_MINT_POLICY_ADDRESS"
 echo ""

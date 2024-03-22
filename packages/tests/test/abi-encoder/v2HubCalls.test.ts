@@ -660,4 +660,42 @@ describe('V2HubCalls', () => {
     const decodedAmount = decoded?.args[1];
     expect(BigInt(decodedAmount)).toEqual(amount);
   });
+
+  test('operateFlowMatrix encodes and decodes correctly', () => {
+    const flowVertices = [generateRandomAddress(), generateRandomAddress()];
+    const flow = [
+      { streamSinkId: BigInt(1), amount: BigInt(1000) },
+      { streamSinkId: BigInt(2), amount: BigInt(2000) }
+    ];
+    const streams = [
+      { sourceCoordinate: BigInt(1), flowEdgeIds: [BigInt(1), BigInt(2)], data: generateRandomData(32) },
+      { sourceCoordinate: BigInt(2), flowEdgeIds: [BigInt(3), BigInt(4)], data: generateRandomData(32) }
+    ];
+    const packedCoordinates = generateRandomData(32);
+    const encoded = new V2HubCallsEncoder().operateFlowMatrix(<V2HubInputTypes.OperateFlowMatrixInputs>{
+      _flowVertices: flowVertices,
+      _flow: flow,
+      _streams: streams,
+      _packedCoordinates: packedCoordinates
+    });
+    const decoded = new V2HubCallsDecoder().decode(encoded);
+    const inputs = <V2HubInputTypes.OperateFlowMatrixInputs>decoded.inputs;
+
+    const decodedFlows = inputs._flow.map(o => ({
+      streamSinkId: BigInt(o.streamSinkId),
+      amount: BigInt(o.amount)
+    }));
+
+    const decodedStreams = inputs._streams.map(o => ({
+      sourceCoordinate: BigInt(o.sourceCoordinate),
+      flowEdgeIds: o.flowEdgeIds.map((id: string) => BigInt(id)),
+      data: new Uint8Array(Buffer.from(o.data.substring(2), 'hex'))
+    }));
+
+    expect(decoded?.name).toBe('operateFlowMatrix');
+    expect(inputs._flowVertices).toEqual(flowVertices);
+    expect(decodedFlows).toEqual(flow);
+    expect(decodedStreams).toEqual(streams);
+    expect(inputs._packedCoordinates).toEqual(packedCoordinates);
+  });
 });

@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
-  import { Avatar } from '@circles-sdk/sdk/dist/sdk/src';
+  import { Avatar } from '@circles-sdk/sdk/dist';
   import { get, writable } from 'svelte/store';
-  import type { AvatarEvent } from '@circles-sdk/sdk/dist/sdk/src/avatar';
+  import type { AvatarEvent } from '@circles-sdk/sdk/dist/avatar';
   import { onMount } from 'svelte';
 
 
