@@ -10,7 +10,7 @@
     let amount: string;
 
     const transfer = async () => {
-        await avatar.transfer(to, amount);
+        await avatar.transfer(to, BigInt(amount));
     }
 </script>
 <div class="form-group">

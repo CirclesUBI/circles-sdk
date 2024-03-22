@@ -8,3 +8,4 @@ export { V1Data } from './v1/v1Data';
 export { V1Token } from '@circles-sdk/abi-v1';
 export { V2Avatar, V2AvatarState } from './v2/v2Avatar';
 export { V2Hub } from '@circles-sdk/abi-v2';
+export { V2Data } from './v2/v2Data';
