@@ -1,7 +1,6 @@
 import { ObservableProperty } from '../observableProperty';
 import { ethers, TransactionReceipt } from 'ethers';
-import { V2Hub, V2HubCalls as V2HubCallsEncoder, V2HubInputTypes } from '@circles-sdk/abi-v2';
-import { generateRandomAddress, generateRandomData } from '@circles-sdk/tests/test/util';
+import { V2Hub } from '@circles-sdk/abi-v2';
 
 export enum V2AvatarState {
   NotInitialized,

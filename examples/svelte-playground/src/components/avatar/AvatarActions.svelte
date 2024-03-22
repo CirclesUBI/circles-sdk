@@ -4,7 +4,6 @@
   import Collapsible from '../common/VerticalCollapsible.svelte';
   import ActionButton from '../common/ActionButton.svelte';
   import Transfer from '../transfer/Transfer.svelte';
-  import HorizontalLayout from '../common/HorizontalLayout.svelte';
   import Trust from '../trust/Trust.svelte';
   import InviteHuman from '../InviteHuman.svelte';
   import Signup from '../signup/Signup.svelte';

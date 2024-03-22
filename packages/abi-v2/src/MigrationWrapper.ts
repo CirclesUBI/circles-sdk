@@ -1,7 +1,5 @@
 import { MigrationCalls } from './MigrationEncoders';
 import { ethers, TransactionRequest, TransactionResponse } from 'ethers';
-import { Observable } from "./common";
-
 export class Migration {
   readonly address: string;
   private readonly provider: ethers.Provider;

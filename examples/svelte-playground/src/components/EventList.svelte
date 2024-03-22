@@ -47,7 +47,7 @@
     {#each $events as event}
       <li>
         <Collapsible label={event.name} isOpen={false}>
-                    <pre>{JSON.stringify(event.data, (a, b, c) => {
+                    <pre>{JSON.stringify(event.data, (_, b) => {
                       if (typeof b === 'bigint') {
                         return b.toString();
                       } else {

@@ -1,6 +1,5 @@
 <script lang="ts">
   import HorizontalLayout from '../common/HorizontalLayout.svelte';
-  import Collapsible from '../common/VerticalCollapsible.svelte';
   import ActionButton from '../common/ActionButton.svelte';
   import { Avatar } from '@circles-sdk/sdk';
 
